@@ -18,7 +18,6 @@
 
 
 
-
    <div id="campogioco">
 
 		<object id="Jazz1" classid="CLSID:1ACE1618-1C7D-4561-AEE1-34842AA85E90" class="hidden">
@@ -28,12 +27,12 @@
 		</object>
 
 	  
-		<canvas id="spartito"  width="1004" height="130" style="left:0px;top:0px; z-index:1000"></canvas>
 
 
-		<div id="dati" >
-			<div id="bpm" style="position:absolute;top: 20px; left: 10px;">&nbsp;bpm
-			</div>
+		<div id="dati" class="dati" >
+		<canvas id="canvasdati"  class="dati" width="396" height="350">
+		<\canvas>
+			
 	   	   <!--<div id="contabpm" style="top: 10px; left: 70px;" class="contatore">    <img src="images/vassoiodpuls.png" height="40" width="140"> 
 	   			<div id="digit3" class="digit1" style="top: 1px; left: 3px; background-position: -0px 0px; "  > </div>
 	   			<div id="digit2" class="digit1" style="top: 1px; left: 31px; background-position: -0px 0px;"  > </div>
@@ -42,46 +41,62 @@
 		</div> 
 
 
-		<div id="opzioni" >
-			<h1>OPZIONI</h1>
-
-				<p>MIDI Input:
-		
-			<select id=midiIn onchange='changeMidi();'>
-		 		<option value="">Not connected</option>
-			</select>
-			<div id=msg></div>
-		</p>
-		</div> 
 
 
-		<div id="bstart" class="pulsante2" style="top: 200px; left: 320px; z-index:1000">START</div> 
+		<div id="bstart" class="pulsante2" style="top: 200px; left: 320px;">START</div> 
 
 
 		<div id="barrav1"  class="barretta" style="top: 600px; left: 200px; width:100px; height:100px;  background-color:#A0522D"></div> 
 		<div id="barrav2"  class="barretta" style="top: 600px; left: 704px; width:100px; height:100px;  background-color:#A0522D"></div> 
 
-		<div id="barrad" class="barra" style="top: 605px; left: 300px; width:400px; z-index:1000; background-color:black">DESTRA</div> 
-		<div id="barras" class="barra" style="top: 655px; left: 300px; width:400px; z-index:1000; background-color:black">SINISTRA</div> 
+		<div id="barrad" class="barra" style="top: 605px; left: 300px; width:400px; background-color:black">DESTRA</div> 
+		<div id="barras" class="barra" style="top: 655px; left: 300px; width:400px; background-color:black">SINISTRA</div> 
+
 
 		<canvas id="grafs" class="barretta" width="200" height="500" style="left:0px"></canvas>
 		<canvas id="grafd" class="barretta" width="200" height="500" style="left:804px"></canvas>
 		<canvas id="grafvs" class="barretta" width="100" height="500" style="left:200px"></canvas>
 		<canvas id="grafvd" class="barretta" width="100" height="500" style="left:704px"></canvas>
+		<canvas id="spartito" class="spartito"  width="1004" height="130" style="left:0px;top:0px;"></canvas>
 		
       
-  <div id="titolo" style="position:absolute; top: 130px; left: 300px;"><img src="images/hanontest.png"   height="80px" width="400px"></div>
+  		<div id="titolo" style="position:absolute; top: 130px; left: 300px;"><img src="images/hanontest.png"   height="80px" width="400px"></div>
       
+		<div id="opzioni" >
+			<h1>OPZIONI</h1>
+			<p>&nbsp;&nbsp;&nbsp;MIDI Input:
+		
+				<select id=midiIn onchange='changeMidi();'>
+					<option value="">Not connected</option>
+				</select>
 
-	<script>
-		var immagine = new Image();
+				<div id=msg></div>
+			</p>
+			<div id="esamina" class="pulsante2" style="top: 140px; left: 10px; ">ESAMINA</div>
+		
+		</div>   <!--opzioni--> 
 
-		immagine.src = "images/clefs.png";
-	</script>
+
+	</div>  <!-- campogioco--> 
+
+	
+	<div id="campoesamina">
+	
+		<canvas id="egrafd" class="barretta" width="1300" height="200" style="left:0px;top:000px"></canvas>
+		<canvas id="egrafs" class="barretta" width="1300" height="200" style="left:0px;top:530px"></canvas>
+		<canvas id="egrafvd" class="barretta" width="1300" height="100" style="left:0px;top:200px"></canvas>
+		<canvas id="egrafvs" class="barretta" width="1300" height="100" style="left:0px;top:430px"></canvas>
+		<canvas id="espartito" class="spartito"   width="1300" height="130" style="left:0px;top:300px;"></canvas>
+
+	<div id="esaminao" class="pulsante2" style="top: 690px; left: 1350px; ">ESCI</div>
+	<div id="noteoff" class="pulsante2" style="top: 640px; left: 1350px; ">NOTE ON</div>
+	
+	</div>  <!-- campoesamina---> 
 
 
-	</div>  <!-- campogioco schermo 
-	   <audio id="pesca" src="sounds/cardplace1.mp3"></audio>
+
+	 
+<!-- 	   <audio id="pesca" src="sounds/cardplace1.mp3"></audio>
 	   <audio id="scartatris" src="sounds/cardplace3.mp3"></audio>
 	   <audio id="ordina" src="sounds/cardslide5.mp3"></audio>
 	   <audio id="scarta" src="sounds/cardslide1.mp3"></audio>
@@ -95,10 +110,12 @@
 	 <audio id="applause" src="sounds/applause.mp3"></audio>
 	 <audio id="distribuisci" src="sounds/distribuisci.mp3"></audio>--> 
 
+
+
+
+
 	<script src="jquery-2.1.1.js"></script>
 	<script src="midicode.js"></script>
-
-
 
 </body>
 

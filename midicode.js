@@ -24,11 +24,37 @@ log.enabled = true;
   ctxsp = canvassp.getContext('2d');
 
 
+
+
+  ecanvass = document.getElementById("egrafs");
+  ectxs = ecanvass.getContext('2d');
+  
+  ecanvasd = document.getElementById("egrafd");
+  ectxd = ecanvasd.getContext('2d');
+
+  ecanvasvs = document.getElementById("egrafvs");
+  ectxvs = ecanvasvs.getContext('2d');
+
+
+  ecanvasvd = document.getElementById("egrafvd");
+  ectxvd = ecanvasvd.getContext('2d');
+
+
+  ecanvassp = document.getElementById("espartito");
+  ectxsp = ecanvassp.getContext('2d');
+
+  canvasdati = document.getElementById("canvasdati");
+  ctxdati = canvasdati.getContext('2d');
+
+
 $(window).resize(function () {
 	tmidi.offsetxx=$("#campogioco").offset().left;
 	tmidi.offsetyy=$("#campogioco").offset().top;
 });
 
+var immagine = new Image();
+
+immagine.src = "images/clefs.png";
 
 
 
@@ -37,6 +63,36 @@ $('#bstart').click(function () {
 	tmidi.startstop();
 });
 
+$('#esamina').click(function () {
+	$("#campoesamina").show();
+	tmidi.esamina();
+});
+
+$('#esaminao').click(function () {
+	$("#campoesamina").hide();
+});
+
+
+$('#noteoff').click(function () {
+	tmidi.noteonoff();
+});
+
+$('#campoesamina').mousedown(function (ev) {
+	tmidi.esaminadown(ev);
+});
+
+$('#campoesamina').mousemove(function (ev) {
+	tmidi.esaminamove(ev);
+});  
+
+/* $(document).mousemove(function(ev) {
+	tmidi.esaminamove(ev);
+
+});*/
+
+$('#campoesamina').mouseup(function (ev) {
+	tmidi.esaminaup(ev);
+});
 
 /*
 var scarta=document.getElementById("scarta");
@@ -132,10 +188,10 @@ function midiProc(t,a,b,c){
 
 	//Jazz.MidiOut(a+9,b,120);
 	
-   	if ((a==0x90)&&(b==21)){ //primo tasto
-		tmidi.startstop();
-		return;
-   	}
+   	if ((a==0x90)&&(b==21)) return tmidi.startstop()     //primo tasto
+	if ((a==0x90)&&(b==23)) return (tmidi.setbpm(-5))	 //secondo tasto bianco
+	if ((a==0x90)&&(b==24)) return (tmidi.setbpm(5))	 //terzo tasto bianco	
+   	
 
    
 	//L'esercizio parte da tmidi.inizioinput  (dopo l'intro)
@@ -290,6 +346,7 @@ var tmidi = {
     	this.initgrafico(ctxd,canvasd.width,canvasd.height);
     	this.initgraficov(ctxvs,canvasvs.width,canvasvs.height);
     	this.initgraficov(ctxvd,canvasvd.width,canvasvd.height);
+    	this.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
 		setTimeout(this.initgraficosp,100,ctxsp,canvassp.width,canvassp.height);
 
     },
@@ -310,17 +367,91 @@ var tmidi = {
     	b.fillRect(49,0,2,h);
     	b.fillRect(75,0,1,h);
     },
+
+
+    initgraficoe:function(b,w,h,destro){
+    	b.clearRect(0, 0, w,h);
+    	b.fillStyle="#A0522D";
+    	if (destro){
+			b.fillRect(0,160,w,20);
+			b.fillRect(0,80,w,20);
+    	}
+    	else {
+			b.fillRect(0,20,w,20);
+			b.fillRect(0,100,w,20);
+    	}
+    	b.fillStyle="#FFFFFF";
+		b.fillRect(500,0,1,h);
+
+    },
+    
+    initgraficoev:function(b,w,h,destro){
+    	b.clearRect(0, 0, w,h);
+
+    	b.fillStyle="#000000";
+    	b.fillRect(0,25,w,1);
+    	b.fillRect(0,49,w,2);
+    	b.fillRect(0,75,w,1);
+    	b.fillStyle="#FFFFFF";
+		b.fillRect(500,0,1,h);
+
+    },
+
+  	initgraficodati:function(b,w,h){
+    	b.clearRect(0, 0, w,h);
+
+    	b.fillStyle="#000000";
+   		b.fillStyle="#FFFFFF";
+    	b.font="18px Verdana";
+		b.fillText("bpm",18,36);
+		b.fillRect(0,50,w,1);
+		b.fillText("Note errate destra: "+tmidi.numerrnoted+ " ("+tmidi.errnoted+ " %)",18,70);
+		b.fillText("Errore medio attacco destra: "+tmidi.errad+ " %",18,95);
+		b.fillText("Errore medio distacco destra: "+tmidi.errdd+ " %",18,120);
+		b.fillText("Stabilità pressione destra: "+tmidi.errpd+ " %",18,145);
+		b.fillText("Giudizio finale destra: "+tmidi.gfd+ " %",18,170);
+		b.fillRect(0,175,w,1);
+		b.fillText("Note errate sinistra: "+tmidi.numerrnotes+ " ("+tmidi.errnotes+ " %)",18,195);
+		b.fillText("Errore medio attacco sinistra :"+tmidi.erras+ " %",18,220);
+		b.fillText("Errore medio distacco sinistra :"+tmidi.errds+ " %",18,245);
+		b.fillText("Stabilità pressione destra: "+tmidi.errps+ " %",18,270);
+		b.fillText("Giudizio finale sinistra: "+tmidi.gfs+ " %",18,295);
+		b.fillRect(0,300,w,1);
+
+    },
+
   
     initgraficosp:function(b,w,h){
+
+    	var esamina=(b==ectxsp);
+
+		if (esamina){
+    	this.initgraficoe(ectxs,ecanvass.width,ecanvass.height,false);
+    	this.initgraficoe(ectxd,ecanvasd.width,ecanvasd.height,true);
+    	this.initgraficoev(ectxvs,ecanvasvs.width,ecanvasvs.height,false);
+    	this.initgraficoev(ectxvd,ecanvasvd.width,ecanvasvd.height,true);
+			
+		}
+
+    	var limite=1000;
+    	if (esamina) limite=1300;
     	b.clearRect(0, 0, w,h);
     	b.fillStyle="#D2691E";
-    	b.fillRect(473,0,30,h);
+    	if (esamina) {
+    		b.fillStyle="#FFFFFF";
+			b.fillRect(500,0,1,h);
+			var trovanota=true;
+    	}
+    	else {
+    		b.fillRect(473,0,30,h);
+    	}
+    	
     	b.fillStyle="#000000";
     	b.strokeStyle="#000000";
 
     	for (var i=2;i<13;i++) {
 			
-			if (i!=7) b.fillRect(50,i*8,1000,1);
+			if (i!=7) b.fillRect(50,i*8,limite,1);
 		}
 
 		b.font="14px Arial";
@@ -334,15 +465,17 @@ var tmidi = {
 		//la nota attuale dipende da quanti intervalli sono passati
     	//zdeltapixel=Math.floor((ztempo-zinizio)*15/tmidi.intervallo)-znotacorrente*15;
     	zoffset=Math.floor((ztempo-zinizio)*16/tmidi.intervallo);
+    	if (esamina) zoffset=-tmidi.eoffset;
     	
 		var d=500,posy,posx=0,nota,oldnota,oldposx,oldposy;
 		var cols,cold;
+		var td=tmidi.barradestra,ts=tmidi.barrasinistra;
 
 		drawline=(function(py){
 			b.fillRect(posx-7,py,14,1);
 		})
 		var lung=tmidi.BufferNote.length;
-    	for (var i=0;((i<lung)&&(posx<1000));i++){
+    	for (var i=0;((i<lung)&&(posx<limite));i++){
     		b.beginPath();
     		//var snota=i+znotacorrente-30;
     		//if (snota<0) continue;
@@ -367,8 +500,45 @@ var tmidi = {
 				b.beginPath();
 				b.arc(posx, posy+32, 4, 0, 2*Math.PI);
 				b.fill();
-				if ((nota==9)||(nota==21)) drawline(posy+32);
+				if ((nota==9)||(nota==21)||(nota==7)) drawline(posy+32);
+				if ((nota==7)||(nota==8)) b.fillRect(posx-6,76+32,10,1);
+
+				if (esamina){
+					
+					
+			
+					if (i<ts.length) {
+						ectxvs.fillStyle="yellow";
+						ectxvs.fillRect(posx-7,0,14,Math.floor((ts[i].v-30)/0.7));
+						ectxs.fillStyle=ts[i].c;
+						ectxs.fillRect(posx-7,ts[i].s,14,ts[i].w);
+					}
+					
+					if (i<td.length) {
+						ectxvd.fillStyle="yellow";
+						ectxvd.fillRect(posx-7,100-Math.floor((td[i].v-30)/0.7),14,100);
+						ectxd.fillStyle=td[i].c;
+						ectxd.fillRect(posx-7,200-(td[i].s+td[i].w),14,td[i].w);
+					}
+
+					if ((trovanota)&&(posx>499)&&(i>0)&&(tmidi.feinavanti)){
+						trovanota=false;
+						if (!(tmidi.notainesame==i-1)){
+							//log ("inesame= "+tmidi.notainesame+" diventa= "+(i-1)+" posx "+posx+" deltax "+tmidi.feinavanti)
+							tmidi.notainesame=i-1;
+
+							if (tmidi.fnoteon) {
+								Jazz.MidiOut(0x90,tmidi.cbuffer[tmidi.notainesame],tmidi.velocitaout);
+								setTimeout(tmidi.midiout,100,0x80,tmidi.cbuffer[tmidi.notainesame],tmidi.velocitaout);	
+							}
+						}
+					}
+
+				}
+
+
 				b.fillStyle="#000000";
+				
 
 				if ((i%4)==3) {
 					oldnota=tmidi.BufferNote[i-3];
@@ -419,7 +589,7 @@ var tmidi = {
  	    b.fillText("Hanon 1, bpm:"+tmidi.bpm,50,120);
 
 
-    	log("tempo grafico= " +(performance.now()-ztempo));
+    	//log("tempo grafico= " +(performance.now()-ztempo));
     },
   
     refresh: function() {
@@ -436,10 +606,76 @@ var tmidi = {
     	}
     },
 
+    midiout : function(a,b,c){
+    	Jazz.MidiOut(a,b,c);	
 
+    },
+
+	fedown:false,
+	femove:false,
+	feinavanti:true,
+	edownx:0, eprevx:0,
+	edowny:0, eprevy:0,
+	eoffset:0,estartoffset:0,
+	notainesame:0,
+
+	esamina:function(){
+		
+		tmidi.eoffset=0;
+		tmidi.notainesame=1000;
+		tmidi.fnoteon=false;
+   		$("#noteoff").css({"border-color":"#888888"});
+   		$("#noteoff").text("NOTE ON");
+
+		tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+
+	},
+
+	
+
+
+
+	esaminadown:function(ev){
+		//log ("offsetX "+ev.offsetX+" offsetY "+ev.offsetY)
+	
+		tmidi.fedown=true;
+		tmidi.feinavanti=true;
+		tmidi.femove=false;
+		tmidi.edownx=ev.offsetX;
+		tmidi.eprevx=ev.offsetX;
+		tmidi.estartoffset=tmidi.eoffset;
+		tmidi.deltax=0;
+	},
+
+	esaminamove:function(ev){
+
+		tmidi.feinavanti=false;
+		if (ev.offsetX<tmidi.eprevx) tmidi.feinavanti=true;
+		tmidi.eprevx=ev.offsetX;
+		if(!tmidi.fedown) return;
+		tmidi.deltax=ev.offsetX-tmidi.edownx;
+		//log ("deltax " +tmidi.feinavanti+ " offsetx "+ev.offsetX)
+		if (!tmidi.femove){
+			if (Math.abs(tmidi.deltax)>3) tmidi.femove=true;
+		}
+		if (tmidi.femove){
+			tmidi.eoffset=tmidi.estartoffset+tmidi.deltax;
+		tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+
+		}
+	},
+
+	esaminaup:function(ev){
+		if(!tmidi.fedown) return;
+
+		tmidi.fedown=false;
+		tmidi.femove=false;
+
+	},
 
 	inizializzazioni: function(){
 		this.fsuona=false;
+		this.fnoteon=false;
 		this.fintro=false;
 		this.fcancellaintro=false;
 		this.fcancellasuona=false;
@@ -463,6 +699,19 @@ var tmidi = {
     	this.colorenotadestra=[];
     	this.colorenotasinistra=[];
 
+    	this.numerrnoted=0;
+    	this.errnoted=0;
+    	this.errad=0;
+    	this.errdd=0;
+    	this.errpd=0;
+    	this.gfd=0;
+    	this.numerrnotes=0;
+    	this.errnotes=0;
+    	this.erras=0;
+    	this.errds=0;
+    	this.errps=0;
+    	this.gfs=0;
+
     	
     	this.bpm=80;
     	this.aggiustatempi();
@@ -476,13 +725,74 @@ var tmidi = {
 		this.displaypunti(tmidi.bpm,"contabpm");
 		$('#contabpm').click(function (ev) {
 			tmidi.setbpmx(ev);
-			log ("offsetX "+ev.offsetX+" offsetY "+ev.offsetY)
 		});		
 
 		
 
 
     },
+
+    aggiornaerrori: function(){
+
+    	var lung,b,sdeltastart,sdeltastop,notebuone;
+
+    	//destra
+    	
+    	b=tmidi.barradestra;
+    	lung=b.length;
+    	if (lung<10) return tmidi.azzeraerrori();
+    	tmidi.numerrnoted=0;sdeltastart=0;sdeltastop=0;
+    	for (var i=0;i<lung;i++) {
+			if (b[i].e) tmidi.numerrnoted++;
+			else{
+				sdeltastart+=Math.abs(tmidi.deltastartd[i]);
+				sdeltastop+=Math.abs(tmidi.deltastopd[i]);
+			}
+    	}
+		tmidi.errnoted=Math.floor(tmidi.numerrnoted/lung*100);
+		nutebuone=lung-tmidi.numerrnoted;
+		tmidi.errad=Math.floor(sdeltastart/tmidi.intervallo/lung*100);
+		tmidi.errdd=Math.floor(sdeltastop/tmidi.intervallo/lung*100);
+		tmidi.gfd=Math.floor(Math.max(100-Math.pow(tmidi.errnoted,1.6)-tmidi.errad/4-tmidi.errdd/4,0))
+    	//sinistra
+    	
+    	b=tmidi.barrasinistra;
+    	lung=b.length;
+    	tmidi.numerrnotes=0;sdeltastart=0;sdeltastop=0;
+    	for (var i=0;i<lung;i++) {
+			if (b[i].e) tmidi.numerrnotes++;
+			else{
+				sdeltastart+=Math.abs(tmidi.deltastarts[i]);
+				sdeltastop+=Math.abs(tmidi.deltastops[i]);
+			}
+
+    	}
+		tmidi.errnotes=Math.floor(tmidi.numerrnotes/lung*100)
+		nutebuone=lung-tmidi.numerrnotes;
+		tmidi.erras=Math.floor(sdeltastart/tmidi.intervallo/lung*100);
+		tmidi.errds=Math.floor(sdeltastop/tmidi.intervallo/lung*100);
+		tmidi.gfs=Math.floor(Math.max(100-Math.pow(tmidi.errnotes,1.6)-tmidi.erras/4-tmidi.errds/4,0))
+
+
+		
+		tmidi.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
+    },
+
+     azzeraerrori: function(){
+    	this.numerrnoted=0;
+    	this.errnoted=0;
+    	this.errad=0;
+    	this.errdd=0;
+    	this.errpd=0;
+    	this.gfd=0;
+    	this.numerrnotes=0;
+    	this.errnotes=0;
+    	this.erras=0;
+    	this.errds=0;
+    	this.errps=0;
+    	this.gfs=0;
+    },
+
 
 	aggiustatempi: function(){
     	this.quarto=60000/(this.bpm);
@@ -499,6 +809,7 @@ var tmidi = {
 		if (x<87){
 			//form imposta bpm
 			tmidi.aggiustatempi();
+			tmidi.aggiornaerrori();   ///7PROVVISORIO
 			return
 		}
 		
@@ -529,11 +840,21 @@ var tmidi = {
 		}
     },
 	
-    stopsuona: function(){
-    	this.fsuona=false;
-   		$("#bstart").css({"border-color":"#888888"});
-   		$("#bstart").text("START");
 
+
+    noteonoff: function(){
+    	if (tmidi.fnoteon) {
+    		tmidi.fnoteon=false;
+    		$("#noteoff").css({"border-color":"#888888"});
+    		$("#noteoff").text("NOTE ON");
+
+    	}
+    	else {
+    		tmidi.fnoteon=true;
+    		$("#noteoff").css({"border-color":"red"});
+    		$("#noteoff").text("NOTE OFF");
+
+    	}
     },
 		
     startstop: function(){
@@ -547,7 +868,7 @@ var tmidi = {
 
     	this.initnotecolori();
     	this.resetgrafici();
-
+		tmidi.aggiornaerrori();
   
     	this.inizio=performance.now()+1000;  //comincerà fra un secondo
 		this.next=this.inizio;
@@ -588,6 +909,16 @@ var tmidi = {
 		*/
     	
     },
+
+        stopsuona: function(){
+    	this.fsuona=false;
+   		$("#bstart").css({"border-color":"#888888"});
+   		$("#bstart").text("START");
+   		tmidi.aggiornaerrori();
+
+
+    },
+
 
      startnota: function(){ 
      	if (!tmidi.fsuona) return;
@@ -637,6 +968,13 @@ var tmidi = {
 
      	var nota=tmidi.cbuffer[tmidi.notacorrente];
     	//log ("OUT: 90 "+nota+" "+tmidi.velocitaout+" "+performance.now()+" "+Jazz.Time())
+		if (tmidi.notacorrente%4==0){
+			Jazz.MidiOut(0x99,75,tmidi.velocitaout);
+			setTimeout(tmidi.stopnotaintro,tmidi.next+duratanota-performance.now(),nota);  //richiede nota off
+
+		}
+
+
     	Jazz.MidiOut(0x90,nota,tmidi.velocitaout);
     	tmidi.notestart[nota]=performance.now()+tmidi.latenza;
     	tmidi.notestart[nota-12]=performance.now()+tmidi.latenza;
@@ -654,7 +992,9 @@ var tmidi = {
  			tmidi.notestart[tmidi.notacorrente]=tmidi.next;
 
     	}
+
     	setTimeout(tmidi.stopnota,tmidi.next-tmidi.intervallo+duratanota-performance.now(),nota);  //richiede nota off
+    	tmidi.aggiornaerrori();
     }, 
 
 
@@ -664,6 +1004,7 @@ var tmidi = {
      		tmidi.fsuona=false;
      		$("#bstart").css({"border-color":"#888888"});
     		$("#bstart").text("START");
+    		tmidi.aggiornaerrori();
 		}
     	//log ("OUT: 80 "+nota+" "+tmidi.velocitaout+" "+performance.now()+" "+Jazz.Time())
     	Jazz.MidiOut(0x80,nota,tmidi.velocitaout);
@@ -776,7 +1117,6 @@ var tmidi = {
 		$("#"+display+" #digit2").animate({"pippodecine":((-altezza*decine) + "px" )}, {
 			 step: function( now, fx ) {
 				$("#"+display+" #digit2").css({"background-position":("0px "+ now + "px" )});
-				log(now);
 			}
 		});
 
