@@ -45,7 +45,7 @@ body{
 	position:absolute;
 	top:0px;
 	left:0px;
-	width:1500px;
+	width:1000px;
 	height:750px;
 	background-image:url(images/wood2.png);
 	margin:0px  auto 0px;
@@ -311,6 +311,24 @@ h1,h2,h3,h4,h5,h6{
 	//background-color:green;
 }
 
+#metronomo{
+	font-size:15px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:white;
+	border-style:solid;
+	border-radius:9px;
+	border-color:#888888;
+
+	//z-index:40000;
+	position:absolute;
+	width:240px;
+	height:600px;
+	left:1020px;
+	top:0px;
+	//background-color:green;
+}
+
+
 #dati{
 	font-size:15px;
 	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
@@ -338,7 +356,15 @@ h1,h2,h3,h4,h5,h6{
 	//background-color:green;
 }
 
+#canvasmetronomo{
 
+
+	//z-index:40000;
+	position:absolute;
+	left:0px;
+	top:50px;
+	//background-color:green;
+}
 .form {
 	
 	//z-index:40000;

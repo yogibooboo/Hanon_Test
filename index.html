@@ -19,7 +19,6 @@
 
 
    <div id="campogioco">
-
 		<object id="Jazz1" classid="CLSID:1ACE1618-1C7D-4561-AEE1-34842AA85E90" class="hidden">
 			<object id="Jazz2" type="audio/x-jazz" class="hidden">
 				<p style="visibility:visible;">This page requires <a href=http://jazz-soft.net>Jazz-Plugin</a> ...</p>
@@ -43,7 +42,6 @@
 
 
 
-		<div id="bstart" class="pulsante2" style="top: 200px; left: 320px;">START</div> 
 
 
 		<div id="barrav1"  class="barretta" style="top: 600px; left: 200px; width:100px; height:100px;  background-color:#A0522D"></div> 
@@ -72,24 +70,35 @@
 
 				<div id=msg></div>
 			</p>
-			<div id="esamina" class="pulsante2" style="top: 140px; left: 10px; ">ESAMINA</div>
-		
+			<input type="file" id="myFile">
+	
 		</div>   <!--opzioni--> 
+
+		<div id="metronomo" >
+		<h1>METRONOMO</h1>
+		<div id="bstart" class="pulsante2" style="top: 530px; left: 50px;">START</div>
+		<canvas id="canvasmetronomo"  width="240" height="500">
+		<\canvas> 
+		 
+
+		</div>   <!--metronomo--> 
+
 
 
 	</div>  <!-- campogioco--> 
+		<div id="esamina" class="pulsante2" style="top: 690px; left: 1380px;  ">DETTAGLIO</div>
 
 	
 	<div id="campoesamina">
 	
-		<canvas id="egrafd" class="barretta" width="1300" height="200" style="left:0px;top:000px"></canvas>
-		<canvas id="egrafs" class="barretta" width="1300" height="200" style="left:0px;top:530px"></canvas>
-		<canvas id="egrafvd" class="barretta" width="1300" height="100" style="left:0px;top:200px"></canvas>
-		<canvas id="egrafvs" class="barretta" width="1300" height="100" style="left:0px;top:430px"></canvas>
-		<canvas id="espartito" class="spartito"   width="1300" height="130" style="left:0px;top:300px;"></canvas>
+		<canvas id="egrafd" class="barretta" width="1270" height="200" style="left:0px;top:000px"></canvas>
+		<canvas id="egrafs" class="barretta" width="1270" height="200" style="left:0px;top:530px"></canvas>
+		<canvas id="egrafvd" class="barretta" width="1270" height="100" style="left:0px;top:200px"></canvas>
+		<canvas id="egrafvs" class="barretta" width="1270" height="100" style="left:0px;top:430px"></canvas>
+		<canvas id="espartito" class="spartito"   width="1270" height="130" style="left:0px;top:300px;"></canvas>
 
-	<div id="esaminao" class="pulsante2" style="top: 690px; left: 1350px; ">ESCI</div>
-	<div id="noteoff" class="pulsante2" style="top: 640px; left: 1350px; ">NOTE ON</div>
+	<div id="esaminao" class="pulsante2" style="top: 690px; left: 1380px; ">ESCI</div>
+	<div id="noteoff" class="pulsante2" style="top: 640px; left: 1380px; ">NOTE ON</div>
 	
 	</div>  <!-- campoesamina---> 
 

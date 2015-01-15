@@ -6,55 +6,13 @@ function log(msg) {
 log.enabled = true;
 
   // recupera l'elemento canvas
-  canvass = document.getElementById("grafs");
-  // richiede al canvas il contesto 2D
-  ctxs = canvass.getContext('2d');
-  
-  canvasd = document.getElementById("grafd");
-  ctxd = canvasd.getContext('2d');
-
-  canvasvs = document.getElementById("grafvs");
-  ctxvs = canvasvs.getContext('2d');
-
-
-  canvasvd = document.getElementById("grafvd");
-  ctxvd = canvasvd.getContext('2d');
-
-  canvassp = document.getElementById("spartito");
-  ctxsp = canvassp.getContext('2d');
-
-
-
-
-  ecanvass = document.getElementById("egrafs");
-  ectxs = ecanvass.getContext('2d');
-  
-  ecanvasd = document.getElementById("egrafd");
-  ectxd = ecanvasd.getContext('2d');
-
-  ecanvasvs = document.getElementById("egrafvs");
-  ectxvs = ecanvasvs.getContext('2d');
-
-
-  ecanvasvd = document.getElementById("egrafvd");
-  ectxvd = ecanvasvd.getContext('2d');
-
-
-  ecanvassp = document.getElementById("espartito");
-  ectxsp = ecanvassp.getContext('2d');
-
-  canvasdati = document.getElementById("canvasdati");
-  ctxdati = canvasdati.getContext('2d');
-
 
 $(window).resize(function () {
 	tmidi.offsetxx=$("#campogioco").offset().left;
 	tmidi.offsetyy=$("#campogioco").offset().top;
 });
 
-var immagine = new Image();
 
-immagine.src = "images/clefs.png";
 
 
 
@@ -70,6 +28,7 @@ $('#esamina').click(function () {
 
 $('#esaminao').click(function () {
 	$("#campoesamina").hide();
+	tmidi.fesamina=false;
 });
 
 
@@ -85,30 +44,23 @@ $('#campoesamina').mousemove(function (ev) {
 	tmidi.esaminamove(ev);
 });  
 
-/* $(document).mousemove(function(ev) {
-	tmidi.esaminamove(ev);
-
-});*/
 
 $('#campoesamina').mouseup(function (ev) {
 	tmidi.esaminaup(ev);
 });
 
-/*
-var scarta=document.getElementById("scarta");
-var scartatris=document.getElementById("scartatris");
-var ordina=document.getElementById("ordina");
-var pesca=document.getElementById("pesca");
-var perjolly=document.getElementById("perjolly");
-var tada=document.getElementById("tada");
-var haiperso=document.getElementById("perso");
-var dascarti=document.getElementById("dascarti");
-var slitta=document.getElementById("slitta");
-var ding=document.getElementById("ding");
-var thunder=document.getElementById("thunder");
-var applause=document.getElementById("applause");
-var distribuisci=document.getElementById("distribuisci");
-*/
+$('#canvasmetronomo').mousedown(function (ev) {
+	tmidi.metronomodown(ev);
+});
+
+$('#canvasmetronomo').mousemove(function (ev) {
+	tmidi.metronomomove(ev);
+});  
+
+
+$('#canvasmetronomo').mouseup(function (ev) {
+	tmidi.metronomoup(ev);
+});
 
 var Jazz = document.getElementById("Jazz1"); if(!Jazz || !Jazz.isJazz) Jazz = document.getElementById("Jazz2");
 
@@ -189,8 +141,8 @@ function midiProc(t,a,b,c){
 	//Jazz.MidiOut(a+9,b,120);
 	
    	if ((a==0x90)&&(b==21)) return tmidi.startstop()     //primo tasto
-	if ((a==0x90)&&(b==23)) return (tmidi.setbpm(-5))	 //secondo tasto bianco
-	if ((a==0x90)&&(b==24)) return (tmidi.setbpm(5))	 //terzo tasto bianco	
+	if ((a==0x90)&&(b==23)) return (tmidi.setbpm(tmidi.bpm-5))	 //secondo tasto bianco
+	if ((a==0x90)&&(b==24)) return (tmidi.setbpm(tmidi.bpm+5))	 //terzo tasto bianco	
    	
 
    
@@ -329,10 +281,69 @@ function midiProc(t,a,b,c){
 
 
 
+  canvass = document.getElementById("grafs");
+  // richiede al canvas il contesto 2D
+  ctxs = canvass.getContext('2d');
+  
+  canvasd = document.getElementById("grafd");
+  ctxd = canvasd.getContext('2d');
+
+  canvasvs = document.getElementById("grafvs");
+  ctxvs = canvasvs.getContext('2d');
+
+
+  canvasvd = document.getElementById("grafvd");
+  ctxvd = canvasvd.getContext('2d');
+
+  canvassp = document.getElementById("spartito");
+  ctxsp = canvassp.getContext('2d');
+
+
+
+
+  ecanvass = document.getElementById("egrafs");
+  ectxs = ecanvass.getContext('2d');
+  
+  ecanvasd = document.getElementById("egrafd");
+  ectxd = ecanvasd.getContext('2d');
+
+  ecanvasvs = document.getElementById("egrafvs");
+  ectxvs = ecanvasvs.getContext('2d');
+
+
+  ecanvasvd = document.getElementById("egrafvd");
+  ectxvd = ecanvasvd.getContext('2d');
+
+
+  ecanvassp = document.getElementById("espartito");
+  ectxsp = ecanvassp.getContext('2d');
+
+  canvasdati = document.getElementById("canvasdati");
+  ctxdati = canvasdati.getContext('2d');
+
+  canvasmetronomo = document.getElementById("canvasmetronomo");
+  ctxmt = canvasmetronomo.getContext('2d');
+
+
+
+tmchiavi=new Image();
+tmchiavi.src="images/clefs.png";
+tmmetronomo=new Image();
+tmmetronomo.src="images/metronome.png";
+tmmetroasta=new Image();
+tmmetroasta.src="images/metroasta.png";
+tmmetroindex=new Image();
+tmmetroindex.src="images/metroindex.png";
+tmmetrosotto=new Image();
+tmmetrosotto.src="images/metrosotto.png";
 var tmidi = {
     
+
     
+
+
     start:function(){
+    	
     	this.inizializzazioni();
     	this.initbuffernote();
     	this.initnotecolori();
@@ -348,6 +359,7 @@ var tmidi = {
     	this.initgraficov(ctxvd,canvasvd.width,canvasvd.height);
     	this.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
 		setTimeout(this.initgraficosp,100,ctxsp,canvassp.width,canvassp.height);
+		setTimeout(this.initmetronomo,100,ctxmt,canvasmetronomo.width,canvasmetronomo.height);
 
     },
 
@@ -420,6 +432,37 @@ var tmidi = {
 
     },
 
+
+	initmetronomo:function(b,w,h) {
+
+		
+
+		var angolo=0;
+		var cursore=-40-200*((120-tmidi.bpm)/80);
+		//log ("cursore= "+cursore)
+		var tempo=performance.now()-tmidi.latenza;
+
+		b.setTransform(1, 0, 0, 1, 0, 0);		
+		b.clearRect(0, 0, w,h);
+
+		if (tmidi.fsuona&&(tempo>tmidi.inizio)){
+			var periodi=((tempo-tmidi.inizio)/(8*tmidi.intervallo))
+			periodi-=Math.floor(periodi);
+			angolo=20*(2-tmidi.bpm/80)*Math.PI/180*Math.sin(periodi*Math.PI*2);
+		}
+		
+		b.drawImage(tmmetronomo, 0, 0,250,500);
+		//b.drawImage(tmmetroasta, 220, 500,10,300);
+		b.translate(125,380);
+		b.rotate(angolo);
+		b.fillRect(0,0,1,-330)
+		b.drawImage(tmmetroasta, -5,0,10,-330);
+		b.drawImage(tmmetroindex, -24,cursore,50,-40);
+
+		b.setTransform(1, 0, 0, 1, 0, 0);
+		b.drawImage(tmmetrosotto, 0, 300,250,200);
+
+	},
   
     initgraficosp:function(b,w,h){
 
@@ -466,6 +509,7 @@ var tmidi = {
     	//zdeltapixel=Math.floor((ztempo-zinizio)*15/tmidi.intervallo)-znotacorrente*15;
     	zoffset=Math.floor((ztempo-zinizio)*16/tmidi.intervallo);
     	if (esamina) zoffset=-tmidi.eoffset;
+ 
     	
 		var d=500,posy,posx=0,nota,oldnota,oldposx,oldposy;
 		var cols,cold;
@@ -524,7 +568,6 @@ var tmidi = {
 					if ((trovanota)&&(posx>499)&&(i>0)&&(tmidi.feinavanti)){
 						trovanota=false;
 						if (!(tmidi.notainesame==i-1)){
-							//log ("inesame= "+tmidi.notainesame+" diventa= "+(i-1)+" posx "+posx+" deltax "+tmidi.feinavanti)
 							tmidi.notainesame=i-1;
 
 							if (tmidi.fnoteon) {
@@ -584,7 +627,7 @@ var tmidi = {
 		b.fillRect(50,16,1,80);
 
 		
- 	    b.drawImage(immagine, 0, 0);
+ 	    b.drawImage(tmchiavi, 0, 0);
 
  	    b.fillText("Hanon 1, bpm:"+tmidi.bpm,50,120);
 
@@ -594,7 +637,17 @@ var tmidi = {
   
     refresh: function() {
     	
-    	if ((tmidi.fsuona)&&!(tmidi.fintro)) tmidi.initgraficosp(ctxsp,canvassp.width,canvassp.height);
+    	
+		if (tmidi.fesamina){
+			if (tmidi.fsuona) tmidi.eoffset=-(performance.now()-tmidi.inizio)/tmidi.intervallo*16+tmidi.Bintro.length*64;
+			tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+		}
+		else {
+			if ((tmidi.fsuona)&&!(tmidi.fintro)) tmidi.initgraficosp(ctxsp,canvassp.width,canvassp.height);
+		}
+		tmidi.initmetronomo(ctxmt,canvasmetronomo.width,canvasmetronomo.height);
+
+
     	window.requestAnimationFrame(tmidi.refresh);	
     },
 
@@ -614,7 +667,7 @@ var tmidi = {
 	fedown:false,
 	femove:false,
 	feinavanti:true,
-	edownx:0, eprevx:0,
+	edownx:0, eprevx:0,edeltax:0,
 	edowny:0, eprevy:0,
 	eoffset:0,estartoffset:0,
 	notainesame:0,
@@ -624,6 +677,7 @@ var tmidi = {
 		tmidi.eoffset=0;
 		tmidi.notainesame=1000;
 		tmidi.fnoteon=false;
+		tmidi.fesamina=true;
    		$("#noteoff").css({"border-color":"#888888"});
    		$("#noteoff").text("NOTE ON");
 
@@ -644,7 +698,7 @@ var tmidi = {
 		tmidi.edownx=ev.offsetX;
 		tmidi.eprevx=ev.offsetX;
 		tmidi.estartoffset=tmidi.eoffset;
-		tmidi.deltax=0;
+		tmidi.edeltax=0;
 	},
 
 	esaminamove:function(ev){
@@ -653,13 +707,12 @@ var tmidi = {
 		if (ev.offsetX<tmidi.eprevx) tmidi.feinavanti=true;
 		tmidi.eprevx=ev.offsetX;
 		if(!tmidi.fedown) return;
-		tmidi.deltax=ev.offsetX-tmidi.edownx;
-		//log ("deltax " +tmidi.feinavanti+ " offsetx "+ev.offsetX)
+		tmidi.edeltax=ev.offsetX-tmidi.edownx;
 		if (!tmidi.femove){
-			if (Math.abs(tmidi.deltax)>3) tmidi.femove=true;
+			if (Math.abs(tmidi.edeltax)>3) tmidi.femove=true;
 		}
 		if (tmidi.femove){
-			tmidi.eoffset=tmidi.estartoffset+tmidi.deltax;
+			tmidi.eoffset=tmidi.estartoffset+tmidi.edeltax;
 		tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
 
 		}
@@ -673,7 +726,66 @@ var tmidi = {
 
 	},
 
+
+	fmdown:false,
+	fmmove:false,
+	mdownx:0, mprevx:0,
+	mdowny:0, mprevy:0,mdeltay:0,
+	mbpm:0,mdeltabpm:8,
+	moffset:0,mstartoffset:0,
+
+
+
+	metronomodown:function(ev){
+
+		if((tmidi.fsuona)||(ev.offsetX<100)||(ev.offsetX>150)) return;
+
+		mbpm=Math.floor(40+(ev.offsetY-100)*80/200);
+
+		mdeltabpm=mbpm-tmidi.bpm;
+		if((mdeltabpm<0)||(mdeltabpm>15)) return;
+	
+		tmidi.fmdown=true;
+		tmidi.fmmove=false;
+		tmidi.mdowny=ev.offsetY;
+		tmidi.mprevy=ev.offsetY;
+		tmidi.mstartoffset=tmidi.moffset;
+		tmidi.mdeltay=0;
+	
+	},
+
+	metronomomove:function(ev){
+
+
+		tmidi.mprevy=ev.offsetY;
+		if(!tmidi.fmdown) return;
+		tmidi.mdeltay=ev.offsetY-tmidi.mdowny;
+		if (!tmidi.fmmove){
+			if (Math.abs(tmidi.mdeltay)>3) tmidi.fmmove=true;
+		}
+		if (tmidi.fmmove){
+			tmidi.moffset=tmidi.mstartoffset+tmidi.mdeltay;
+		mbpm=Math.floor(40+(ev.offsetY-100)*80/200)-mdeltabpm;
+
+		tmidi.setbpm(mbpm);
+
+
+		//tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+
+		}
+	},
+
+	metronomoup:function(ev){
+		if(!tmidi.fmdown) return;
+
+		tmidi.fmdown=false;
+		tmidi.fmmove=false;
+
+	},
+
+
 	inizializzazioni: function(){
+
 		this.fsuona=false;
 		this.fnoteon=false;
 		this.fintro=false;
@@ -721,8 +833,8 @@ var tmidi = {
 		this.notestart=[];
 		this.latenza=100;
 		this.BufferNote=[];   //note con 0 a partire da do sotto due ottave
-		tmidi.creacontatore("contabpm",90,40,"dati",70,10,"4pulsanti");
-		this.displaypunti(tmidi.bpm,"contabpm");
+		tmidi.creacontatore("contabpm",90,40,"metronomo",62,450,"4pulsanti");
+		this.displaypuntifast(tmidi.bpm,"contabpm");
 		$('#contabpm').click(function (ev) {
 			tmidi.setbpmx(ev);
 		});		
@@ -813,18 +925,19 @@ var tmidi = {
 			return
 		}
 		
-		if ((x<108)&&(y<20)) return tmidi.setbpm(1);
-		if ((x<108)) return tmidi.setbpm(-1);
-		if ((x>108)&&(y<20)) return tmidi.setbpm(5);
-		return tmidi.setbpm(-5);
+		if ((x<108)&&(y<20)) return tmidi.setbpm(tmidi.bpm+1);
+		if ((x<108)) return tmidi.setbpm(tmidi.bpm-1);
+		if ((x>108)&&(y<20)) return tmidi.setbpm(tmidi.bpm+5);
+		return tmidi.setbpm(tmidi.bpm-5);
 	},
 
-	setbpm: function(delta){
-		tmidi.bpm+=delta;
+	setbpm: function(newbpm){
+		tmidi.bpm=newbpm;
 		if (tmidi.bpm>120) tmidi.bpm=120;
 		if (tmidi.bpm<40) tmidi.bpm=40;
 		tmidi.aggiustatempi();
-		this.displaypunti(tmidi.bpm,"contabpm");
+		this.displaypuntifast(tmidi.bpm,"contabpm");
+
 	},
 
 
@@ -1048,7 +1161,7 @@ var tmidi = {
 
 
 	
-    creacontatore:function (nome,larghezza,altezza,contenitore,posx,posy) {
+   /* creacontatore:function (nome,larghezza,altezza,contenitore,posx,posy) {
 
 		var wdigit=Math.floor(larghezza*0.9/3),hdigit=Math.floor(altezza*9/10);
 		var offsetx=Math.round(1+larghezza/50);
@@ -1066,7 +1179,7 @@ var tmidi = {
 
 		)
 
-    },
+    }, */
 
     creacontatore:function (nome,larghezza,altezza,contenitore,posx,posy,opzione) {
 
@@ -1127,6 +1240,22 @@ var tmidi = {
 				$("#"+display+" #digit1").css({"background-position":("0px "+ now + "px" )});
 			}
 		});
+	},
+
+
+
+	displaypuntifast: function(punti,display) {
+		var centinaia,decine,unita,altezza;
+		if (punti>999) punti=999;
+		centinaia=Math.floor(punti/100); punti-=(centinaia*100);
+		decine=Math.floor(punti/10); punti-=(decine*10);
+		unita=punti;
+		altezza=(parseInt(document.querySelector("#"+display+" #digit3").style.height));
+		//altezza=$("#"+display+" #digit3").height();
+
+		$("#"+display+" #digit3").css({"background-position":("0px "+ (-altezza*centinaia) + "px" )});
+		$("#"+display+" #digit2").css({"background-position":("0px "+ (-altezza*decine) + "px" )});
+		$("#"+display+" #digit1").css({"background-position":("0px "+(-altezza*unita) + "px" )});
 	},
 
 /*    MidiO: function(a,b,c){ 
