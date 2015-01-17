@@ -13,7 +13,13 @@ $(window).resize(function () {
 });
 
 
+var reader = new FileReader();
 
+reader.onload = function(e) {
+  var rawData = reader.result;
+}
+
+//reader.readAsBinaryString(file);
 
 
 
@@ -62,6 +68,21 @@ $('#canvasmetronomo').mouseup(function (ev) {
 	tmidi.metronomoup(ev);
 });
 
+
+$('#barrad').click(function (ev) {
+	tmidi.suonamidi();
+});
+
+$('#barras').click(function (ev) {
+	tmidi.fromFile();
+});
+
+
+
+
+
+
+
 var Jazz = document.getElementById("Jazz1"); if(!Jazz || !Jazz.isJazz) Jazz = document.getElementById("Jazz2");
 
 
@@ -70,6 +91,7 @@ var active_element;
 var current_in;
 var msg;
 var sel;
+
 
 
 
@@ -336,9 +358,11 @@ tmmetroindex=new Image();
 tmmetroindex.src="images/metroindex.png";
 tmmetrosotto=new Image();
 tmmetrosotto.src="images/metrosotto.png";
+
+
 var tmidi = {
     
-
+	mf:[],
     
 
 
@@ -348,9 +372,87 @@ var tmidi = {
     	this.initbuffernote();
     	this.initnotecolori();
     	this.resetgrafici();
+    	this.readFile("luciano3.mid");
     	window.requestAnimationFrame(tmidi.refresh);
         return;
     },
+
+   
+	filemidi:[],
+	
+
+
+	fromFile:function (){
+
+ 
+  		var reader=new FileReader();
+  		var f=document.getElementById('myFile').files[0];
+  		reader.onload=function(e){ readMidiFile(e.target.result);};
+  		reader.readAsBinaryString(f);
+
+  		function readMidiFile(s){
+ 			
+ 			ms=s;
+  			mf=new JZZ.MidiFile(s);
+   			pl=mf.player();
+   			pl.onEvent=tmidi.onPlayer;
+			pl.play();
+  		}
+
+
+ 	},
+
+
+
+
+	readFile:function (file) {
+
+		 var rawFile = new XMLHttpRequest();
+		rawFile.open("GET", file, true);
+		rawFile.responseType = "arraybuffer";
+
+		rawFile.onload = function (oEvent) {
+			if(rawFile.readyState === 4)
+			{
+				 var tmp= (rawFile.response);
+				 
+				 tmidi.filemidi="";
+				dW = new DataView(tmp)
+				 for (var i=0;i<tmp.byteLength;i++){
+					tmidi.filemidi+=String.fromCharCode(dW.getUint8(i))
+				 }
+				//document.getElementById("textSection").innerHTML = allText;
+			}
+		}
+
+		rawFile.send(); 
+	},
+
+	 
+    suonamidi :function(){
+    	
+		tmidi.mf=new JZZ.MidiFile(tmidi.filemidi);
+		tmidi.pl=tmidi.mf.player();
+		tmidi.pl.onEvent=tmidi.onPlayer;
+		tmidi.pl.play();
+		return;
+	},
+
+
+	onPlayer: function(e){
+ 		if(e.midi instanceof JZZ.Midi){
+  			Jazz.MidiOutRaw(e.midi.array());
+ 		}
+ 		if(e.control=='play'){
+  			//btn.innerHTML='stop';
+ 		}
+ 		else if(e.control=='stop'){
+  			for(var i=0;i<16;i++) Jazz.MidiOut(0xb0+i,123,0);
+  			//btn.innerHTML='play';
+ 		}
+	},	
+
+   
 
     resetgrafici:function(){
     	this.initgrafico(ctxs,canvass.width,canvass.height);

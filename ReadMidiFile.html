@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html>
+<head>
+<title>Read MIDI File</title>
+<script src="JZZ.Midi.js"></script>
+<script src="JZZ.MidiFile.js"></script>
+<!--
+<!STYLE_CSS><link rel="stylesheet" type="text/css" href="../style.css" />
+-->
+
+
+<style type="text/css">
+button {
+ width:6em;
+}
+#midi {
+ font-family:Courier New, monospace;
+ background-color:#eef;
+ border:none;
+ padding:0.2em;
+}
+#midi div {
+ border:double;
+ margin:0.2em;
+}
+#midi div div {
+ border:none;
+}
+#midi div div.hdr {
+ font-weight:bold;
+ border:none;
+}
+#midi span.clk {
+ width:6em;
+ padding:0 0.5em;
+ text-align:right;
+ display:inline-block;
+ background-color:#ddd;
+}
+#midi .wait {
+ padding:.2em;
+ font-size:1.5em;
+ font-weight:bold;
+ color:#888;
+}
+#midi .err {
+ padding:.5em;
+ font-size:1.2em;
+ font-weight:bold;
+ color:#d00;
+}
+</style>
+</head>
+
+<body>
+
+
+<div class=path>
+
+Read MIDI File
+
+</div>
+
+<h1>Read MIDI File</h1>
+
+<object id="Jazz1" classid="CLSID:1ACE1618-1C7D-4561-AEE1-34842AA85E90" class="hidden">
+  <object id="Jazz2" type="audio/x-jazz" class="hidden">
+<p style="visibility:visible;">This page requires <a href=http://jazz-soft.net>Jazz-Plugin</a> ...</p>
+  </object>
+</object>
+
+<p><em>NOTE:</em> another <a href=PlayMidiFile.html>example</a> explains how to <span id=play>play</span> it.</p>
+
+<h2>from file:</h2>
+<p><input type=file id=file size=80 onchange='fromFile();'></p>
+
+<h2>from URL:</h2>
+<form onsubmit='fromUrl(); return false;'>
+<p><input type=text id=url value='http://jazz-soft.net/demo/midi/furelise.mid' size=80><input type=submit value=Submit...></p>
+</form>
+
+<h2>from string: <button onclick='fromString();'>Read...</button></h2>
+
+<p>
+<div id=fname>&nbsp;</div>
+</p><p>
+<div id=midi>Files accepted: SMF (*.mid, *.kar), RMID (*.rmi)</div>
+</p>
+
+<h2>How it works</h2>
+<p>
+In this example, we are reading binary string from file, URL or base64-encoded string, and passing it to <tt>JZZ.MidiFile</tt> constructor.
+</p><p>
+Some older/freakier browsers may not support HTML5 File API required to open local files.
+</p><p>
+Due to the "same origin" security restriction, you must use URLs from your own domain, or write a <a href=#proxy>proxy</a>.
+</p>
+
+<script><!--
+var Jazz = document.getElementById("Jazz1"); if(!Jazz || !Jazz.isJazz) Jazz = document.getElementById("Jazz2");
+var pl;
+var btn;
+function fromFile(){
+ plzWait(); fName(document.getElementById('file').value);
+ if(window.FileReader){
+  var reader=new FileReader();
+  var f=document.getElementById('file').files[0];
+  reader.onload=function(e){ readMidiFile(e.target.result);};
+  reader.readAsBinaryString(f);
+ }
+ else err('File API is not supported in this browser!');
+}
+function fromUrl(){
+ var url=document.getElementById('url').value;
+ plzWait(); fName(url);
+ try{
+  var req=new XMLHttpRequest();
+  req.open("GET",'proxy.php?url='+url,true);
+  if(req.overrideMimeType){
+   req.overrideMimeType("text/plain; charset=x-user-defined");
+  }
+  req.onreadystatechange=function(ev){
+   if(req.readyState===4){
+    if(req.status===200){
+     var s='';
+     if(typeof req.responseBody=='unknown'){ // MSIE
+      var a=new VBArray(req.responseBody).toArray();
+      for(var i=0;i<a.length;i++) s+=String.fromCharCode(a[i]);
+     }
+     else {
+      var r=req.responseText;
+      for(var i=0;i<r.length;i++) s+=String.fromCharCode(r.charCodeAt(i)&0xff);
+     }
+     readMidiFile(s);
+    }
+    else err(req.status+": "+req.statusText);
+   }
+  };
+  req.send(null);
+ }
+ catch(e){ err(e);}
+}
+function fromString(){
+ plzWait(); fName('Base64 string');
+ readMidiFile(JZZ.MidiFile.fromBase64(b64));
+}
+function readMidiFile(s){
+ try{
+  var mf=new JZZ.MidiFile(s);
+  displayMidiFile(mf);
+  if(btn){
+   pl=mf.player();
+   pl.onEvent=onPlayer;
+   btn.disabled=false;
+  }
+ }
+ catch(e){ err(e);}
+}
+function displayMidiFile(mf){
+ document.getElementById('midi').innerHTML='';
+ var chunk;
+ var div;
+ chunk=document.createElement('div');
+ chunk.innerHTML='<div class=hdr>MThd</div>';
+ div=document.createElement('div');
+ div.innerHTML='type: '+mf.type+(mf.ppqn?(', ppqn: '+mf.ppqn):(' smpte: '+mf.fps+'x'+mf.ppf));
+ chunk.appendChild(div);
+ document.getElementById('midi').appendChild(chunk);
+ for(var i=0;i<mf.length;i++){
+  chunk=document.createElement('div');
+  chunk.innerHTML='<div class=hdr>'+mf[i].type+'</div>';
+  if(mf[i].data){
+   div=document.createElement('div');
+   arr=[]; s=mf[i].data;
+   for(var j=0;j<s.length;j++){
+    var c=s.charCodeAt(j)<32?'-':s.charAt(j);
+    if(c=='&') c='&amp;'; if(c=='<') c='&lt;'; if(c=='>') c='&gt;';
+    var n=(s.charCodeAt(j)<16?'0':'')+s.charCodeAt(j).toString(16);
+    if(j && !(j%32)) arr.push('<br>'); else if(j && !(j%8)) arr.push('&nbsp;');
+    arr.push('<span title="'+c+'">'+n+'</span>');
+   }
+   div.innerHTML=arr.join(' ');
+   chunk.appendChild(div);
+  }
+  if(mf[i] instanceof JZZ.MidiFile.MTrk){
+   for(var j=0;j<mf[i].length;j++){
+    var evt=mf[i][j];
+    var s=evt.toString().replace(/&/g,'&amp;').replace(/>/g,'&gt;').replace(/</g,'&lt;');
+    div=document.createElement('div');
+    div.innerHTML="<span class=clk>"+evt.time+"</span> <span>"+s+"</span>";
+    chunk.appendChild(div);
+   }
+  }
+  document.getElementById('midi').appendChild(chunk);
+ }
+}
+function err(e){ document.getElementById('midi').innerHTML='<span class=err>'+e+'</span>';}
+function plzWait(){
+ document.getElementById('midi').innerHTML='<span class=wait>One moment please...</span>';
+ if(pl) pl.stop();
+ if(btn){ btn.disabled=true; btn.innerHTML='play';}
+}
+function fName(s){ document.getElementById('fname').innerHTML='<tt>'+s+'</tt>';}
+
+var b64='\
+TVRoZAAAAAYAAQADAGRNVHJrAAAAGgD/AwtMaXR0bGUgTGFtYgD/UQMKLCsA/y8ATVRyawAAAPEA/wMF\
+V29yZHMA/wEYQFRNYXJ5IEhhZCBBIExpdHRsZSBMYW1iZP8BA1xNYTL/AQNyeSAy/wEEaGFkIDL/AQJh\
+IDL/AQNsaXQy/wEEdGxlIDL/AQVsYW1iLGT/AQQvTGl0Mv8BBHRsZSAy/wEFbGFtYixk/wEEL0xpdDL/\
+AQR0bGUgMv8BBWxhbWIsZP8BAy9NYTL/AQNyeSAy/wEEaGFkIDL/AQJhIDL/AQNsaXQy/wEEdGxlIDL/\
+AQVsYW1iLGT/AQYvQmxhaC0y/wEFYmxhaC0y/wEFYmxhaC0y/wEFYmxhaC0y/wEFYmxhaCEA/y8ATVRy\
+awAAALkA/wMFTXVzaWMAwAtkkEB/MkAAAD5/Mj4AADx/MjwAAD5/Mj4AAEB/MkAAAEB/MkAAAEB/WkAA\
+Cj5/Mj4AAD5/Mj4AAD5/Wj4ACkB/MkAAAEN/MkMAAEN/WkMACkB/MkAAAD5/Mj4AADx/MjwAAD5/Mj4A\
+AEB/MkAAAEB/MkAAAEB/WkAACj5/Mj4AAD5/Mj4AAEB/MkAAAD5/Mj4AADx/ZEBkAENkAEh/WjwAAEAA\
+AEMAAEgACv8vAA==';
+
+function onPlayer(e){
+ if(e.midi instanceof JZZ.Midi){
+  Jazz.MidiOutRaw(e.midi.array());
+ }
+ if(e.control=='play'){
+  btn.innerHTML='stop';
+ }
+ else if(e.control=='stop'){
+  for(var i=0;i<16;i++) Jazz.MidiOut(0xb0+i,123,0);
+  btn.innerHTML='play';
+ }
+}
+function onButton(){
+ if(!pl) return;
+ if(pl.playing) pl.stop();
+ else pl.play();
+}
+try{
+ Jazz.MidiOutOpen(0);
+ var ver=Jazz.version.split('.');
+ if((ver[0]>1 || (ver[0]==1 && ver[1]>=2)) && Jazz.Support('MidiOutRaw')){
+  document.getElementById('play').innerHTML='<button id=playbtn onclick="onButton();" disabled>play</button>';
+  btn=document.getElementById('playbtn');
+ }
+}
+catch(e){alert(e+":)))");}
+--></script>
+
+
+
+
+</body>
+</html>
