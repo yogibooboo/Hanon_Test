@@ -1,3 +1,13 @@
+#myFile {
+	display:none;
+
+}
+
+#midiIn {
+	//background-image:url(images/wood2.png);
+	background:#A0522D
+
+}
 .hidden {
  visibility: hidden;
  width: 0px;
@@ -340,9 +350,9 @@ h1,h2,h3,h4,h5,h6{
 	//z-index:40000;
 	position:absolute;
 	width:396px;
-	height:350px;
+	height:400px;
 	left:304px;
-	top:250px;
+	top:200px;
 	//background-color:green;
 }
 
@@ -355,6 +365,18 @@ h1,h2,h3,h4,h5,h6{
 	top:0px;
 	//background-color:green;
 }
+
+#canvasoptions{
+
+
+	//z-index:40000;
+	position:absolute;
+	left:0px;
+	top:150px;
+	//background-color:green;
+	
+}
+
 
 #canvasmetronomo{
 

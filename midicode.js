@@ -68,16 +68,18 @@ $('#canvasmetronomo').mouseup(function (ev) {
 	tmidi.metronomoup(ev);
 });
 
-
+/*
 $('#barrad').click(function (ev) {
 	tmidi.suonamidi();
 });
 
 $('#barras').click(function (ev) {
 	tmidi.fromFile();
+});  */
+
+$('#canvasoptions').click(function (ev) {
+	tmidi.optionsclick(ev);
 });
-
-
 
 
 
@@ -257,7 +259,7 @@ function midiProc(t,a,b,c){
 				var bstart=300+(tmidi.deltastartd[pos]/tmidi.intervallo)*400;
 				var bwidth=Math.min(400+ritardo/tmidi.intervallo*400,1000-bstart)
 				$("#barrad").css({left:bstart,width:bwidth, "background-color":colore});
-				$("#barrad").text("DESTRA "+ (pos))
+				$("#barrad").text("RIGHT "+ (pos))
 
 				tmidi.colorenotadestra[pos]=colore  //blue
 				return
@@ -283,7 +285,7 @@ function midiProc(t,a,b,c){
 				var bstart=300+(tmidi.deltastarts[pos]/tmidi.intervallo)*400;
 				var bwidth=Math.min(400+ritardo/tmidi.intervallo*400,1000-bstart)
 				$("#barras").css({left:bstart,width:bwidth, "background-color":"green"});
-				$("#barras").text("SINISTRA "+ (pos))
+				$("#barras").text("LEFT "+ (pos))
 
 				tmidi.colorenotasinistra[pos]=colore;
 				return
@@ -346,6 +348,10 @@ function midiProc(t,a,b,c){
   canvasmetronomo = document.getElementById("canvasmetronomo");
   ctxmt = canvasmetronomo.getContext('2d');
 
+  canvasoptions = document.getElementById("canvasoptions");
+  ctxop = canvasoptions.getContext('2d');
+  
+
 
 
 tmchiavi=new Image();
@@ -372,7 +378,7 @@ var tmidi = {
     	this.initbuffernote();
     	this.initnotecolori();
     	this.resetgrafici();
-    	this.readFile("luciano3.mid");
+    	this.readFile("luciano6.mid");
     	window.requestAnimationFrame(tmidi.refresh);
         return;
     },
@@ -382,7 +388,7 @@ var tmidi = {
 	
 
 
-	fromFile:function (){
+/*	fromFile:function (){
 
  
   		var reader=new FileReader();
@@ -400,7 +406,7 @@ var tmidi = {
   		}
 
 
- 	},
+ 	},  */
 
 
 
@@ -423,20 +429,23 @@ var tmidi = {
 				 }
 				//document.getElementById("textSection").innerHTML = allText;
 			}
+			tmidi.mf=new JZZ.MidiFile(tmidi.filemidi);
+			tmidi.pl=tmidi.mf.player();
+			tmidi.pl.onEvent=tmidi.onPlayer;
 		}
 
 		rawFile.send(); 
 	},
 
 	 
-    suonamidi :function(){
+/*    suonamidi :function(){
     	
-		tmidi.mf=new JZZ.MidiFile(tmidi.filemidi);
-		tmidi.pl=tmidi.mf.player();
-		tmidi.pl.onEvent=tmidi.onPlayer;
-		tmidi.pl.play();
+		
+		if(!tmidi.pl) return;
+ 		if(tmidi.pl.playing) tmidi.pl.stop();
+ 		else tmidi.pl.play();
 		return;
-	},
+	},  */
 
 
 	onPlayer: function(e){
@@ -462,8 +471,44 @@ var tmidi = {
     	this.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
 		setTimeout(this.initgraficosp,100,ctxsp,canvassp.width,canvassp.height);
 		setTimeout(this.initmetronomo,100,ctxmt,canvasmetronomo.width,canvasmetronomo.height);
+		setTimeout(this.initoptions,100,ctxop,canvasoptions.width,canvasoptions.height);
 
     },
+
+
+    initoptions:function(b,w,h){
+    	b.clearRect(0, 0, w,h);
+
+   		
+    	b.font="18px Verdana";
+		var nsw=tmidi.numeroopzioni;
+
+		b.fillStyle="#A0522D";
+		for (var i=0;i<nsw;i++){
+			if (tmidi.opzioni[i]) b.fillRect(w-50,10+i*25,40,25);
+			else	b.fillRect(w-90,10+i*25,40,25);
+		}
+
+		b.fillStyle="#FFFFFF";
+
+
+		for (var i=0;i<nsw;i++){
+			b.fillRect(10,10+i*25,w-20,2);
+			b.fillText("I",w-35,30+i*25);
+			b.fillText("O",w-75,30+i*25);
+		}
+		b.fillRect(10,10+i*25,w-20,2);
+		
+		b.fillRect(w-10,10,2,25*nsw);
+		b.fillRect(w-50,10,2,25*nsw);
+		b.fillRect(w-90,10,2,25*nsw);
+		b.fillRect(10,10,2,25*nsw);
+		b.fillText("Insert Base",20,30);
+		b.fillText("Insert Melody",20,55);
+		b.fillText("Repeat",20,80);
+		b.fillText("Auto bpm +5",20,105);
+    },
+
 
     initgrafico:function(b,w,h){
     	b.clearRect(0, 0, w,h);
@@ -517,20 +562,46 @@ var tmidi = {
     	b.fillStyle="#000000";
    		b.fillStyle="#FFFFFF";
     	b.font="18px Verdana";
-		b.fillText("bpm",18,36);
-		b.fillRect(0,50,w,1);
-		b.fillText("Note errate destra: "+tmidi.numerrnoted+ " ("+tmidi.errnoted+ " %)",18,70);
-		b.fillText("Errore medio attacco destra: "+tmidi.errad+ " %",18,95);
-		b.fillText("Errore medio distacco destra: "+tmidi.errdd+ " %",18,120);
-		b.fillText("Stabilità pressione destra: "+tmidi.errpd+ " %",18,145);
-		b.fillText("Giudizio finale destra: "+tmidi.gfd+ " %",18,170);
-		b.fillRect(0,175,w,1);
-		b.fillText("Note errate sinistra: "+tmidi.numerrnotes+ " ("+tmidi.errnotes+ " %)",18,195);
-		b.fillText("Errore medio attacco sinistra :"+tmidi.erras+ " %",18,220);
-		b.fillText("Errore medio distacco sinistra :"+tmidi.errds+ " %",18,245);
-		b.fillText("Stabilità pressione destra: "+tmidi.errps+ " %",18,270);
-		b.fillText("Giudizio finale sinistra: "+tmidi.gfs+ " %",18,295);
-		b.fillRect(0,300,w,1);
+		b.fillRect(0,50,w,2);
+		b.fillRect(220,0,2,260);
+		b.fillRect(310,0,2,260);
+		b.fillText("LEFT",240,30);
+		b.fillText("RIGHT",325,30);
+		b.fillText("Wrong notes",18,80);
+		b.fillText(tmidi.numerrnotes+ " ("+tmidi.errnotes+ "%)",230,80);
+		b.fillText(tmidi.numerrnoted+ " ("+tmidi.errnoted+ "%)",320,80);
+		b.fillText("Note start error",18,105);
+		b.fillText(tmidi.erras+ " %",230,105);
+		b.fillText(tmidi.errad+ " %",320,105);
+		b.fillText("Note stop error",18,130);
+		b.fillText(tmidi.errds+ " %",230,130);
+		b.fillText(tmidi.errdd+ " %",320,130);
+		b.fillText("note duration error",18,155);
+		b.fillText(tmidi.errdurs+ " %",230,155);
+		b.fillText(tmidi.errdurd+ " %",320,155);
+		b.fillText("pressure stability",18,180);
+		b.fillText(tmidi.errps+ " %",230,180); 
+		b.fillText(tmidi.errpd+ " %",320,180);
+		b.fillRect(0,200,w,2);
+		b.font="24px Verdana";
+		b.fillText("overall score",18,235);
+		b.fillText(tmidi.gfs+ " %",240,235);
+		b.fillText(tmidi.gfd+ " %",320,235);
+		b.fillRect(0,260,w,1);
+				
+
+		
+		//b.fillText("Errore medio attacco destra: "+tmidi.errad,18,95);
+		//b.fillText("Errore medio distacco destra: "+tmidi.errdd+ " %",18,120);
+		//b.fillText("Stabilità pressione destra: "+tmidi.errpd+ " %",18,145);
+		//b.fillText("Giudizio finale destra: "+tmidi.gfd+ " %",18,170);
+		//b.fillRect(0,175,w,1);
+		//b.fillText("Note errate sinistra: "+tmidi.numerrnotes+ " ("+tmidi.errnotes+ " %)",18,195);
+		//b.fillText("Errore medio attacco sinistra :"+tmidi.erras+ " %",18,220);
+		//b.fillText("Errore medio distacco sinistra :"+tmidi.errds+ " %",18,245);
+		//b.fillText("Stabilità pressione destra: "+tmidi.errps+ " %",18,270);
+		//b.fillText("Giudizio finale sinistra: "+tmidi.gfs+ " %",18,295);
+		
 
     },
 
@@ -558,8 +629,10 @@ var tmidi = {
 		b.translate(125,380);
 		b.rotate(angolo);
 		b.fillRect(0,0,1,-330)
-		b.drawImage(tmmetroasta, -5,0,10,-330);
-		b.drawImage(tmmetroindex, -24,cursore,50,-40);
+		//b.drawImage(tmmetroasta, -5,0,10,-330);
+		b.drawImage(tmmetroasta, -5,-330,10,330);
+		//b.drawImage(tmmetroindex, -24,cursore,50,-40);
+		b.drawImage(tmmetroindex, -24,cursore-40,50,40);
 
 		b.setTransform(1, 0, 0, 1, 0, 0);
 		b.drawImage(tmmetrosotto, 0, 300,250,200);
@@ -918,12 +991,14 @@ var tmidi = {
     	this.errad=0;
     	this.errdd=0;
     	this.errpd=0;
+    	this.errdurd=0;
     	this.gfd=0;
     	this.numerrnotes=0;
     	this.errnotes=0;
     	this.erras=0;
     	this.errds=0;
     	this.errps=0;
+    	this.errdurs=0
     	this.gfs=0;
 
     	
@@ -939,45 +1014,56 @@ var tmidi = {
 		this.displaypuntifast(tmidi.bpm,"contabpm");
 		$('#contabpm').click(function (ev) {
 			tmidi.setbpmx(ev);
-		});		
-
-		
+		});
+		tmidi.oldtotale=0;		
+		tmidi.creacontatore("totale",300,120,"dati",50,270);
+		this.numeroopzioni=4;
+		this.opzioni=[]
+		for (var i=0;i<this.numeroopzioni;i++){
+			this.opzioni[i]=false;
+		}
+		this.opzioni[0]=true;
+		this.opzioni[1]=true;
 
 
     },
 
     aggiornaerrori: function(){
 
-    	var lung,b,sdeltastart,sdeltastop,notebuone;
+    	var lung,b,sdeltastart,sdeltastop,notebuone,sdeltadur;
 
     	//destra
     	
     	b=tmidi.barradestra;
     	lung=b.length;
     	if (lung<10) return tmidi.azzeraerrori();
-    	tmidi.numerrnoted=0;sdeltastart=0;sdeltastop=0;
+    	tmidi.numerrnoted=0;sdeltastart=0;sdeltastop=0;sdeltadur=0;
     	for (var i=0;i<lung;i++) {
 			if (b[i].e) tmidi.numerrnoted++;
 			else{
 				sdeltastart+=Math.abs(tmidi.deltastartd[i]);
 				sdeltastop+=Math.abs(tmidi.deltastopd[i]);
+				sdeltadur+=Math.abs(tmidi.deltastartd[i]-tmidi.deltastopd[i]);
 			}
     	}
 		tmidi.errnoted=Math.floor(tmidi.numerrnoted/lung*100);
 		nutebuone=lung-tmidi.numerrnoted;
 		tmidi.errad=Math.floor(sdeltastart/tmidi.intervallo/lung*100);
 		tmidi.errdd=Math.floor(sdeltastop/tmidi.intervallo/lung*100);
+		tmidi.errdurd=Math.floor(sdeltadur/tmidi.intervallo/lung*100);
 		tmidi.gfd=Math.floor(Math.max(100-Math.pow(tmidi.errnoted,1.6)-tmidi.errad/4-tmidi.errdd/4,0))
+		
     	//sinistra
     	
     	b=tmidi.barrasinistra;
     	lung=b.length;
-    	tmidi.numerrnotes=0;sdeltastart=0;sdeltastop=0;
+    	tmidi.numerrnotes=0;sdeltastart=0;sdeltastop=0;sdeltadur=0;
     	for (var i=0;i<lung;i++) {
 			if (b[i].e) tmidi.numerrnotes++;
 			else{
 				sdeltastart+=Math.abs(tmidi.deltastarts[i]);
 				sdeltastop+=Math.abs(tmidi.deltastops[i]);
+				sdeltadur+=Math.abs(tmidi.deltastarts[i]-tmidi.deltastops[i]);
 			}
 
     	}
@@ -985,11 +1071,18 @@ var tmidi = {
 		nutebuone=lung-tmidi.numerrnotes;
 		tmidi.erras=Math.floor(sdeltastart/tmidi.intervallo/lung*100);
 		tmidi.errds=Math.floor(sdeltastop/tmidi.intervallo/lung*100);
+		tmidi.errdurs=Math.floor(sdeltadur/tmidi.intervallo/lung*100);
 		tmidi.gfs=Math.floor(Math.max(100-Math.pow(tmidi.errnotes,1.6)-tmidi.erras/4-tmidi.errds/4,0))
 
 
 		
 		tmidi.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
+		var newtotale=Math.floor((tmidi.gfd+tmidi.gfs)/2);
+		if (newtotale!=tmidi.oldtotale){
+			tmidi.oldtotale=newtotale;
+			this.displaypuntifast(newtotale,"totale");
+		}
+		
     },
 
      azzeraerrori: function(){
@@ -1015,6 +1108,21 @@ var tmidi = {
     	this.intervallo=this.sedicesimo;
     	this.durata=this.intervallo*0.9;
 	},
+
+
+	
+	optionsclick: function(ev){
+		var x=ev.offsetX,y=ev.offsetY;
+		log (x+" "+y);
+		if ((x<146)||(x>226)||(y<10)||(y>10+tmidi.numeroopzioni*25)) return;
+		var opz=Math.floor((y-10)/25);
+		var opzset = false;
+		if (x>186) opzset=true;
+		tmidi.opzioni[opz]=opzset;
+		tmidi.initoptions(ctxop,canvasoptions.width,canvasoptions.height);
+	},
+
+
 
 
 	setbpmx: function(ev){
@@ -1085,9 +1193,12 @@ var tmidi = {
     	this.resetgrafici();
 		tmidi.aggiornaerrori();
   
-    	this.inizio=performance.now()+1000;  //comincerà fra un secondo
+    	
+
+    	
+    	this.inizio=performance.now()+100 //+1000;  //comincerà fra un secondo
 		this.next=this.inizio;
-		this.inizioinput=this.inizio+1000;
+		this.inizioinput=this.inizio+100  //+1000;
 		this.notacorrente=0;
 		//this.sinistracorrente=-1;
 		//this.sinistranota=[];
@@ -1098,12 +1209,12 @@ var tmidi = {
 
 
 		$("#barrad").css({left:300, width:400, "background-color":"black"});
-		$("#barrad").text("DESTRA");
+		$("#barrad").text("RIGHT");
 		$("#barras").css({left:300, width:400, "background-color":"black"});
-		$("#barras").text("SINISTRA");
+		$("#barras").text("LEFT");
 
 
-		setTimeout(tmidi.startnota,this.inizio-performance.now())
+		setTimeout(tmidi.startnotapl,this.inizio-performance.now())
 		tmidi.notestart[tmidi.cbuffer[0]]=this.inizio+this.latenza;
 		tmidi.notestart[tmidi.cbuffer[0]-12]=this.inizio+this.latenza;
 
@@ -1130,11 +1241,17 @@ var tmidi = {
    		$("#bstart").css({"border-color":"#888888"});
    		$("#bstart").text("START");
    		tmidi.aggiornaerrori();
+   		if(tmidi.pl.playing) tmidi.pl.stop();
 
 
     },
 
+	startnotapl: function(){ 
+    	if (tmidi.opzioni[0]) tmidi.pl.play();
+		return tmidi.startnota();
+	},
 
+	 
      startnota: function(){ 
      	if (!tmidi.fsuona) return;
      	if (tmidi.fcancellaintro){tmidi.fcancellaintro=false;tmidi.fintro=false}
@@ -1155,22 +1272,23 @@ var tmidi = {
 	    	setTimeout(tmidi.stopnotaintro,tmidi.next-tmidi.intervallo+duratanota-performance.now(),nota);  //richiede nota off
 			return
      	}
-		if (tmidi.notacorrente>tmidi.barradestra.length+2){
+     	var ritardo=2; if (tmidi.bpm>80) ritardo=3;
+		if (tmidi.notacorrente>tmidi.barradestra.length+ritardo){
 				$("#barrad").css({left:300, width:400, "background-color":"red"});
-				while (tmidi.notacorrente>tmidi.barradestra.length+2) {
+				while (tmidi.notacorrente>tmidi.barradestra.length+ritardo) {
 					tmidi.barradestra.push({"s":0,"w":200,"c":"red","e":true,"v":0});
 					tmidi.colorenotadestra[tmidi.barradestra.length-1]="#FF0000";  //red
 				}
-				$("#barrad").text("DESTRA "+(tmidi.barradestra.length-1));
+				$("#barrad").text("RIGHT "+(tmidi.barradestra.length-1));
 				tmidi.drawdestra();
 		}
-		if (tmidi.notacorrente>tmidi.barrasinistra.length+2){
+		if (tmidi.notacorrente>tmidi.barrasinistra.length+ritardo){
 				$("#barras").css({left:300, width:400, "background-color":"red"});
-				while (tmidi.notacorrente>tmidi.barrasinistra.length+2) {
+				while (tmidi.notacorrente>tmidi.barrasinistra.length+ritardo) {
 					tmidi.barrasinistra.push({"s":0,"w":200,"c":"red","e":true,"v":0});
 					tmidi.colorenotasinistra[tmidi.barrasinistra.length-1]="#FF0000";  //red
 				}
-				$("#barras").text("SINISTRA "+(tmidi.barrasinistra.length-1));
+				$("#barras").text("LEFT "+(tmidi.barrasinistra.length-1));
 				
 				tmidi.drawsinistra();
 
@@ -1190,7 +1308,7 @@ var tmidi = {
 		}
 
 
-    	Jazz.MidiOut(0x90,nota,tmidi.velocitaout);
+    	if (tmidi.opzioni[1]) Jazz.MidiOut(0x90,nota,tmidi.velocitaout);
     	tmidi.notestart[nota]=performance.now()+tmidi.latenza;
     	tmidi.notestart[nota-12]=performance.now()+tmidi.latenza;
     	var duratanota = tmidi.durata;
@@ -1222,7 +1340,7 @@ var tmidi = {
     		tmidi.aggiornaerrori();
 		}
     	//log ("OUT: 80 "+nota+" "+tmidi.velocitaout+" "+performance.now()+" "+Jazz.Time())
-    	Jazz.MidiOut(0x80,nota,tmidi.velocitaout);
+    	 Jazz.MidiOut(0x80,nota,tmidi.velocitaout);
     }, 
 
     stopnotaintro: function(nota){ 
@@ -1290,7 +1408,7 @@ var tmidi = {
 		var offsety=Math.round(1+altezza/50);
 		var largopzione=0;
 		var immagine="images/vassoiod.png";
-		if (opzione="4pulsanti"){
+		if (opzione=="4pulsanti"){
 			immagine="images/vassoiodpuls.png";
 			largopzione=Math.round(larghezza*0.5);
 		}
@@ -1367,7 +1485,7 @@ var tmidi = {
     }, */
 
 	drumsintro:[77,76],
-	Bintro:  [01,00,01,00],
+	Bintro:  [01,00,01,00,01,00,01,00,01,00,01,00],
 	
 	Hanon2: [48,52,53,55,57,55,53,52],
 	Hanon1: [48,52,53,55,57,55,53,52,

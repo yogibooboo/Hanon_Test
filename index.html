@@ -28,8 +28,8 @@
 	  
 
 
-		<div id="dati" class="dati" >
-		<canvas id="canvasdati"  class="dati" width="396" height="350">
+		<div id="dati"  >
+		<canvas id="canvasdati"  width="396" height="400">
 		<\canvas>
 			
 	   	   <!--<div id="contabpm" style="top: 10px; left: 70px;" class="contatore">    <img src="images/vassoiodpuls.png" height="40" width="140"> 
@@ -47,8 +47,8 @@
 		<div id="barrav1"  class="barretta" style="top: 600px; left: 200px; width:100px; height:100px;  background-color:#A0522D"></div> 
 		<div id="barrav2"  class="barretta" style="top: 600px; left: 704px; width:100px; height:100px;  background-color:#A0522D"></div> 
 
-		<div id="barrad" class="barra" style="top: 605px; left: 300px; width:400px; background-color:black">DESTRA</div> 
-		<div id="barras" class="barra" style="top: 655px; left: 300px; width:400px; background-color:black">SINISTRA</div> 
+		<div id="barrad" class="barra" style="top: 605px; left: 300px; width:400px; background-color:black">RIGHT</div> 
+		<div id="barras" class="barra" style="top: 655px; left: 300px; width:400px; background-color:black">LEFT</div> 
 
 
 		<canvas id="grafs" class="barretta" width="200" height="500" style="left:0px"></canvas>
@@ -61,7 +61,7 @@
   		<div id="titolo" style="position:absolute; top: 130px; left: 300px;"><img src="images/hanontest.png"   height="80px" width="400px"></div>
       
 		<div id="opzioni" >
-			<h1>OPZIONI</h1>
+			<h1>OPTIONS</h1>
 			<p>&nbsp;&nbsp;&nbsp;MIDI Input:
 		
 				<select id=midiIn onchange='changeMidi();'>
@@ -69,15 +69,23 @@
 				</select>
 
 				<div id=msg></div>
-			</p>
-			<input type="file" id="myFile">
+
+							</p>
+
+		<canvas id="canvasoptions"  width="236" height="400">
+		<\canvas>
+
+		<!--<input type="file" id="myFile">--> 
+
+
+
 	
 		</div>   <!--opzioni--> 
 
 		<div id="metronomo" >
-		<h1>METRONOMO</h1>
+		<h1>METRONOME</h1>
 		<div id="bstart" class="pulsante2" style="top: 530px; left: 50px;">START</div>
-		<canvas id="canvasmetronomo"  width="240" height="500">
+		<canvas id="canvasmetronomo"  width="240" height="470">
 		<\canvas> 
 		 
 

@@ -62,10 +62,10 @@ JZZ.MidiFile.prototype.load=function(s){
 }
 JZZ.MidiFile.prototype.loadSMF=function(s){
  if(s.substr(0,8)!='MThd\0\0\0\6') throw new Error('Not a MIDI file');
- this.type=s.charCodeAt(8)*16+s.charCodeAt(9);
- this.ntrk=s.charCodeAt(10)*16+s.charCodeAt(11);
+ this.type=s.charCodeAt(8)*16+s.charCodeAt(9);  //Tipo SMF
+ this.ntrk=s.charCodeAt(10)*16+s.charCodeAt(11);   //numero di MTrk
  if(s.charCodeAt(12)>0x7f){
-  this.fps=0x100-s.charCodeAt(12);
+  this.fps=0x100-s.charCodeAt(12);  //da vedere
   this.ppf=s.charCodeAt(13);
  }
  else{
@@ -80,7 +80,7 @@ JZZ.MidiFile.prototype.loadSMF=function(s){
   var len=(s.charCodeAt(p+4)<<24)+(s.charCodeAt(p+5)<<16)+(s.charCodeAt(p+6)<<8)+s.charCodeAt(p+7);
   p+=8;
   var data=s.substr(p,len);
-  this.push(new JZZ.MidiFile.Chunk(type,data));
+  this.push(new JZZ.MidiFile.Chunk(type,data));  //gestisce una MTrk
   p+=len;
  }
  if(p!=s.length || n!=this.ntrk) throw new Error("Corrupted MIDI file");;
@@ -146,7 +146,7 @@ JZZ.MidiFile.prototype.player=function(){
 }
 
 
-JZZ.MidiFile.Chunk=function(t,d){
+JZZ.MidiFile.Chunk=function(t,d){   // t=tipo   d=dati(string)    gestisce una MTrk  se no errore tipo chiama JZZ.MidiFile.MTrk (qui sotto)
  if(this.sub[t]) return this.sub[t](t,d);
  if(typeof t!='string' || t.length!=4) throw new Error("Invalid chunk type: "+t);
  this.type=t;
@@ -163,9 +163,9 @@ JZZ.MidiFile.Chunk.prototype.dump=function(){
 }
 
 
-JZZ.MidiFile.MTrk=function(s){
+JZZ.MidiFile.MTrk=function(s){  // s=dati(string)    gestisce una MTrk 
  if(s==undefined){
-  this.push(new JZZ.MidiFile.Event(0,'\xff\x2f',''));
+  this.push(new JZZ.MidiFile.Event(0,'\xff\x2f',''));    //solo in caso di errore(time,status,data)
   return;
  }
  var t=0;
@@ -322,6 +322,7 @@ JZZ.MidiFile.Event.prototype.toString=function(){
   else if(s1==0x51){
    var ms=this.data.charCodeAt(0)*65536 + this.data.charCodeAt(1)*256 + this.data.charCodeAt(2);
    var bpm=Math.round(60000000*100/ms)/100;
+   //var bpm=100;
    str+='Tempo: '+bpm+' bpm'; return str;
   }
   else if(s1==0x54){
@@ -398,7 +399,8 @@ JZZ.MidiFile.Player.prototype.tick=function(){
   if(e.time>c) break;
   var evt={};
   if(e.status=='\xff\x51' && this.ppqn){
-   this.mul=this.ppqn*1000./((e.data.charCodeAt(0)<<16)+(e.data.charCodeAt(1)<<8)+e.data.charCodeAt(2));
+   //this.mul=this.ppqn*1000./((e.data.charCodeAt(0)<<16)+(e.data.charCodeAt(1)<<8)+e.data.charCodeAt(2));
+   this.mul=this.ppqn*1000./(60000000/tmidi.bpm);
    this.t0=t; this.c0=c;
   }
   else if(e.status.charCodeAt(0)==0xf7){ evt.midi=JZZ.MIDI(e.data);}
@@ -416,7 +418,7 @@ JZZ.MidiFile.Player.prototype.tick=function(){
   else this.stop();
  }
  var f=(function(x){return function(){x.tick();};})(this);
- if(this.playing){ window.setTimeout(f,0); return;}
+ if(this.playing){ window.setTimeout(f,0); return;}   //set Timeout a 0 in realtà viene messo a 4 di def, (ho visto che di fatto va a 5 ms)
  if(this.event=='pause') this.paused=t;
  this.onEvent({control:this.event});
 }
