@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <title>Metronome</title>
+
+    <meta charset="utf-8"> 
+
+    <link rel="stylesheet" href="metro.css" />
+
+    <!--<meta http-equiv="X-UA-Compatible" content="requiresActiveX=true"/>--> 
+       
+</head>
+
+
+<body>
+
+
+
+   <div id="campogioco">
+
+
+
+	
+		
+
+		<div id="metronomo" >
+		<canvas id="canvasmetronomo"  width="400" height="700">
+		</canvas>  
+		 <canvas id="canvasimposta"  width="600" height="700">
+		</canvas> 
+		<div id="bstart" class="pulsante2" style="top: 630px; left: 450px;">START</div>
+
+
+		</div>   <!--metronomo--> 
+
+
+
+	</div>  <!-- campogioco--> 
+
+	<!--	<object id="Jazz1" classid="CLSID:1ACE1618-1C7D-4561-AEE1-34842AA85E90" class="hidden">
+			<object id="Jazz2" type="audio/x-jazz" class="hidden">
+				<p style="visibility:visible;">This page requires <a href=http://jazz-soft.net>Jazz-Plugin</a> ...</p>
+			</object>
+		</object>
+		<p>&nbsp;&nbsp;&nbsp;MIDI Input:
+
+			<select id=midiIn onchange='changeMidi();'>
+				<option value="">Not connected</option>
+			</select>
+
+			<div id=msg></div>
+
+		 </p>  -->
+
+
+
+
+	<script src="jquery-2.1.1.js"></script>
+	<script src="metrocode.js"></script>
+	<script src="JZZ.Midi.js"></script>
+	<script src="JZZ.MidiFile.js"></script>
+</body>
+
+</html>

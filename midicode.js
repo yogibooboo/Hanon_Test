@@ -374,11 +374,11 @@ var tmidi = {
 
     start:function(){
     	
-    	this.inizializzazioni();
-    	this.initbuffernote();
-    	this.initnotecolori();
-    	this.resetgrafici();
-    	this.readFile("luciano6.mid");
+    	tmidi.inizializzazioni();
+    	tmidi.initbuffernote();
+    	tmidi.initnotecolori();
+    	tmidi.resetgrafici();
+    	tmidi.readFile("luciano6.mid");
     	window.requestAnimationFrame(tmidi.refresh);
         return;
     },
@@ -450,7 +450,15 @@ var tmidi = {
 
 	onPlayer: function(e){
  		if(e.midi instanceof JZZ.Midi){
-  			Jazz.MidiOutRaw(e.midi.array());
+
+ 			var msg=e.midi.array();
+ 			//log (msg)
+ 			if (!tmidi.opzioni[0])   { //out disabilitato
+ 				
+ 				if ((msg[0]&0xf0)==0x90) return;  //filtra note ON
+ 			}
+ 			 
+  			Jazz.MidiOutRaw(msg);
  		}
  		if(e.control=='play'){
   			//btn.innerHTML='stop';
@@ -464,14 +472,14 @@ var tmidi = {
    
 
     resetgrafici:function(){
-    	this.initgrafico(ctxs,canvass.width,canvass.height);
-    	this.initgrafico(ctxd,canvasd.width,canvasd.height);
-    	this.initgraficov(ctxvs,canvasvs.width,canvasvs.height);
-    	this.initgraficov(ctxvd,canvasvd.width,canvasvd.height);
-    	this.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
-		setTimeout(this.initgraficosp,100,ctxsp,canvassp.width,canvassp.height);
-		setTimeout(this.initmetronomo,100,ctxmt,canvasmetronomo.width,canvasmetronomo.height);
-		setTimeout(this.initoptions,100,ctxop,canvasoptions.width,canvasoptions.height);
+    	tmidi.initgrafico(ctxs,canvass.width,canvass.height);
+    	tmidi.initgrafico(ctxd,canvasd.width,canvasd.height);
+    	tmidi.initgraficov(ctxvs,canvasvs.width,canvasvs.height);
+    	tmidi.initgraficov(ctxvd,canvasvd.width,canvasvd.height);
+    	tmidi.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
+		setTimeout(tmidi.initgraficosp,100,ctxsp,canvassp.width,canvassp.height);
+		setTimeout(tmidi.initmetronomo,100,ctxmt,canvasmetronomo.width,canvasmetronomo.height);
+		setTimeout(tmidi.initoptions,100,ctxop,canvasoptions.width,canvasoptions.height);
 
     },
 
@@ -505,8 +513,30 @@ var tmidi = {
 		b.fillRect(10,10,2,25*nsw);
 		b.fillText("Insert Base",20,30);
 		b.fillText("Insert Melody",20,55);
-		b.fillText("Repeat",20,80);
+		b.fillText("Loop",20,80);
 		b.fillText("Auto bpm +5",20,105);
+		b.fillText("Auto seq.",20,130);
+
+		var offy=200;
+		for (var i=0;i<4;i++){
+			
+			for (var j=0;j<5;j++){
+				if (j+5*i+1==tmidi.hanonselected) {
+					b.fillStyle="#A0522D";
+					b.fillRect(20+40*j,offy+i*25,40,25);
+					b.fillStyle="#FFFFFF";
+				}
+				b.fillText(j+5*i+1,30+40*j,offy+20+i*25);
+			}
+			b.fillRect(20,offy+i*25,200,2);
+		}
+			b.fillRect(20,offy+i*25,200,2);
+
+		for (var i=0;i<5;i++){
+			b.fillRect(20+i*200/5,offy,2,101);
+			
+		}
+		b.fillRect(20+i*200/5,offy,2,101);
     },
 
 
@@ -568,8 +598,10 @@ var tmidi = {
 		b.fillText("LEFT",240,30);
 		b.fillText("RIGHT",325,30);
 		b.fillText("Wrong notes",18,80);
-		b.fillText(tmidi.numerrnotes+ " ("+tmidi.errnotes+ "%)",230,80);
-		b.fillText(tmidi.numerrnoted+ " ("+tmidi.errnoted+ "%)",320,80);
+		//b.fillText(tmidi.numerrnotes+ " ("+tmidi.errnotes+ "%)",230,80);
+		//b.fillText(tmidi.numerrnoted+ " ("+tmidi.errnoted+ "%)",320,80);
+		b.fillText(tmidi.numerrnotes,230,80);
+		b.fillText(tmidi.numerrnoted,320,80);
 		b.fillText("Note start error",18,105);
 		b.fillText(tmidi.erras+ " %",230,105);
 		b.fillText(tmidi.errad+ " %",320,105);
@@ -590,17 +622,6 @@ var tmidi = {
 		b.fillRect(0,260,w,1);
 				
 
-		
-		//b.fillText("Errore medio attacco destra: "+tmidi.errad,18,95);
-		//b.fillText("Errore medio distacco destra: "+tmidi.errdd+ " %",18,120);
-		//b.fillText("Stabilità pressione destra: "+tmidi.errpd+ " %",18,145);
-		//b.fillText("Giudizio finale destra: "+tmidi.gfd+ " %",18,170);
-		//b.fillRect(0,175,w,1);
-		//b.fillText("Note errate sinistra: "+tmidi.numerrnotes+ " ("+tmidi.errnotes+ " %)",18,195);
-		//b.fillText("Errore medio attacco sinistra :"+tmidi.erras+ " %",18,220);
-		//b.fillText("Errore medio distacco sinistra :"+tmidi.errds+ " %",18,245);
-		//b.fillText("Stabilità pressione destra: "+tmidi.errps+ " %",18,270);
-		//b.fillText("Giudizio finale sinistra: "+tmidi.gfs+ " %",18,295);
 		
 
     },
@@ -644,10 +665,10 @@ var tmidi = {
     	var esamina=(b==ectxsp);
 
 		if (esamina){
-    	this.initgraficoe(ectxs,ecanvass.width,ecanvass.height,false);
-    	this.initgraficoe(ectxd,ecanvasd.width,ecanvasd.height,true);
-    	this.initgraficoev(ectxvs,ecanvasvs.width,ecanvasvs.height,false);
-    	this.initgraficoev(ectxvd,ecanvasvd.width,ecanvasvd.height,true);
+    	tmidi.initgraficoe(ectxs,ecanvass.width,ecanvass.height,false);
+    	tmidi.initgraficoe(ectxd,ecanvasd.width,ecanvasd.height,true);
+    	tmidi.initgraficoev(ectxvs,ecanvasvs.width,ecanvasvs.height,false);
+    	tmidi.initgraficoev(ectxvd,ecanvasvd.width,ecanvasvd.height,true);
 			
 		}
 
@@ -690,7 +711,7 @@ var tmidi = {
 		var cols,cold;
 		var td=tmidi.barradestra,ts=tmidi.barrasinistra;
 
-		drawline=(function(py){
+		var drawline=(function(py){
 			b.fillRect(posx-7,py,14,1);
 		})
 		var lung=tmidi.BufferNote.length;
@@ -707,8 +728,8 @@ var tmidi = {
     			nota=tmidi.BufferNote[i];
 				posy=112-(nota)*4;
 
-				b.fillRect(posx+3,posy,1,-25);
-				b.fillRect(posx-4,posy+32,1,25);
+				//b.fillRect(posx+3,posy,1,-25);
+				//b.fillRect(posx-4,posy+32,1,25);
 
 				
 				b.fillStyle=cold;
@@ -717,10 +738,10 @@ var tmidi = {
 				if ((nota==14)||(nota==26)) drawline(posy);
 				b.fillStyle=cols;
 				b.beginPath();
-				b.arc(posx, posy+32, 4, 0, 2*Math.PI);
+				b.arc(posx, posy+28, 4, 0, 2*Math.PI);
 				b.fill();
-				if ((nota==9)||(nota==21)||(nota==7)) drawline(posy+32);
-				if ((nota==7)||(nota==8)) b.fillRect(posx-6,76+32,10,1);
+				if ((nota==9)||(nota==21)||(nota==7)) drawline(posy+28);
+				if ((nota==7)||(nota==8)) b.fillRect(posx-6,76+28,10,1);
 
 				if (esamina){
 					
@@ -767,12 +788,47 @@ var tmidi = {
 					b.lineTo(posx+3,posy-25);
 					b.moveTo(oldposx+3,oldposy-20);
 					b.lineTo(posx+3,posy-20);
-					b.moveTo(oldposx-4,oldposy+57);
-					b.lineTo(posx-4,posy+57);
-					b.moveTo(oldposx-4,oldposy+52);
-					b.lineTo(posx-4,posy+52);
+					b.moveTo(oldposx-4,oldposy+53);
+					b.lineTo(posx-4,posy+53);
+					b.moveTo(oldposx-4,oldposy+48);
+					b.lineTo(posx-4,posy+48);
 
 					b.stroke();
+
+					
+
+					b.fillRect(oldposx+3,oldposy,1,-25);  	//prima stanghetta verticale del gruppo di 4
+					b.fillRect(oldposx-4,oldposy+28,1,25);
+
+
+					var oldposx2,oldposy2,delta2;					//seconda stanghetta verticale del gruppo di 4
+					oldnota=tmidi.BufferNote[i-2];
+					oldposx2=d+(i-2)*12-zoffset;
+					oldposy2=112-(oldnota)*4;
+
+					delta2=+oldposy2-oldposy-(posy-oldposy)/3;
+					b.fillRect(oldposx2+3,oldposy2,1,-25-delta2);  	
+					b.fillRect(oldposx2-4,oldposy2+28,1,25-delta2);
+
+
+															//terza stanghetta verticale del gruppo di 4
+					oldnota=tmidi.BufferNote[i-1];
+					oldposx2=d+(i-1)*12-zoffset;
+					oldposy2=112-(oldnota)*4;
+
+					delta2=+oldposy2-oldposy-(posy-oldposy)*2/3;
+					b.fillRect(oldposx2+3,oldposy2,1,-25-delta2);  	
+					b.fillRect(oldposx2-4,oldposy2+28,1,25-delta2);
+
+
+
+
+					b.fillRect(posx+3,posy,1,-25);  	//Ultima stanghetta verticale del gruppo di 4
+					b.fillRect(posx-4,posy+28,1,25);
+
+
+
+
 					d+=11;
 				}
 				if ((i%8)==7) {
@@ -804,7 +860,7 @@ var tmidi = {
 		
  	    b.drawImage(tmchiavi, 0, 0);
 
- 	    b.fillText("Hanon 1, bpm:"+tmidi.bpm,50,120);
+ 	    b.fillText("Hanon "+tmidi.hanonselected+", bpm:"+tmidi.bpm,50,120);
 
 
     	//log("tempo grafico= " +(performance.now()-ztempo));
@@ -827,9 +883,9 @@ var tmidi = {
     },
 
     initnotecolori: function() {
-    	for (i=0;i<this.cbuffer.length;i++){
-    		this.colorenotadestra[i]="#000000";  //nero
-    		this.colorenotasinistra[i]="#000000";  //nero
+    	for (i=0;i<tmidi.cbuffer.length;i++){
+    		tmidi.colorenotadestra[i]="#000000";  //nero
+    		tmidi.colorenotasinistra[i]="#000000";  //nero
     		
     	}
     },
@@ -870,8 +926,13 @@ var tmidi = {
 		tmidi.fedown=true;
 		tmidi.feinavanti=true;
 		tmidi.femove=false;
-		tmidi.edownx=ev.offsetX;
-		tmidi.eprevx=ev.offsetX;
+
+		var x  = (ev.offsetX || ev.clientX - $(ev.target).offset().left);
+
+
+
+		tmidi.edownx=x;
+		tmidi.eprevx=x;
 		tmidi.estartoffset=tmidi.eoffset;
 		tmidi.edeltax=0;
 	},
@@ -879,10 +940,12 @@ var tmidi = {
 	esaminamove:function(ev){
 
 		tmidi.feinavanti=false;
-		if (ev.offsetX<tmidi.eprevx) tmidi.feinavanti=true;
-		tmidi.eprevx=ev.offsetX;
+		var x  = (ev.offsetX || ev.clientX - $(ev.target).offset().left);
+
+		if (x<tmidi.eprevx) tmidi.feinavanti=true;
+		tmidi.eprevx=x;
 		if(!tmidi.fedown) return;
-		tmidi.edeltax=ev.offsetX-tmidi.edownx;
+		tmidi.edeltax=x-tmidi.edownx;
 		if (!tmidi.femove){
 			if (Math.abs(tmidi.edeltax)>3) tmidi.femove=true;
 		}
@@ -913,17 +976,21 @@ var tmidi = {
 
 	metronomodown:function(ev){
 
-		if((tmidi.fsuona)||(ev.offsetX<100)||(ev.offsetX>150)) return;
+		var x  = (ev.offsetX || ev.clientX - $(ev.target).offset().left);
+		var y  = (ev.offsetY || ev.clientY - $(ev.target).offset().top);
 
-		mbpm=Math.floor(40+(ev.offsetY-100)*80/200);
+
+		if((tmidi.fsuona)||(x<100)||(x>150)) return;
+
+		mbpm=Math.floor(40+(y-100)*80/200);
 
 		mdeltabpm=mbpm-tmidi.bpm;
 		if((mdeltabpm<0)||(mdeltabpm>15)) return;
 	
 		tmidi.fmdown=true;
 		tmidi.fmmove=false;
-		tmidi.mdowny=ev.offsetY;
-		tmidi.mprevy=ev.offsetY;
+		tmidi.mdowny=y;
+		tmidi.mprevy=y;
 		tmidi.mstartoffset=tmidi.moffset;
 		tmidi.mdeltay=0;
 	
@@ -931,16 +998,18 @@ var tmidi = {
 
 	metronomomove:function(ev){
 
+		var x  = (ev.offsetX || ev.clientX - $(ev.target).offset().left);
+		var y  = (ev.offsetY || ev.clientY - $(ev.target).offset().top);
 
-		tmidi.mprevy=ev.offsetY;
+		tmidi.mprevy=y;
 		if(!tmidi.fmdown) return;
-		tmidi.mdeltay=ev.offsetY-tmidi.mdowny;
+		tmidi.mdeltay=y-tmidi.mdowny;
 		if (!tmidi.fmmove){
 			if (Math.abs(tmidi.mdeltay)>3) tmidi.fmmove=true;
 		}
 		if (tmidi.fmmove){
 			tmidi.moffset=tmidi.mstartoffset+tmidi.mdeltay;
-		mbpm=Math.floor(40+(ev.offsetY-100)*80/200)-mdeltabpm;
+		mbpm=Math.floor(40+(y-100)*80/200)-mdeltabpm;
 
 		tmidi.setbpm(mbpm);
 
@@ -961,69 +1030,71 @@ var tmidi = {
 
 	inizializzazioni: function(){
 
-		this.fsuona=false;
-		this.fnoteon=false;
-		this.fintro=false;
-		this.fcancellaintro=false;
-		this.fcancellasuona=false;
-		this.inizio=performance.now();
-		this.inizioinput=this.inizio;
+		tmidi.fsuona=false;
+		tmidi.fnoteon=false;
+		tmidi.fintro=false;
+		tmidi.fcancellaintro=false;
+		tmidi.fcancellasuona=false;
+		tmidi.inizio=performance.now();
+		tmidi.inizioinput=tmidi.inizio;
 		Jazz.MidiOut(0x90,60,0);   //sembra che il MidiOut si debba inizializzare...
     	Jazz.MidiOut(0x80,60,0);
-    	this.notacorrente=0;
-    	//this.sinistracorrente=-1;
-    	//this.sinistranota=[];
-    	//this.destranota=[];
-    	this.notain=[];
-    	this.deltastarts=[];
-    	this.deltastops=[];
-    	this.vels=[];
-    	this.deltastartd=[];
-    	this.deltastopd=[];
-    	this.veld=[];
-    	this.barrasinistra=[];  //{"s":start,"w":width,"c":color,"e":error}
-    	this.barradestra=[];
-    	this.colorenotadestra=[];
-    	this.colorenotasinistra=[];
+    	tmidi.notacorrente=0;
+    	//tmidi.sinistracorrente=-1;
+    	//tmidi.sinistranota=[];
+    	//tmidi.destranota=[];
+    	tmidi.notain=[];
+    	tmidi.deltastarts=[];
+    	tmidi.deltastops=[];
+    	tmidi.vels=[];
+    	tmidi.deltastartd=[];
+    	tmidi.deltastopd=[];
+    	tmidi.veld=[];
+    	tmidi.barrasinistra=[];  //{"s":start,"w":width,"c":color,"e":error}
+    	tmidi.barradestra=[];
+    	tmidi.colorenotadestra=[];
+    	tmidi.colorenotasinistra=[];
 
-    	this.numerrnoted=0;
-    	this.errnoted=0;
-    	this.errad=0;
-    	this.errdd=0;
-    	this.errpd=0;
-    	this.errdurd=0;
-    	this.gfd=0;
-    	this.numerrnotes=0;
-    	this.errnotes=0;
-    	this.erras=0;
-    	this.errds=0;
-    	this.errps=0;
-    	this.errdurs=0
-    	this.gfs=0;
+    	tmidi.numerrnoted=0;
+    	tmidi.errnoted=0;
+    	tmidi.errad=0;
+    	tmidi.errdd=0;
+    	tmidi.errpd=0;
+    	tmidi.errdurd=0;
+    	tmidi.gfd=0;
+    	tmidi.numerrnotes=0;
+    	tmidi.errnotes=0;
+    	tmidi.erras=0;
+    	tmidi.errds=0;
+    	tmidi.errps=0;
+    	tmidi.errdurs=0
+    	tmidi.gfs=0;
 
     	
-    	this.bpm=80;
-    	this.aggiustatempi();
-		this.velocitaout=120;
-		this.cbuffer=this.Hanon1;
-		this.notein=[];
-		this.notestart=[];
-		this.latenza=100;
-		this.BufferNote=[];   //note con 0 a partire da do sotto due ottave
+    	tmidi.bpm=80;
+    	tmidi.aggiustatempi();
+		tmidi.velocitaout=120;
+		tmidi.cbuffer=tmidi.Hanon1;
+		tmidi.notein=[];
+		tmidi.notestart=[];
+		tmidi.latenza=100;
+		tmidi.BufferNote=[];   //note con 0 a partire da do sotto due ottave
 		tmidi.creacontatore("contabpm",90,40,"metronomo",62,450,"4pulsanti");
-		this.displaypuntifast(tmidi.bpm,"contabpm");
+		tmidi.displaypuntifast(tmidi.bpm,"contabpm");
 		$('#contabpm').click(function (ev) {
 			tmidi.setbpmx(ev);
 		});
 		tmidi.oldtotale=0;		
 		tmidi.creacontatore("totale",300,120,"dati",50,270);
-		this.numeroopzioni=4;
-		this.opzioni=[]
-		for (var i=0;i<this.numeroopzioni;i++){
-			this.opzioni[i]=false;
+		tmidi.numeroopzioni=5;
+		tmidi.opzioni=[]
+		for (var i=0;i<tmidi.numeroopzioni;i++){
+			tmidi.opzioni[i]=false;
 		}
-		this.opzioni[0]=true;
-		this.opzioni[1]=true;
+		tmidi.opzioni[0]=true;
+		tmidi.opzioni[1]=true;
+
+		tmidi.hanonselected=1;
 
 
     },
@@ -1080,54 +1151,126 @@ var tmidi = {
 		var newtotale=Math.floor((tmidi.gfd+tmidi.gfs)/2);
 		if (newtotale!=tmidi.oldtotale){
 			tmidi.oldtotale=newtotale;
-			this.displaypuntifast(newtotale,"totale");
+			tmidi.displaypuntifast(newtotale,"totale");
 		}
 		
     },
 
      azzeraerrori: function(){
-    	this.numerrnoted=0;
-    	this.errnoted=0;
-    	this.errad=0;
-    	this.errdd=0;
-    	this.errpd=0;
-    	this.gfd=0;
-    	this.numerrnotes=0;
-    	this.errnotes=0;
-    	this.erras=0;
-    	this.errds=0;
-    	this.errps=0;
-    	this.gfs=0;
+    	tmidi.numerrnoted=0;
+    	tmidi.errnoted=0;
+    	tmidi.errad=0;
+    	tmidi.errdd=0;
+    	tmidi.errpd=0;
+    	tmidi.gfd=0;
+    	tmidi.numerrnotes=0;
+    	tmidi.errnotes=0;
+    	tmidi.erras=0;
+    	tmidi.errds=0;
+    	tmidi.errps=0;
+    	tmidi.gfs=0;
     },
 
 
 	aggiustatempi: function(){
-    	this.quarto=60000/(this.bpm);
-    	this.ottavo=60000/(this.bpm*2);
-    	this.sedicesimo=60000/(this.bpm*4);
-    	this.intervallo=this.sedicesimo;
-    	this.durata=this.intervallo*0.9;
+    	tmidi.quarto=60000/(tmidi.bpm);
+    	tmidi.ottavo=60000/(tmidi.bpm*2);
+    	tmidi.sedicesimo=60000/(tmidi.bpm*4);
+    	tmidi.intervallo=tmidi.sedicesimo;
+    	tmidi.durata=tmidi.intervallo*0.9;
 	},
 
 
 	
 	optionsclick: function(ev){
-		var x=ev.offsetX,y=ev.offsetY;
-		log (x+" "+y);
-		if ((x<146)||(x>226)||(y<10)||(y>10+tmidi.numeroopzioni*25)) return;
-		var opz=Math.floor((y-10)/25);
-		var opzset = false;
-		if (x>186) opzset=true;
-		tmidi.opzioni[opz]=opzset;
+		var x  = (ev.offsetX || ev.clientX - $(ev.target).offset().left);
+		var y  = (ev.offsetY || ev.clientY - $(ev.target).offset().top);
+		
+		if (!((x<146)||(x>226)||(y<10)||(y>10+tmidi.numeroopzioni*25))) {
+			var opz=Math.floor((y-10)/25);
+			var opzset = false;
+			if (x>186) opzset=true;
+			tmidi.opzioni[opz]=opzset;
+			
+		}
+		else if (!((x<30)||(x>200)||(y<200)||(y>300))) {
+			log (x+" "+y);
+			tmidi.hanonselected=Math.floor((x-30)/40)+5*Math.floor((y-200)/25)+1;
+			tmidi.loadfiles();	
+		}
 		tmidi.initoptions(ctxop,canvasoptions.width,canvasoptions.height);
 	},
 
 
+	loadfiles:function(){
+		 var rawFile = new XMLHttpRequest();
+		rawFile.open("GET","complete/36-96.Hanon "+tmidi.hanonselected+".mid", true);
+		rawFile.responseType = "arraybuffer";
 
+		rawFile.onload = function (oEvent) {
+			if(rawFile.readyState === 4)
+			{
+				 var tmp= (rawFile.response);
+				 
+				var zfilemidi="";
+				var dW1 = new DataView(tmp)
+				 for (var i=0;i<tmp.byteLength;i++){
+					zfilemidi+=String.fromCharCode(dW1.getUint8(i))
+				 }
+				//document.getElementById("textSection").innerHTML = allText;
+			}
+			var mf1=new JZZ.MidiFile(zfilemidi);
+			//tmidi.pl=tmidi.mf.player();
+			//tmidi.pl.onEvent=tmidi.onPlayer;
+			tmidi.hanon1bis=[];
+			var stringa;
+			for (var i=0;i<mf1[0].length;i++){
+				stringa=mf1[0][i].toString();
+				if (stringa.substr(0,2)=="90"){
+					tmidi.hanon1bis.push(parseInt(stringa.substr(3,2), 16)-12);
+				}
+			}
+			tmidi.cbuffer=tmidi.hanon1bis;
+			tmidi.initbuffernote();
+			tmidi.initnotecolori();
+    		tmidi.deltastarts=[];
+    		tmidi.deltastops=[];
+    		tmidi.vels=[];
+    		tmidi.deltastartd=[];
+    		tmidi.deltastopd=[];
+    		tmidi.veld=[];
+    		tmidi.barrasinistra=[];  //{"s":start,"w":width,"c":color,"e":error}
+    		tmidi.barradestra=[];
+
+			tmidi.numerrnoted=0;
+			tmidi.errnoted=0;
+			tmidi.errad=0;
+			tmidi.errdd=0;
+			tmidi.errpd=0;
+			tmidi.errdurd=0;
+			tmidi.gfd=0;
+			tmidi.numerrnotes=0;
+			tmidi.errnotes=0;
+			tmidi.erras=0;
+			tmidi.errds=0;
+			tmidi.errps=0;
+			tmidi.errdurs=0
+			tmidi.gfs=0;
+
+			tmidi.resetgrafici();
+			//tmidi.initgraficosp(ctxsp,canvassp.width,canvassp.height);
+		}
+
+		rawFile.send(); 
+
+		
+	},
 
 	setbpmx: function(ev){
 
-		var x=ev.offsetX,y=ev.offsetY;
+		var x  = (ev.offsetX || ev.clientX - $(ev.target).offset().left);
+		var y  = (ev.offsetY || ev.clientY - $(ev.target).offset().top);
+
 		if (x<87){
 			//form imposta bpm
 			tmidi.aggiustatempi();
@@ -1146,13 +1289,13 @@ var tmidi = {
 		if (tmidi.bpm>120) tmidi.bpm=120;
 		if (tmidi.bpm<40) tmidi.bpm=40;
 		tmidi.aggiustatempi();
-		this.displaypuntifast(tmidi.bpm,"contabpm");
+		tmidi.displaypuntifast(tmidi.bpm,"contabpm");
 
 	},
 
 
 	initbuffernote: function(){
-
+		tmidi.BufferNote=[];
     	for (var i=0;i<tmidi.cbuffer.length;i++) {
 
 			var nota=tmidi.cbuffer[i]-36;
@@ -1180,7 +1323,9 @@ var tmidi = {
     	}
     },
 		
-    startstop: function(){
+    startstop: function(opzione){
+    	tmidi.drumsintro[2]=76;
+    	if (opzione=="specialintro") tmidi.drumsintro[2]=78;
     	if (tmidi.fsuona) {tmidi.stopsuona();return};
     	tmidi.fsuona=true;
     	tmidi.fintro=true;
@@ -1189,23 +1334,23 @@ var tmidi = {
    	   	$("#bstart").css({"border-color":"red"});
     	$("#bstart").text("STOP");
 
-    	this.initnotecolori();
-    	this.resetgrafici();
+    	tmidi.initnotecolori();
+    	tmidi.resetgrafici();
 		tmidi.aggiornaerrori();
   
     	
 
     	
-    	this.inizio=performance.now()+100 //+1000;  //comincerà fra un secondo
-		this.next=this.inizio;
-		this.inizioinput=this.inizio+100  //+1000;
-		this.notacorrente=0;
-		//this.sinistracorrente=-1;
-		//this.sinistranota=[];
-    	//this.destranota=[];
-    	this.notain=[];
-    	this.barrasinistra=[];  //{"s":start,"w":width,"c":color,"e":error}
-    	this.barradestra=[];
+    	tmidi.inizio=performance.now()+100 //+1000;  //comincerà fra un secondo
+		tmidi.next=tmidi.inizio;
+		tmidi.inizioinput=tmidi.inizio+100  //+1000;
+		tmidi.notacorrente=0;
+		//tmidi.sinistracorrente=-1;
+		//tmidi.sinistranota=[];
+    	//tmidi.destranota=[];
+    	tmidi.notain=[];
+    	tmidi.barrasinistra=[];  //{"s":start,"w":width,"c":color,"e":error}
+    	tmidi.barradestra=[];
 
 
 		$("#barrad").css({left:300, width:400, "background-color":"black"});
@@ -1214,9 +1359,9 @@ var tmidi = {
 		$("#barras").text("LEFT");
 
 
-		setTimeout(tmidi.startnotapl,this.inizio-performance.now())
-		tmidi.notestart[tmidi.cbuffer[0]]=this.inizio+this.latenza;
-		tmidi.notestart[tmidi.cbuffer[0]-12]=this.inizio+this.latenza;
+		setTimeout(tmidi.startnotapl,tmidi.inizio-performance.now())
+		tmidi.notestart[tmidi.cbuffer[0]]=tmidi.inizio+tmidi.latenza;
+		tmidi.notestart[tmidi.cbuffer[0]-12]=tmidi.inizio+tmidi.latenza;
 
     	/*var prima=60;
     	var bpm=60;
@@ -1227,8 +1372,8 @@ var tmidi = {
     	log (performance.now()+" "+Jazz.Time())
     	Jazz.MidiOut(0x90,prima,120)
     	Jazz.MidiOut(0x80,prima,120)
-    	for (var i=0;i<this.Hanon1.length;i++){
-    		var nota=this.Hanon1[i];
+    	for (var i=0;i<tmidi.Hanon1.length;i++){
+    		var nota=tmidi.Hanon1[i];
     		setTimeout(tmidi.MidiO,(i)*durata+ritardo,0x90,nota,120)
     		setTimeout(tmidi.MidiO,(i+0.9)*durata+ritardo,0x80,nota,120)
     	}
@@ -1237,7 +1382,7 @@ var tmidi = {
     },
 
         stopsuona: function(){
-    	this.fsuona=false;
+    	tmidi.fsuona=false;
    		$("#bstart").css({"border-color":"#888888"});
    		$("#bstart").text("START");
    		tmidi.aggiornaerrori();
@@ -1247,7 +1392,7 @@ var tmidi = {
     },
 
 	startnotapl: function(){ 
-    	if (tmidi.opzioni[0]) tmidi.pl.play();
+    	/*if (tmidi.opzioni[0]) */ tmidi.pl.play();
 		return tmidi.startnota();
 	},
 
@@ -1271,7 +1416,9 @@ var tmidi = {
  			}
 	    	setTimeout(tmidi.stopnotaintro,tmidi.next-tmidi.intervallo+duratanota-performance.now(),nota);  //richiede nota off
 			return
-     	}
+     	}    //if (tmidi.fintro) 
+
+     	//nota normale
      	var ritardo=2; if (tmidi.bpm>80) ritardo=3;
 		if (tmidi.notacorrente>tmidi.barradestra.length+ritardo){
 				$("#barrad").css({left:300, width:400, "background-color":"red"});
@@ -1303,7 +1450,7 @@ var tmidi = {
     	//log ("OUT: 90 "+nota+" "+tmidi.velocitaout+" "+performance.now()+" "+Jazz.Time())
 		if (tmidi.notacorrente%4==0){
 			Jazz.MidiOut(0x99,75,tmidi.velocitaout);
-			setTimeout(tmidi.stopnotaintro,tmidi.next+duratanota-performance.now(),nota);  //richiede nota off
+			setTimeout(tmidi.stopnotaintro,tmidi.next+duratanota-performance.now(),75);  //richiede nota off
 
 		}
 
@@ -1317,6 +1464,7 @@ var tmidi = {
     	if (tmidi.notacorrente>=tmidi.cbuffer.length-1) {
     		duratanota=tmidi.intervallo*3+tmidi.durata;  //ultima nota lunga
     		tmidi.fcancellasuona=true;
+    		log ("i "+performance.now())
 
     	}
     	else {
@@ -1332,15 +1480,36 @@ var tmidi = {
 
 
      stopnota: function(nota){ 
+    
+     Jazz.MidiOut(0x80,nota,tmidi.velocitaout);
+
      	if (tmidi.fcancellasuona) {
+     		log ("f "+performance.now())
      		tmidi.fcancellasuona=false;
      		tmidi.fsuona=false;
      		$("#bstart").css({"border-color":"#888888"});
     		$("#bstart").text("START");
     		tmidi.aggiornaerrori();
+
+			var opzintro="";
+	    	if ((tmidi.opzioni[3])&&(tmidi.oldtotale>=70)) {   //auto bpm+5 se punteggio >70
+				
+				Jazz.MidiOut(0x99,78,120);
+				setTimeout(tmidi.stopnotaintro,tmidi.next+tmidi.intervallo-performance.now(),78);  //richiede nota off
+				opzintro="specialintro"
+				var tbpm = tmidi.bpm+5;
+				if (tbpm>108) tbpm=108;
+				tmidi.setbpm(tbpm)
+    		}
+
+
+
+    		if (tmidi.opzioni[2]){   //Loop
+				tmidi.pl.stop()
+    			return tmidi.startstop(opzintro);
+    		}
+
 		}
-    	//log ("OUT: 80 "+nota+" "+tmidi.velocitaout+" "+performance.now()+" "+Jazz.Time())
-    	 Jazz.MidiOut(0x80,nota,tmidi.velocitaout);
     }, 
 
     stopnotaintro: function(nota){ 
@@ -1484,8 +1653,8 @@ var tmidi = {
     	Jazz.MidiOut(a,b-12,c)
     }, */
 
-	drumsintro:[77,76],
-	Bintro:  [01,00,01,00,01,00,01,00,01,00,01,00],
+	drumsintro:[70,77,76],
+	Bintro:  [02,00,02,00,02,02,02,02],
 	
 	Hanon2: [48,52,53,55,57,55,53,52],
 	Hanon1: [48,52,53,55,57,55,53,52,
