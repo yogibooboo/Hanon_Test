@@ -3,13 +3,15 @@
 
 
 <head>
-    <title>Midi_Test</title>
+    <title>Luciano Manenti Home, scala40 card game,Hanon  piano keyboard exercises, Quasi-real metronome</title>
 
     <meta charset="utf-8"> 
 
-    <link rel="stylesheet" href="midi.css" />
+    <link rel="stylesheet" href="home.css" />
 
-    <meta http-equiv="X-UA-Compatible" content="requiresActiveX=true"/>
+<meta name="google-site-verification" content="HczGE3blChW6QEkClRXFQMJc3Z_9fl8feUwWl6LpX6I" />
+
+<meta name="Description" content="Play free at Scala40 card game. Perform Hanon exercises to improve your piano technique and measure your progress. Free online quasi-real metronome with more than real performances">
        
 </head>
 
@@ -17,126 +19,26 @@
 <body>
 
 
-
    <div id="campogioco">
 
-   		
-		<object id="Jazz1" classid="CLSID:1ACE1618-1C7D-4561-AEE1-34842AA85E90" class="hidden">
-			<object id="Jazz2" type="audio/x-jazz" class="hidden">
-				<p style="visibility:visible;">This page requires <a href=http://jazz-soft.net>Jazz-Plugin</a> ...</p>
-			</object>
-		</object>
-
-	  
-
-
-		<div id="dati"  >
-		<canvas id="canvasdati"  width="396" height="400">
-		</canvas>
-			
-	   	   <!--<div id="contabpm" style="top: 10px; left: 70px;" class="contatore">    <img src="images/vassoiodpuls.png" height="40" width="140"> 
-	   			<div id="digit3" class="digit1" style="top: 1px; left: 3px; background-position: -0px 0px; "  > </div>
-	   			<div id="digit2" class="digit1" style="top: 1px; left: 31px; background-position: -0px 0px;"  > </div>
-	   			<div id="digit1" class="digit1" style="top: 1px; left: 59px; background-position: -0px 0px;"  > </div>
-	   	   </div>  contabpm-->
-		</div> 
-
-
-
-
-
-
-		<div id="barrav1"  class="barretta" style="top: 600px; left: 200px; width:100px; height:100px;  background-color:#A0522D"></div> 
-		<div id="barrav2"  class="barretta" style="top: 600px; left: 704px; width:100px; height:100px;  background-color:#A0522D"></div> 
-
-		<div id="barrad" class="barra" style="top: 605px; left: 300px; width:400px; background-color:black">RIGHT</div> 
-		<div id="barras" class="barra" style="top: 655px; left: 300px; width:400px; background-color:black">LEFT</div> 
-
-
-		<canvas id="grafs" class="barretta" width="200" height="500" style="left:0px"></canvas>
-		<canvas id="grafd" class="barretta" width="200" height="500" style="left:804px"></canvas>
-		<canvas id="grafvs" class="barretta" width="100" height="500" style="left:200px"></canvas>
-		<canvas id="grafvd" class="barretta" width="100" height="500" style="left:704px"></canvas>
-		<canvas id="spartito" class="spartito"  width="1004" height="130" style="left:0px;top:0px;"></canvas>
-		
-      
-  		<div id="titolo" style="position:absolute; top: 130px; left: 300px;"><img src="images/hanontest.png"   height="80px" width="400px"></div>
-      
-		<div id="opzioni" >
-			<h1>OPTIONS</h1>
-			<p>&nbsp;&nbsp;&nbsp;MIDI Input:
-		
-				<select id=midiIn onchange='changeMidi();'>
-					<option value="">Not connected</option>
-				</select>
-
-				<div id=msg></div>
-
-							</p>
-
-		<canvas id="canvasoptions"  width="236" height="400">
-		</canvas>
-
-		<!-- <input type="file" id="myFile">--> 
-
-
-
+	<div id="intestazione"></div>
 	
-		</div>   <!--opzioni--> 
+		
+		<a href="scala40.html"><div id="icoscala" ><img src="images/home/scala40.png"></div></a>
+		<a href="hanon.html"><div id="icohanon"><img src="images/home/hanontest.png"></div></a>
+		<a href="metronome.html"><div id="icometro"><img src="images/home/metronome.png"></div></a>
+		<a href="aboutme.html"><div id="aboutme"><img src="images/home/aboutme.png"></div></a>
+	
 
-		<div id="metronomo" >
-		<h1>METRONOME</h1>
-		<div id="bstart" class="pulsante2" style="top: 530px; left: 50px;">START</div>
-		<canvas id="canvasmetronomo"  width="240" height="470">
-		</canvas> 
-		 
-
-		</div>   <!--metronomo--> 
 
 
 
 	</div>  <!-- campogioco--> 
-		<div id="esamina" class="pulsante2" style="top: 690px; left: 1380px;  ">DETTAGLIO</div>
+
+
+
 
 	
-	<div id="campoesamina">
-	
-		<canvas id="egrafd" class="barretta" width="1270" height="200" style="left:0px;top:000px"></canvas>
-		<canvas id="egrafs" class="barretta" width="1270" height="200" style="left:0px;top:530px"></canvas>
-		<canvas id="egrafvd" class="barretta" width="1270" height="100" style="left:0px;top:200px"></canvas>
-		<canvas id="egrafvs" class="barretta" width="1270" height="100" style="left:0px;top:430px"></canvas>
-		<canvas id="espartito" class="spartito"   width="1270" height="130" style="left:0px;top:300px;"></canvas>
-
-	<div id="esaminao" class="pulsante2" style="top: 690px; left: 1380px; ">ESCI</div>
-	<div id="noteoff" class="pulsante2" style="top: 640px; left: 1380px; ">NOTE ON</div>
-	
-	</div>  <!-- campoesamina---> 
-
-
-
-	 
-<!-- 	   <audio id="pesca" src="sounds/cardplace1.mp3"></audio>
-	   <audio id="scartatris" src="sounds/cardplace3.mp3"></audio>
-	   <audio id="ordina" src="sounds/cardslide5.mp3"></audio>
-	   <audio id="scarta" src="sounds/cardslide1.mp3"></audio>
-	    <audio id="perjolly" src="sounds/chimes.mp3"></audio>
-	    <audio id="tada" src="sounds/tada.mp3"></audio>
-	   <audio id="perso" src="sounds/haiperso.mp3"></audio>
-	 <audio id="dascarti" src="sounds/magic.mp3"></audio>
-	 <audio id="slitta" src="sounds/slitta.mp3"></audio>
-	 <audio id="ding" src="sounds/ding.mp3"></audio>
-	 <audio id="thunder" src="sounds/thunder.mp3"></audio>
-	 <audio id="applause" src="sounds/applause.mp3"></audio>
-	 <audio id="distribuisci" src="sounds/distribuisci.mp3"></audio>--> 
-
-
-
-
-
-	<script src="jquery-2.1.1.js"></script>
-	<script src="midicode.js"></script>
-	<script src="JZZ.Midi.js"></script>
-	<script src="JZZ.MidiFile.js"></script>
 </body>
 
 </html>

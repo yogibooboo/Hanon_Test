@@ -5,6 +5,9 @@ function log(msg) {
 } // log  
 log.enabled = true;
 
+
+
+
   // recupera l'elemento canvas
 
 $(window).resize(function () {
@@ -20,8 +23,14 @@ reader.onload = function(e) {
 }
 
 //reader.readAsBinaryString(file);
+$('.pulsanteaiuto').click(function () {
+	window.open("instructions/hanon_test.htm", "_blank", "toolbar=no, scrollbars=yes, resizable=yes, top=100, left=400, width=1000, height=800");
+	//window.open("instructions/hanon_test.htm")
+});
 
-
+$('.pulsantehelp').click(function () {
+	window.open("instructions/hanon_test_e.htm", "_blank", "toolbar=no, scrollbars=yes, resizable=yes, top=100, left=400, width=1000, height=800");
+});
 
 $('#bstart').click(function () {
 	tmidi.startstop();
@@ -85,7 +94,7 @@ $('#canvasoptions').click(function (ev) {
 
 
 
-var Jazz = document.getElementById("Jazz1"); if(!Jazz || !Jazz.isJazz) Jazz = document.getElementById("Jazz2");
+//var Jazz = document.getElementById("Jazz1"); if(!Jazz || !Jazz.isJazz) Jazz = document.getElementById("Jazz2");
 
 
 
@@ -164,11 +173,11 @@ function midiProc(t,a,b,c){
 
 	//Jazz.MidiOut(a+9,b,120);
 	
-   	if ((a==0x90)&&(b==21)) return tmidi.startstop()     //primo tasto
-	if ((a==0x90)&&(b==23)) return (tmidi.setbpm(tmidi.bpm-5))	 //secondo tasto bianco
-	if ((a==0x90)&&(b==24)) return (tmidi.setbpm(tmidi.bpm+5))	 //terzo tasto bianco	
-   	
-
+   	if ((a==0x90)&&(b==22)) return tmidi.startstop()     //primo tasto nero
+	if ((a==0x90)&&(b==25)) return (tmidi.setbpm(tmidi.bpm-5))	 //secondo tasto nero
+	if ((a==0x90)&&(b==27)) return (tmidi.setbpm(tmidi.bpm+5))	 //terzo tasto nero
+   	if ((a==0x90)&&(b==106)&&(tmidi.hanonselected<19)) {tmidi.hanonselected++;tmidi.loadfiles()};
+	if ((a==0x90)&&(b==104)&&(tmidi.hanonselected>1)) {tmidi.hanonselected--;tmidi.loadfiles()};
    
 	//L'esercizio parte da tmidi.inizioinput  (dopo l'intro)
 	//L'intervallo tra le note è tmidi.intervallo
@@ -1107,7 +1116,8 @@ var tmidi = {
     	
     	b=tmidi.barradestra;
     	lung=b.length;
-    	if (lung<10) return tmidi.azzeraerrori();
+    	if (lung<4) return ;
+    	
     	tmidi.numerrnoted=0;sdeltastart=0;sdeltastop=0;sdeltadur=0;
     	for (var i=0;i<lung;i++) {
 			if (b[i].e) tmidi.numerrnoted++;
@@ -1169,6 +1179,7 @@ var tmidi = {
     	tmidi.errds=0;
     	tmidi.errps=0;
     	tmidi.gfs=0;
+    	tmidi.oldtotale=0;
     },
 
 
@@ -1335,8 +1346,10 @@ var tmidi = {
     	$("#bstart").text("STOP");
 
     	tmidi.initnotecolori();
+    	tmidi.azzeraerrori();
     	tmidi.resetgrafici();
-		tmidi.aggiornaerrori();
+		
+
   
     	
 
@@ -1502,7 +1515,10 @@ var tmidi = {
 				tmidi.setbpm(tbpm)
     		}
 
-
+			if ((tmidi.opzioni[4])&&(tmidi.hanonselected<19)) {
+				tmidi.hanonselected++;
+				tmidi.loadfiles();
+			}
 
     		if (tmidi.opzioni[2]){   //Loop
 				tmidi.pl.stop()

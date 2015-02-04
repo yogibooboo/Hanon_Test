@@ -45,7 +45,7 @@ body{
 	left:auto;
 	width:1024px;
 	height:750px;
-	//background-image:url(images/wood2.png);
+	//background-color:green;
 	margin:0px  auto 0px;
 	
 
@@ -147,6 +147,24 @@ h1,h2,h3,h4,h5,h6{
 	cursor:pointer;
 	background-size: 130px 40px;
 	background-image:url(images/wbutton.png);
+	
+}
+
+.pulsanteback{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888;
+	text-align:center;
+	border-radius:9px;
+	width:126px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/home/manentibutton.png);
 	
 }
 .spartito{
@@ -373,6 +391,17 @@ h1,h2,h3,h4,h5,h6{
 	left:400px;
 	top:0px;
 	//background-color:red;
+	
+}
+
+#wc{
+
+
+	position:absolute;
+	left:0px;
+	top:0px;
+	//background-color:red;
+	
 	
 }
 

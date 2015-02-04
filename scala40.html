@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html>
+
+
+<head>
+    <title>Free Scala 40 online</title>
+
+    <meta charset="utf-8"> 
+
+    <link rel="stylesheet" href="scala40.css" />
+    
+    <meta name="Description" content="Play free Scala40 card game online. choose between one, two or three opponents"
+       
+</head>
+
+
+<body>
+	   <div id="schermo"></div>	
+	   <div id="campogioco">
+	  
+	  <div id="formistruzioni" class="formistruzioni"> 
+		<h2>Istruzioni per giocare a scala 40 Luciano:</h2>
+Per pescare dal mazzo: cliccare nell’area “giocatore” oppure sul mazzo.<br><br>
+Per pescare dagli scarti cliccare su di essi.<br><br>
+Per scartare una carta cliccarla con il tasto destro, oppure trascinarla negli scarti,oppure selezionarla e cliccare sugli scarti.<br><br>
+Per riordinare le proprie carte, trascinare la carta che si intende spostare a destra della carta dopo cui si intende inserirla, oppure a sinistra della prima carta.<br><br>
+Per formare un tris cliccare sulle carte che lo compongono, che devono essere ordinate correttamente. Una volta selezionato, si può scartare il tris cliccando nell’area immediatamente superiore a quella del giocatore.<br><br>
+Per aggiungere una carta a un tris o per sostituire un Jolly trascinare la carta nella posizione dove si intende collocare.<br><br>
+Il tasto UNDO permette di annullare la mosse più recenti.<br><br>
+Il tasto SCOPERTE permette di giocare a carte scoperte.<br><br>
+il tasto AVVERSARI consente di scegliere il numeri di avversari e/o iniziare una nuova partita <br><br>
+Per modificare il limite di punti cliccargli sopra<br><br>
+Quando si deposita un tris con jolly, è possibile cambiarne il seme cliccandoci sopra<br><br>
+<button class= "bottone1" type="button" >OK</button>
+	  </div> 
+	   
+
+	  <div id="formnuovo" class="formistruzioni"> 
+		<h2>Quanti avversari vuoi avere?</h2>
+
+		<input type="radio" name="avversari" value="1" checked>1<br>
+		<input type="radio" name="avversari" value="2" >2<br>
+		<input type="radio" name="avversari" value="3" >3<br>
+
+<button class= "bottone1" type="button" >OK</button>
+	  </div> 
+
+
+	   
+	  <div id="haivinto" class="form" style="background-image:url(images/scala40/haivinto.jpg)">  
+	  <!--<button id= "vintoOK" type="button" style="left: 100px;" >OK</button>
+	  <button id= "vintoNEW" type="button" style="left: 200px;" >NUOVA PARTITA</button>-->
+	  <button class= "bottone1" type="button" style="left: 200px;" >NUOVA PARTITA</button>
+	   </div> 
+	   
+	   <div id="haiperso" class="form" style="background-image:url(images/scala40/haiperso.jpg)">  
+	  <!--<button id= "persoOK" type="button" style="left: 100px;" >OK</button>
+	  <button id= "persoNEW" type="button" style="left: 200px;" >NUOVA PARTITA</button>-->
+	  <button class= "bottone1" type="button" style="left: 200px;" >NUOVA PARTITA</button>
+	  </div> 
+
+
+	  <div id="haipersotorneo" class="form" style="background-image:url(images/scala40/haipersotorneo.jpg)">  
+	  <button class= "bottone1" type="button" style="left: 100px;" >NUOVO TORNEO</button>
+	  <button class= "bottone2" type="button" style="left: 300px;" >GIOCA ANCORA</button>
+	  </div> 
+
+	  <div id="haivintotorneo" class="form" style="background-image:url(images/scala40/haivintotorneo.jpg)">  
+	  <button class= "bottone1" type="button" style="left: 100px;" >NUOVO TORNEO</button>
+	  <button class= "bottone2" type="button" style="left: 300px;" >GIOCA ANCORA</button>
+	  </div> 
+
+
+
+	   <div id="oltre40" class="form" style="background-image:url(images/scala40/achtung.jpg)">  
+	  <button class= "bottone1" type="button" style="left: 100px;" >ANNULLA APERTURA</button>
+	  <button class= "bottone2" type="button" style="left: 300px;" >CONTINUA</button>
+	  </div> 
+	  <div id="allerta" class="form" style="background-image:url(images/scala40/allerta.jpg)">
+	  		<div id="testoallerta"> prova </div>
+	  <button class= "bottone1" type="button" style="left: 200px;" >OK</button>
+	  </div> 
+
+
+	   <div id="totalizzatore"  class="totalizzatore">
+	   <div id="azzeratotale" class="pulsanteazz" style="top: 260px; left: 12px; z-index:1000; ">AZZERA</div> 
+	   </div>  <!--totalizzatore-->
+	   
+
+
+	   
+	   
+ 	   
+	   
+	   <div id="nonpertest">
+		<div id="istruzioni" class="pulsante2" style="top: 5px; left: 10px; z-index:1000">ISTRUZIONI</div> 
+		<div id="nuovo" class="pulsante2" style="top: 53px; left: 10px; z-index:1000">AVVERSARI</div>
+	    </div>   <!-- nonpertest-->
+	   <div id="pulsante2" class="pulsante2" style="top: 5px; left: 878px; z-index:1000">UNDO (0)</div> 
+	   <div id="scoperte" class="pulsante2" style="top: 53px; left: 878px; z-index:1000">SCOPERTE</div> 
+	   <img id="accessi" src="http://cgi-serv.digiland.it/Count.cgi?df=luciano.manenti">
+	   
+	    
+
+	    
+	     <div id="mazzo">
+                 
+                 <span>mazzo</span>
+		
+            </div>   <!-- mazzo-->
+	    
+	    <div id="scarti">
+                 
+                 <span>scarti</span>
+		
+            </div>   <!--scarti-->
+	    
+		<a href="index.html"><div class="pulsanteback" style="top: 700px; left: 890px; "></div></a>
+	    
+	  
+	
+      
+	  <div style="position:absolute; top: 00px; left: 210px;"><img src="images/scala40/dorata.png"   height="150px" width="650px"></div>
+   
+	</div>  <!-- campogioco schermo-->  
+	   <audio id="pesca" src="sounds/scala40/cardplace1.mp3"></audio>
+	   <audio id="scartatris" src="sounds/scala40/cardplace3.mp3"></audio>
+	   <audio id="ordina" src="sounds/scala40/cardslide5.mp3"></audio>
+	   <audio id="scarta" src="sounds/scala40/cardslide1.mp3"></audio>
+	    <audio id="perjolly" src="sounds/scala40/chimes.mp3"></audio>
+	    <audio id="tada" src="sounds/scala40/tada.mp3"></audio>
+	   <audio id="perso" src="sounds/scala40/haiperso.mp3"></audio>
+	 <audio id="dascarti" src="sounds/scala40/magic.mp3"></audio>
+	 <audio id="slitta" src="sounds/scala40/slitta.mp3"></audio>
+	 <audio id="ding" src="sounds/scala40/ding.mp3"></audio>
+	 <audio id="thunder" src="sounds/scala40/thunder.mp3"></audio>
+	 <audio id="applause" src="sounds/scala40/applause.mp3"></audio>
+	 <audio id="distribuisci" src="sounds/scala40/distribuisci.mp3"></audio>
+
+	<script src="jquery-2.1.1.js"></script>
+	<script src="scala40code.js"></script>
+
+
+
+</body>
+
+</html>

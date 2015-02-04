@@ -5,7 +5,11 @@
 
 #midiIn {
 	//background-image:url(images/wood2.png);
-	background:#A0522D
+	background:#A0522D;
+	position:absolute;
+	top:115px;
+	left:12px;
+
 
 }
 .hidden {
@@ -138,7 +142,7 @@ h1,h2,h3,h4,h5,h6{
 	padding:2px;
 	font-size:22px;
 	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
-	color:#8888;
+	color:#ffffff;
 	text-align:center;
 	border-radius:9px;
 	width:126px;
@@ -149,6 +153,53 @@ h1,h2,h3,h4,h5,h6{
 	background-image:url(images/wbutton.png);
 	
 }
+
+.pulsanteback{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888;
+	text-align:center;
+	border-radius:9px;
+	width:126px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/home/manentibutton.png);
+	
+}
+
+.pulsantehelp{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	border-radius:9px;
+	width:110px;
+	height:31px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 115px 36px;
+	background-image:url(images/help.png);
+	
+}
+
+.pulsanteaiuto{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	border-radius:9px;
+	width:110px;
+	height:31px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 115px 36px;
+	background-image:url(images/aiuto.png);
+	
+}
+
 .spartito{
 	border-style:solid;
 	border-color:#888888;

@@ -1,0 +1,835 @@
+<html>
+
+<head>
+<meta http-equiv=Content-Type content="text/html; charset=windows-1252">
+<meta name=Generator content="Microsoft Word 14 (filtered)">
+<title>Hanon Test Help</title>
+<style>
+<!--
+ /* Font Definitions */
+ @font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Wingdings;
+	panose-1:5 0 0 0 0 0 0 0 0 0;}
+@font-face
+	{font-family:Tahoma;
+	panose-1:2 11 6 4 3 5 4 4 2 4;}
+@font-face
+	{font-family:"Century Gothic";
+	panose-1:2 11 5 2 2 2 2 2 2 4;}
+ /* Style Definitions */
+ p.MsoNormal, li.MsoNormal, div.MsoNormal
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:10.0pt;
+	margin-left:0cm;
+	line-height:120%;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	font-style:italic;}
+h1
+	{mso-style-link:"Titolo 1 Carattere";
+	margin-top:24.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	line-height:111%;
+	background:#FFC6DC;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	font-style:italic;}
+h2
+	{mso-style-link:"Titolo 2 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:7.2pt;
+	line-height:111%;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+h3
+	{mso-style-link:"Titolo 3 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:7.2pt;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+h4
+	{mso-style-link:"Titolo 4 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:4.3pt;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+h5
+	{mso-style-link:"Titolo 5 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:4.3pt;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+h6
+	{mso-style-link:"Titolo 6 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-weight:normal;
+	font-style:italic;}
+p.MsoHeading7, li.MsoHeading7, div.MsoHeading7
+	{mso-style-link:"Titolo 7 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+p.MsoHeading8, li.MsoHeading8, div.MsoHeading8
+	{mso-style-link:"Titolo 8 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.MsoHeading9, li.MsoHeading9, div.MsoHeading9
+	{mso-style-link:"Titolo 9 Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.MsoCaption, li.MsoCaption, div.MsoCaption
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:10.0pt;
+	margin-left:0cm;
+	line-height:120%;
+	font-size:9.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-weight:bold;
+	font-style:italic;}
+p.MsoTitle, li.MsoTitle, div.MsoTitle
+	{mso-style-link:"Titolo Carattere";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	text-align:center;
+	background:#E40059;
+	font-size:24.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:white;
+	letter-spacing:.5pt;
+	font-style:italic;}
+p.MsoSubtitle, li.MsoSubtitle, div.MsoSubtitle
+	{mso-style-link:"Sottotitolo Carattere";
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:45.0pt;
+	margin-left:0cm;
+	text-align:center;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	font-style:italic;}
+a:link, span.MsoHyperlink
+	{color:#17BBFD;
+	text-decoration:underline;}
+a:visited, span.MsoHyperlinkFollowed
+	{color:#FF79C2;
+	text-decoration:underline;}
+strong
+	{letter-spacing:0pt;}
+em
+	{font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	border:solid #FFC6DC 2.25pt;
+	padding:0cm;
+	background:#FFC6DC;
+	font-weight:bold;}
+p.MsoAcetate, li.MsoAcetate, div.MsoAcetate
+	{mso-style-link:"Testo fumetto Carattere";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:8.0pt;
+	font-family:"Tahoma","sans-serif";
+	font-style:italic;}
+p.MsoNoSpacing, li.MsoNoSpacing, div.MsoNoSpacing
+	{mso-style-link:"Nessuna spaziatura Carattere";
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	font-style:italic;}
+p.MsoListParagraph, li.MsoListParagraph, div.MsoListParagraph
+	{margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:10.0pt;
+	margin-left:36.0pt;
+	line-height:120%;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	font-style:italic;}
+p.MsoQuote, li.MsoQuote, div.MsoQuote
+	{mso-style-link:"Citazione Carattere";
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:10.0pt;
+	margin-left:0cm;
+	line-height:120%;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;}
+p.MsoIntenseQuote, li.MsoIntenseQuote, div.MsoIntenseQuote
+	{mso-style-link:"Citazione intensa Carattere";
+	margin-top:0cm;
+	margin-right:108.0pt;
+	margin-bottom:10.0pt;
+	margin-left:108.0pt;
+	text-align:center;
+	line-height:125%;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-weight:bold;
+	font-style:italic;}
+span.MsoSubtleEmphasis
+	{font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+span.MsoIntenseEmphasis
+	{font-family:"Century Gothic","sans-serif";
+	color:white;
+	border:solid #E40059 2.25pt;
+	padding:0cm;
+	background:#E40059;
+	font-weight:bold;
+	font-style:italic;
+	text-decoration:none none;
+	vertical-align:baseline;}
+span.MsoSubtleReference
+	{font-variant:small-caps;
+	color:#E40059;
+	font-style:italic;}
+span.MsoIntenseReference
+	{font-variant:small-caps;
+	color:#E40059;
+	font-weight:bold;
+	font-style:italic;}
+span.MsoBookTitle
+	{font-family:"Century Gothic","sans-serif";
+	font-variant:small-caps;
+	color:#AA0042;
+	font-weight:bold;
+	font-style:italic;
+	text-decoration:underline;}
+p.MsoTocHeading, li.MsoTocHeading, div.MsoTocHeading
+	{margin-top:24.0pt;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	line-height:111%;
+	background:#FFC6DC;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	font-weight:bold;
+	font-style:italic;}
+span.Titolo1Carattere
+	{mso-style-name:"Titolo 1 Carattere";
+	mso-style-link:"Titolo 1";
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	background:#FFC6DC;
+	font-weight:bold;
+	font-style:italic;}
+span.Titolo2Carattere
+	{mso-style-name:"Titolo 2 Carattere";
+	mso-style-link:"Titolo 2";
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-weight:bold;
+	font-style:italic;}
+span.Titolo3Carattere
+	{mso-style-name:"Titolo 3 Carattere";
+	mso-style-link:"Titolo 3";
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-weight:bold;
+	font-style:italic;}
+span.Titolo4Carattere
+	{mso-style-name:"Titolo 4 Carattere";
+	mso-style-link:"Titolo 4";
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-weight:bold;
+	font-style:italic;}
+span.Titolo5Carattere
+	{mso-style-name:"Titolo 5 Carattere";
+	mso-style-link:"Titolo 5";
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-weight:bold;
+	font-style:italic;}
+span.Titolo6Carattere
+	{mso-style-name:"Titolo 6 Carattere";
+	mso-style-link:"Titolo 6";
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+span.Titolo7Carattere
+	{mso-style-name:"Titolo 7 Carattere";
+	mso-style-link:"Titolo 7";
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+p.msoheading7cxspfirst, li.msoheading7cxspfirst, div.msoheading7cxspfirst
+	{mso-style-name:msoheading7cxspfirst;
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+p.msoheading7cxspmiddle, li.msoheading7cxspmiddle, div.msoheading7cxspmiddle
+	{mso-style-name:msoheading7cxspmiddle;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+p.msoheading7cxsplast, li.msoheading7cxsplast, div.msoheading7cxsplast
+	{mso-style-name:msoheading7cxsplast;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#AA0042;
+	font-style:italic;}
+span.Titolo8Carattere
+	{mso-style-name:"Titolo 8 Carattere";
+	mso-style-link:"Titolo 8";
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.msoheading8cxspfirst, li.msoheading8cxspfirst, div.msoheading8cxspfirst
+	{mso-style-name:msoheading8cxspfirst;
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.msoheading8cxspmiddle, li.msoheading8cxspmiddle, div.msoheading8cxspmiddle
+	{mso-style-name:msoheading8cxspmiddle;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.msoheading8cxsplast, li.msoheading8cxsplast, div.msoheading8cxsplast
+	{mso-style-name:msoheading8cxsplast;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+span.Titolo9Carattere
+	{mso-style-name:"Titolo 9 Carattere";
+	mso-style-link:"Titolo 9";
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.msoheading9cxspfirst, li.msoheading9cxspfirst, div.msoheading9cxspfirst
+	{mso-style-name:msoheading9cxspfirst;
+	margin-top:10.0pt;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.msoheading9cxspmiddle, li.msoheading9cxspmiddle, div.msoheading9cxspmiddle
+	{mso-style-name:msoheading9cxspmiddle;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+p.msoheading9cxsplast, li.msoheading9cxsplast, div.msoheading9cxsplast
+	{mso-style-name:msoheading9cxsplast;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-style:italic;}
+span.TitoloCarattere
+	{mso-style-name:"Titolo Carattere";
+	mso-style-link:Titolo;
+	font-family:"Century Gothic","sans-serif";
+	color:white;
+	letter-spacing:.5pt;
+	background:#E40059;
+	font-style:italic;}
+span.SottotitoloCarattere
+	{mso-style-name:"Sottotitolo Carattere";
+	mso-style-link:Sottotitolo;
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	font-style:italic;}
+span.TestofumettoCarattere
+	{mso-style-name:"Testo fumetto Carattere";
+	mso-style-link:"Testo fumetto";
+	font-family:"Tahoma","sans-serif";
+	font-style:italic;}
+span.NessunaspaziaturaCarattere
+	{mso-style-name:"Nessuna spaziatura Carattere";
+	mso-style-link:"Nessuna spaziatura";
+	font-style:italic;}
+p.msolistparagraphcxspfirst, li.msolistparagraphcxspfirst, div.msolistparagraphcxspfirst
+	{mso-style-name:msolistparagraphcxspfirst;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	line-height:120%;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	font-style:italic;}
+p.msolistparagraphcxspmiddle, li.msolistparagraphcxspmiddle, div.msolistparagraphcxspmiddle
+	{mso-style-name:msolistparagraphcxspmiddle;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:36.0pt;
+	margin-bottom:.0001pt;
+	line-height:120%;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	font-style:italic;}
+p.msolistparagraphcxsplast, li.msolistparagraphcxsplast, div.msolistparagraphcxsplast
+	{mso-style-name:msolistparagraphcxsplast;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:10.0pt;
+	margin-left:36.0pt;
+	line-height:120%;
+	font-size:12.0pt;
+	font-family:"Century Gothic","sans-serif";
+	font-style:italic;}
+span.CitazioneCarattere
+	{mso-style-name:"Citazione Carattere";
+	mso-style-link:Citazione;
+	color:#AA0042;}
+span.CitazioneintensaCarattere
+	{mso-style-name:"Citazione intensa Carattere";
+	mso-style-link:"Citazione intensa";
+	font-family:"Century Gothic","sans-serif";
+	color:#E40059;
+	font-weight:bold;
+	font-style:italic;}
+p.msotocheadingcxspfirst, li.msotocheadingcxspfirst, div.msotocheadingcxspfirst
+	{mso-style-name:msotocheadingcxspfirst;
+	margin-top:24.0pt;
+	margin-right:0cm;
+	margin-bottom:0cm;
+	margin-left:0cm;
+	margin-bottom:.0001pt;
+	line-height:111%;
+	background:#FFC6DC;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	font-weight:bold;
+	font-style:italic;}
+p.msotocheadingcxspmiddle, li.msotocheadingcxspmiddle, div.msotocheadingcxspmiddle
+	{mso-style-name:msotocheadingcxspmiddle;
+	margin:0cm;
+	margin-bottom:.0001pt;
+	line-height:111%;
+	background:#FFC6DC;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	font-weight:bold;
+	font-style:italic;}
+p.msotocheadingcxsplast, li.msotocheadingcxsplast, div.msotocheadingcxsplast
+	{mso-style-name:msotocheadingcxsplast;
+	margin-top:0cm;
+	margin-right:0cm;
+	margin-bottom:5.0pt;
+	margin-left:0cm;
+	line-height:111%;
+	background:#FFC6DC;
+	font-size:11.0pt;
+	font-family:"Century Gothic","sans-serif";
+	color:#71002C;
+	font-weight:bold;
+	font-style:italic;}
+p.msopapdefault, li.msopapdefault, div.msopapdefault
+	{mso-style-name:msopapdefault;
+	margin-right:0cm;
+	margin-bottom:10.0pt;
+	margin-left:0cm;
+	line-height:120%;
+	font-size:12.0pt;
+	font-family:"Times New Roman","serif";}
+.MsoChpDefault
+	{font-size:10.0pt;}
+.MsoPapDefault
+	{margin-bottom:10.0pt;
+	line-height:120%;}
+@page WordSection1
+	{size:595.3pt 841.9pt;
+	margin:70.85pt 2.0cm 2.0cm 2.0cm;}
+div.WordSection1
+	{page:WordSection1;}
+ /* List Definitions */
+ ol
+	{margin-bottom:0cm;}
+ul
+	{margin-bottom:0cm;}
+-->
+</style>
+
+</head>
+
+<body lang=IT link="#17BBFD" vlink="#FF79C2">
+
+<div class=WordSection1>
+
+<div style='border-top:solid #E40059 6.0pt;border-left:none;border-bottom:solid #E40059 6.0pt;
+border-right:none;padding:0cm 0cm 0cm 0cm'>
+
+<p class=MsoTitle><span lang=EN-US>HANON TEST – INSTRUCTIONS</span></p>
+
+</div>
+
+<div style='border:solid #E40059 1.0pt;padding:0cm 0cm 0cm 0cm'>
+
+<h1><span lang=EN-US>Jazz Plugin Installation and activation - MIDI input</span></h1>
+
+</div>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>The HANON TEST application requires the
+installation of <b>Jazz plugin. </b>It can be downloaded from this site: </span></p>
+
+<p class=MsoNormal><a href="http://jazz-soft.net/download/Jazz-Plugin/"><span
+lang=EN-US>http://jazz-soft.net/download/Jazz-Plugin/</span></a></p>
+
+<p class=MsoNormal><span lang=EN-US>After downloading the installation program,
+click on it for its execution. Keep pressing &lt;OK&gt; and &lt;Next&gt; until
+done.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;When the  Hanon Test application is
+executed thel browser will request the authorization to activate the plugin. Confirm
+that you always allow  the execution of Jazz plugin for this application and
+reload the page clicking on the reload  button or pressing F5.</span></p>
+
+<p class=MsoNormal><img width=130 height=82
+src="FILTRATA/HANON%20TEST_file/image001.png" align=left hspace=12><span
+lang=EN-US>Google chrome indicates the blocked  plugin with an icon signed with
+a red cross in the address bar (see figure).Click on the red cross and activate
+the plugin. Then reload the page using F5</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><img width=209 height=80
+src="FILTRATA/HANON%20TEST_file/image002.png" align=left hspace=12><span
+lang=EN-US>At this point you should have a MIDI keyboard connected to your PC.If
+it is not already selected, select the MIDI input you intend to use from the dropdown
+menu  included in the <b>OPTIONS </b>panel.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<div style='border:solid #E40059 1.0pt;padding:0cm 0cm 0cm 0cm'>
+
+<h1><span lang=EN-US>Metronome setup</span></h1>
+
+</div>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><img width=87 height=192
+src="FILTRATA/HANON%20TEST_file/image003.jpg" align=right hspace=12><span
+lang=EN-US>The speed of the metronome, in Bpm (beats per minute) can be
+selected in various ways:</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>Dragging the cursor up and down with the mouse,
+as on a real metronome.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US> By clicking on the buttons <b>+1, +5, -1, -5</b>
+that increase or decrease the speed of the metronome of the corresponding
+amount.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US> Pressing the second black key on the MIDI
+keyboard to decrease of 5, or the third black key to increment of 5.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US>Using the option &quot;<b>auto bpm +5</b>&quot;
+outlined below.</span><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<div style='border:solid #E40059 1.0pt;padding:0cm 0cm 0cm 0cm'>
+
+<h1>Opzioni</h1>
+
+</div>
+
+<p class=MsoNormal><img width=267 height=372
+src="FILTRATA/HANON%20TEST_file/image004.jpg" align=right hspace=12>&nbsp;</p>
+
+<p class=MsoNormal><span lang=EN-US>In the <b>Options</b> panel, you can enable
+or disable the following options:</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US> Insert Base</span></b><span lang=EN-US> -
+Adds a musical background to the exercise</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>Insert melody</span></b><span lang=EN-US> -
+allows you to hear the notes of the exercise</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>Loop</span></b><span lang=EN-US> - Enable the
+automatic repetition of the exercise</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US> <b>Auto + 5 bpm</b> - If selected automatically
+increases the Bpm of 5 if the exercise has been completed with a score greater
+than 70.</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><span lang=EN-US> <b>Auto seq</b>. - At the end of an exercise
+automatically selects the next.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>In the grid below, you can select the
+number (1 to 20) for the Hanon exercise that you intend to execute.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Pressing the second-to-last black key MIDI
+keyboard this number is decreased, while by pressing the last black key the number
+is increased.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<div style='border:solid #E40059 1.0pt;padding:0cm 0cm 0cm 0cm'>
+
+<h1><span lang=EN-US>Test execution</span></h1>
+
+</div>
+
+<p class=MsoNormal><span lang=EN-US>The test is activated by pressing the START
+button located under the metronome. Alternatively you can start the test by
+pressing the first black button of the MIDI keyboard. In the same way the test
+can be stopped..</span></p>
+
+<p class=MsoNormal><img border=0 width=665 height=93
+src="FILTRATA/HANON%20TEST_file/image005.jpg"><span lang=EN-US><br clear=all>
+</span><img width=293 height=315 src="FILTRATA/HANON%20TEST_file/image006.png"
+align=right hspace=12><span lang=EN-US>During the test, the two lower bars labeled
+ &quot;RIGHT&quot; and &quot;LEFT&quot; give an indication of the precision
+with which the right and left hands performed the current note. The perfect
+execution, that is, with the note that starts and ends exactly at the beginning
+and end of the corresponding time interval sees bars positioned as in the
+figure above. Any delays or advances in the beginning of the note will see the
+left edge of the bar to move forward or backward respectively. Similarly the
+right edge of the bar will move forward or backward depending on the errors on
+the end of the note.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>As an indication, the width of the brown
+square corresponds to ¼ of the theoretical note length.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>In addition to moving, the two bars also
+change color. A note left hand played perfectly is dark green, and the right
+hand is dark blue. The color lightens with the increase the error, until they
+become white for a very big error. If the note is completely wrong or off the
+bar turns red.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>The performance of these two bars over time
+is shown on two vertical graphs, represented here on the right.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>The position of the two light brown bands
+corresponds to the position of the two squares on the sides of the horizontal
+bars mentioned above, therefore the correct range of execution is the one
+between them.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>Even in these graphs, the color is much
+more clear how much worse is the performance. Red if totally wrong or absent.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>At the top of the screen is displayed a
+double stave with notes for the exercise. These notes will gradually be colored
+with the same criterion.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>The two graphs immediately to the sides of
+the central table represent the speed of played notes, corresponding to the
+pressure exerted on the keys of the MIDI keyboard. Useful to give an idea of
+how this pressure is constant.</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<div style='border:solid #E40059 1.0pt;padding:0cm 0cm 0cm 0cm'>
+
+<h1>The central table</h1>
+
+</div>
+
+<p class=MsoNormal><img width=329 height=334
+src="FILTRATA/HANON%20TEST_file/image007.jpg" align=right hspace=12><span
+lang=EN-US>The central table provides statistical information on the test. For
+each hand provides the following information:</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>Wrong notes</span></b><span lang=EN-US> - how
+many wrong notes were played</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>notes start error</span></b><span lang=EN-US>
+- the average value of the error on the start of the note, as a percentage of
+the length of the note</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>notes stop error </span></b><span lang=EN-US>-
+the average value of the error on the end of the note, as a percentage of the
+length of the note</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>Notes  duration error</span></b><span
+lang=EN-US> - the average value of the error on the length of the note, as a
+percentage of the length of the note</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>Pressure Stability</span></b><span
+lang=EN-US> - constancy in the value of key presses, a percentage of the mean
+value (0 = perfectly constant, 100 = maximum instability).</span></p>
+
+<p class=MsoListParagraph style='text-indent:-18.0pt'><span lang=EN-US
+style='font-family:Symbol;font-style:normal'>·<span style='font:7.0pt "Times New Roman"'>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+</span></span><b><span lang=EN-US>Overall score</span></b><span lang=EN-US> - a
+score calculated on the combination of the above values. The theoretical
+maximum value is 100, unattainable in practice. A good value is 80.</span></p>
+
+<p class=MsoNormal style='margin-left:18.0pt'><span lang=EN-US>The number
+reported in great overall score is the average of the two hands. If this value
+at the end of the exercise exceeds 70 and <b>auto bpm + 5</b> is enabled the Bpm
+value will be automatically increased by 5.&nbsp;</span></p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<div style='border:solid #E40059 1.0pt;padding:0cm 0cm 0cm 0cm'>
+
+<h1><span lang=EN-US>In detail</span></h1>
+
+</div>
+
+<p class=MsoNormal><span lang=EN-US>Pressing the <b>DETAILS</b> button you
+access a detailed display of the just completed exercise. You can drag the
+graphs to the right and left with the mouse. Pressing the <b>NOTE ON</b> button
+you can listen to the notes of the exercise while dragging the graph. You can
+also perform an exercise keeping this view. Press the <b>EXIT</b> button to
+return to the main screen</span></p>
+
+<div style='border:solid #E40059 1.0pt;padding:0cm 0cm 0cm 0cm'>
+
+<h1><span lang=EN-US>Tip</span></h1>
+
+</div>
+
+<p class=MsoNormal><span lang=EN-US>I found  very convenient the free <b>Splashtop
+</b>application  which lets you duplicate  the PC screen on a tablet. In this
+way it is possible to perform the exercises in real time by consulting the
+result on the tablet placed on the lectern of the keyboard. </span>For
+information http://www.splashtop.com/.</p>
+
+<p class=MsoNormal><span lang=EN-US>&nbsp;</span></p>
+
+<p class=MsoListParagraph>.</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+<p class=MsoNormal>&nbsp;</p>
+
+</div>
+
+</body>
+
+</html>

@@ -1,0 +1,436 @@
+
+
+body{
+	-webkit-touch-callout:none;
+	-webkit-user-select:none;
+	-khtml-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+
+	font-size:.75em;
+	font-family:'Open Sans',"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#fff;
+	width:auto;
+	height:700px;
+	background-color:green;
+	margin:0;
+
+}
+
+#campogioco{
+	position:relative;
+	top:0px;
+	left:auto;
+	width:1024px;
+	height:750px;
+	background-image:url(images/scala40/tappetoverde.png);
+	margin:0px  auto 0px;
+
+}
+
+
+
+img{
+	border-style:none
+}
+
+h1,h2,h3,h4,h5,h6{
+	text-align:center
+}
+
+
+
+
+
+.campo{
+	margin-top:auto;
+	margin-bottom:auto;
+	text-align:center;	
+
+	border-style:solid;
+	border-color:#888888;
+	border-width:3px 6px;
+	color:#888888;
+	position:absolute;
+}
+
+
+.etichetta{
+	position:absolute;
+	color:#888888;
+
+	font-size:50px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	text-shadow:green 4px 4px 2px
+	
+
+}
+
+#mazzo{
+	font-size:15px;
+	color:#cccccc;
+	border-radius:9px;
+	text-align:center;
+	position:absolute;
+	top:415px;
+	left:890px;
+	width:120px;
+	height:130px;
+	background-image:url(images/scala40/tappetoverdescuretto.png);
+}
+
+#scarti{
+	font-size:15px;
+	color:#cccccc;
+	border-radius:9px;
+	text-align:center;
+	position:absolute;
+	top:565px;
+	left:890px;
+	width:120px;
+	height:130px;
+	background-image:url(images/scala40/tappetoverdescuretto.png);
+}
+
+.card{
+	border-radius:9px;
+	-ms-border-radius:9px;
+	-webkit-border-radius:9px;
+	-o-border-radius:9px;
+	-khtml-border-radius:9px;
+	-moz-border-radius:9px;
+	background-image:url(images/scala40/conjollyplus.png);
+	position:absolute;
+	cursor:pointer;
+}
+
+.cardselected{
+	background-image:url(images/scala40/conjollyselplus.png);
+	
+	
+}
+
+
+
+.pulsante{
+	font-size:25px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:black;
+	text-align:center;
+	border-radius:9px;
+	width:40px;
+	height:40px;
+	position:absolute;
+	cursor:pointer;
+	background-image:url(images/scala40/tappetoverdechiaro.png);
+}
+
+.pulsante2{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888oo;
+	text-align:center;
+	border-radius:9px;
+	width:126px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/scala40/wbutton.png);
+	
+}
+
+.pulsanteback{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888;
+	text-align:center;
+	border-radius:9px;
+	width:126px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/home/manentibutton.png);
+	
+}
+
+.pulsanteazz{
+	
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:14px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888oo;
+	text-align:center;
+	border-radius:9px;
+	width:100px;
+	height:20px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/scala40/wbutton.png);
+}
+
+
+.pulsante3{
+	
+	font-size:10px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:black;
+	text-align:center;
+	border-radius:9px;
+	width:40px;
+	height:40px;
+	position:absolute;
+	cursor:pointer;
+	background-image:url(images/scala40/tappetoverdechiaro.png);
+}
+
+#jollyoptions-page{
+	width:360px;
+	height:450px;
+	position:absolute;
+	background:#E6E68A;
+	
+	top:100px;
+	left:500px;
+	z-index:10000;
+	border-radius:15px;
+	-moz-border-radius:15px;
+	-ms-border-radius:15px;
+	color:#000;
+	border:solid 2px #666!important;
+	display:none;
+	
+	
+}
+
+#jollyoptions-page button{
+	
+	top:350px;
+	left:130px;
+	position:absolute;
+	width:100px;
+	height:30px;
+	display:block;
+	margin:auto;
+	margin-top:10px;
+	margin-bottom:15px
+
+}
+
+#jollyoptions label{
+	border-style:solid;
+	
+	border-radius:9px;
+
+	position:absolute;
+	left:40px;
+	width:200px;
+	
+
+	font-size:30px;
+}
+
+:checked  {
+	
+	
+	background-color:yellow;
+
+
+}
+.seme:hover {
+	
+	border-color: yellow;
+	
+   
+	
+}
+.seme:not(hover) {
+	
+	border-color: grey;
+}
+
+.selettore input{
+    margin:0;padding:0;
+    -webkit-appearance:none;
+       -moz-appearance:none;
+            appearance:none;
+}
+
+
+.digit {
+	
+	position:absolute;
+	cursor:pointer;
+	width:40px;
+	height:45px;
+	background-size: 40px 450px;
+	background-image:url(images/scala40/numeridorovr.png);  
+}
+
+.digit1 {
+	
+	position:absolute;
+	cursor:pointer;
+	width:27px;
+	height:40px; 
+	background-size: 27px 400px;
+	background-image:url(images/scala40/numeridorovr.png);  
+}
+
+.digitx {
+	
+	position:absolute;
+	cursor:pointer;
+	background-image:url(images/scala40/numeridorovr.png);
+}
+
+
+.digit2 {
+	
+	position:absolute;
+	cursor:pointer;
+	width:14px;
+	height:22px;
+	background-size: 14px 220px;
+	background-image:url(images/scala40/numeridorovr.png);  
+}
+
+.contatore {
+	
+	position:absolute;
+	cursor:pointer;
+}
+
+
+.totalizzatore {
+	
+	position:absolute;
+	cursor:pointer;
+	top:100px;
+	left:880px;
+
+	width:130px;
+	height:300px;
+
+	background-size: 130px 300px;
+	background-image:url(images/scala40/mtotalizzatore.png);  
+	
+}
+
+
+#schermo{
+	position:absolute;
+	top:0px;
+	left:auto;
+	width:1024px;
+	height:750px; 
+	background-image:url(images/scala40/nero.png); 
+	z-index:30000;
+	margin:0px  auto 0px;
+	opacity:0.6;
+	display:none; 
+
+}
+
+
+
+
+.form {
+	
+	z-index:40000;
+	position:absolute;
+	width:500px;
+	height:280px;
+	left:250px;
+	top:200px;
+	background-size: 500px 280px;
+	display:none;
+}
+
+
+.formistruzioni {
+	
+	z-index:40000;
+	line-height:140%;
+	border-style:solid;
+	
+	border-radius:9px;
+	font-size:12px;
+
+	position:absolute;
+	width:700px;
+	left:150px;
+	top:50px;
+	padding:25px;
+	background-size: 500px 280px;
+	background-color:green;
+	display:none;
+}  
+
+#testoallerta {
+	
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	line-height:140%;
+	border-style:solid;
+	
+	border-radius:9px;
+	font-size:24px;
+	color:orange;
+
+	position:absolute;
+	width:200px;
+	left:210px;
+	top:20px;
+	padding:25px;
+
+}  
+
+	
+.formistruzioni button{
+
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-ms-border-radius:10px;
+	border:solid;
+	position:relative;
+	left:300px;
+	width:100px;
+	height:36px;
+	z-index:50000;
+
+	
+	
+}
+
+.form button{
+
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-ms-border-radius:10px;
+	border:solid;
+	position:absolute;
+	width:100px;
+	height:36px;
+	top:240px;
+	z-index:50000;
+	
+	
+}
+
+#accessi{
+	position:absolute;
+	top:700px;
+	left:12px;
+	display:none;	
+}

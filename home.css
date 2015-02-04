@@ -1,0 +1,644 @@
+#icoscala{
+	position:absolute;
+		border-style:solid;
+	border-color:#FFFFFF;
+	border-width:6px;
+	top:180px;
+	left:100px;
+	width:150px;
+	height:100px;
+	background-size: 150px 100px;
+	background-image:url(images/home/scala40.jpg);
+	//background-color:green; */
+	
+}
+#icoscala img{
+	position:absolute;
+	top:25px;
+	left:200px;
+	width:350px;
+	height:60px;
+	//background-color:green; */
+	
+}
+
+#underconstruction{
+	position:absolute;
+		border-style:solid;
+	border-color:#FFFFFF;
+	border-width:6px;
+
+	top:00px;
+	left:100px;
+	width:1024px;
+	height:768px;
+	background-size: 1024px 768px;
+	background-image:url(images/home/underconstruction.jpg);
+	//background-color:green; */
+	
+}
+
+#underconstruction h {
+			border-style:solid;
+	border-color:#FFFFFF;
+	border-width:6px;
+		border-radius:15px;
+
+	padding:10px;
+	position:absolute;
+		font-size:20px;
+	font-family:'Open Sans',"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+
+	top:500px;
+	left:300px;
+	width:400px;
+	color:white;
+	background-color:green;
+}
+
+#aboutme{
+	position:absolute;
+		border-style:solid;
+	border-color:#FFFFFF;
+	border-width:6px;
+	top:570px;
+	left:100px;
+	width:150px;
+	height:100px;
+	background-size: 150px 100px;
+	background-image:url(images/home/yogi.png);
+	//background-color:green; */
+	
+}
+
+
+#aboutme img{
+	position:absolute;
+	top:25px;
+	left:200px;
+	width:350px;
+	height:60px;
+	//background-color:green; */
+	
+}
+#icohanon {
+	position:absolute;
+		border-style:solid;
+	border-color:#FFFFFF;
+	border-width:6px;
+
+	top:310px;
+	left:100px;
+	width:150px;
+	height:100px;
+	background-size: 150px 100px;
+	background-image:url(images/home/hanon.jpg);
+	//background-color:green;
+	
+}
+#icohanon img{
+	position:absolute;
+	top:25px;
+	left:200px;
+	width:350px;
+	height:60px;
+	//background-color:green; */
+	
+}
+
+
+#icometro {
+	position:absolute;
+		border-style:solid;
+	border-color:#FFFFFF;
+	border-width:6px;
+
+	top:440px;
+	left:100px;
+	width:150px;
+	height:100px;
+	background-size: 150px 100px;
+	background-image:url(images/home/icometronomo.jpg);
+	//background-color:green;
+	
+}
+
+
+#icometro img{
+	position:absolute;
+	top:25px;
+	left:200px;
+	width:350px;
+	height:60px;
+	//background-color:green; */
+	
+}
+
+
+
+#intestazione {
+	position:relative;
+		border-style:solid;
+	border-color:#ffffff;
+	border-width:6px;
+		border-radius:20px;
+
+
+	top:0px;
+	left:100px;
+	width:830px;
+	height:152px;
+
+	background-size: 830px 152px;
+	background-image:url(images/home/intestazione.png);
+	background-color:green;
+	
+	
+}
+
+body{
+	-webkit-touch-callout:none;
+	-webkit-user-select:none;
+	-khtml-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
+
+	font-size:.75em;
+	font-family:'Open Sans',"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#fff;
+	width:auto;
+	height:auto;
+	//background-image:url(images/tappetoverde.png);
+	background-size: 1600px 1024px;
+	background-image:url(images/home/castagne.jpg);
+	margin:0;
+
+}
+
+#campogioco{
+	position:relative;
+	top:0px;
+	left:auto;
+	width:1024px;
+	height:750px;
+	//background-image:url(images/wood2.png);
+	margin:0px  auto 0px;
+	
+
+}
+
+#campoesamina{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:1000px;
+	height:750px;
+	background-image:url(images/wood2.png);
+	margin:0px  auto 0px;
+	z-index:50000;
+	display:none;
+
+}
+
+
+
+h1,h2,h3,h4,h5,h6{
+	text-align:center
+}
+
+
+
+
+
+.campo{
+	margin-top:auto;
+	margin-bottom:auto;
+	text-align:center;	
+
+	border-style:solid;
+	border-color:#888888;
+	border-width:3px 6px;
+	color:#888888;
+	position:absolute;
+}
+
+
+.etichetta{
+	position:absolute;
+	color:#888888;
+
+	font-size:50px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	text-shadow:green 4px 4px 2px
+	
+
+}
+
+
+.card{
+	border-radius:9px;
+	-ms-border-radius:9px;
+	-webkit-border-radius:9px;
+	-o-border-radius:9px;
+	-khtml-border-radius:9px;
+	-moz-border-radius:9px;
+	background-image:url(images/conjollyplus.png);
+	position:absolute;
+	cursor:pointer;
+}
+
+.cardselected{
+	background-image:url(images/conjollyselplus.png);
+	
+	
+}
+
+
+
+.pulsante{
+	font-size:25px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:black;
+	text-align:center;
+	border-radius:9px;
+	width:40px;
+	height:40px;
+	position:absolute;
+	cursor:pointer;
+	background-image:url(images/tappetoverdechiaro.png);
+}
+
+.pulsante2{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888;
+	text-align:center;
+	border-radius:9px;
+	width:126px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/wbutton.png);
+	
+}
+
+
+.pulsanteback{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888;
+	text-align:center;
+	border-radius:9px;
+	width:247px;
+	height:69px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 250px 72px;
+	background-image:url(images/home/manentibutton.png);
+
+}
+
+.spartito{
+	border-style:solid;
+	border-color:#888888;
+	border-radius:0px;
+	position:absolute;
+	cursor:pointer;
+	background:#A0522D
+
+	
+}
+
+.barra{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	text-align:center;
+	border-radius:9px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	
+}
+
+.barretta{
+	border-style:solid;
+	border-color:#888888;
+	border-radius:0px;
+	position:absolute;
+	top:100px;
+	cursor:pointer;
+	background:#500000;
+	
+}
+
+.barrettina{
+	position:absolute;
+	cursor:pointer;
+	
+}
+
+
+.pulsanteazz{
+	
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:14px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888oo;
+	text-align:center;
+	border-radius:9px;
+	width:100px;
+	height:20px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/wbutton.png);
+}
+
+
+.pulsante3{
+	
+	font-size:10px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:black;
+	text-align:center;
+	border-radius:9px;
+	width:40px;
+	height:40px;
+	position:absolute;
+	cursor:pointer;
+	background-image:url(images/tappetoverdechiaro.png);
+}
+
+
+
+
+.digit {
+	
+	position:absolute;
+	cursor:pointer;
+	width:40px;
+	height:45px;
+	background-size: 40px 450px;
+	background-image:url(images/numeridorovr.png);  
+}
+
+.digit1 {
+	
+	position:absolute;
+	cursor:pointer;
+	width:27px;
+	height:40px; 
+	background-size: 27px 400px;
+	background-image:url(images/numeridorovr.png);  
+}
+
+.digitx {
+	
+	position:absolute;
+	cursor:pointer;
+	background-image:url(images/numeridorovr.png);
+}
+
+
+.digit2 {
+	
+	position:absolute;
+	cursor:pointer;
+	width:14px;
+	height:22px;
+	background-size: 14px 220px;
+	background-image:url(images/numeridorovr.png);  
+}
+
+.contatore {
+	
+	position:absolute;
+	cursor:pointer;
+}
+
+
+.totalizzatore {
+	
+	position:absolute;
+	cursor:pointer;
+	top:100px;
+	left:880px;
+
+	width:130px;
+	height:300px;
+
+	background-size: 130px 300px;
+	background-image:url(images/mtotalizzatore.png);  
+	
+}
+
+
+#schermo{
+	position:absolute;
+	top:0px;
+	left:auto;
+	width:1024px;
+	height:750px; 
+	background-image:url(images/nero.png); 
+	z-index:30000;
+	margin:0px  auto 0px;
+	opacity:0.6;
+	display:none; 
+
+}
+
+
+#opzioni{
+	font-size:15px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:white;
+	border-style:solid;
+	border-radius:9px;
+	border-color:#888888;
+
+	//z-index:40000;
+	position:absolute;
+	width:240px;
+	height:600px;
+	left:-250px;
+	top:0px;
+	//background-color:green;
+}
+
+#metronomo{
+	font-size:15px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:white;
+	border-style:solid;
+	border-radius:9px;
+	border-color:#888888;
+
+	//z-index:40000;
+	position:absolute;
+	width:1000px;
+	height:700px;
+	left:0px;
+	top:0px;
+	//background-color:green;
+}
+
+
+#dati{
+	font-size:15px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:white;
+	border-style:solid;
+	border-radius:9px;
+	border-color:#888888;
+
+	//z-index:40000;
+	position:absolute;
+	width:396px;
+	height:400px;
+	left:304px;
+	top:200px;
+	//background-color:green;
+}
+
+#canvasdati{
+
+
+	//z-index:40000;
+	position:absolute;
+	left:0px;
+	top:0px;
+	//background-color:green;
+}
+
+#canvasimposta{
+
+
+	position:absolute;
+	left:400px;
+	top:0px;
+	//background-color:red;
+	
+}
+
+#wc{
+
+
+	position:absolute;
+	left:0px;
+	top:0px;
+	//background-color:red;
+	
+	
+}
+
+
+#canvasmetronomo{
+
+
+	//z-index:40000;
+	position:absolute;
+	left:0px;
+	top:0px;
+	//background-color:green;
+}
+.form {
+	
+	//z-index:40000;
+	position:absolute;
+	width:500px;
+	height:280px;
+	left:250px;
+	top:200px;
+	background-size: 500px 280px;
+	display:none;
+}
+
+
+.formistruzioni {
+	
+	//z-index:40000;
+	line-height:140%;
+	border-style:solid;
+	
+	border-radius:9px;
+	font-size:12px;
+
+	position:absolute;
+	width:700px;
+	left:150px;
+	top:50px;
+	padding:25px;
+	background-size: 500px 280px;
+	background-color:green;
+	display:none;
+}  
+
+#testoallerta {
+	
+	font-family: "Comic Sans MS", cursive, sans-serif;
+	line-height:140%;
+	border-style:solid;
+	
+	border-radius:9px;
+	font-size:24px;
+	color:orange;
+
+	position:absolute;
+	width:200px;
+	left:210px;
+	top:20px;
+	padding:25px;
+
+}  
+
+	
+.formistruzioni button{
+
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-ms-border-radius:10px;
+	border:solid;
+	position:relative;
+	left:300px;
+	width:100px;
+	height:36px;
+	//z-index:50000;
+
+	
+	
+}
+
+.form button{
+
+	border-radius:10px;
+	-moz-border-radius:10px;
+	-ms-border-radius:10px;
+	border:solid;
+	position:absolute;
+	width:100px;
+	height:36px;
+	top:240px;
+	//z-index:50000;
+	
+	
+}
+
+#accessi{
+	position:absolute;
+	top:700px;
+	left:12px;
+	display:none;	
+}
