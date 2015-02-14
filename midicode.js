@@ -397,25 +397,6 @@ var tmidi = {
 	
 
 
-/*	fromFile:function (){
-
- 
-  		var reader=new FileReader();
-  		var f=document.getElementById('myFile').files[0];
-  		reader.onload=function(e){ readMidiFile(e.target.result);};
-  		reader.readAsBinaryString(f);
-
-  		function readMidiFile(s){
- 			
- 			ms=s;
-  			mf=new JZZ.MidiFile(s);
-   			pl=mf.player();
-   			pl.onEvent=tmidi.onPlayer;
-			pl.play();
-  		}
-
-
- 	},  */
 
 
 
@@ -598,36 +579,123 @@ var tmidi = {
   	initgraficodati:function(b,w,h){
     	b.clearRect(0, 0, w,h);
 
-    	b.fillStyle="#000000";
-   		b.fillStyle="#FFFFFF";
-    	b.font="18px Verdana";
-		b.fillRect(0,50,w,2);
+    	var hrow=20;       //altezza righe
+    	var pleft=230,pright=315,plefttext=10;
+
+
+    	fillTextc = function(l,n,m,y){
+    		b.fillText(l,plefttext,y)
+    		str=n +" %"
+    		if (n==0) str="---"
+    		b.fillText(str,pleft,y)
+    		str=m +" %"
+    		if (m==0) str="---"
+    		b.fillText(str,pright,y)
+    		b.font="16px Verdana";
+    		b.fillStyle="#FF0000";
+    		str=tmidi.ersx[8];
+    		if (tmidi.gfs==0) str="---";
+    		b.fillText(str,pleft+55,y)
+    		str=tmidi.erdx[8];
+    		if (tmidi.gfd==0) str="---";
+    		b.fillText(str,pright+55,y)
+   		}
+    	fillTextd = function(l,n,m,y){
+    		b.fillText(l,plefttext,50+y*hrow)
+    		str=n +" %"
+    		if (n==0) str="---"
+    		b.fillText(str,pleft,50+y*hrow)
+    		str=m +" %"
+    		if (m==0) str="---"
+    		b.fillText(str,pright,50+y*hrow)
+    		b.fillStyle="#FF0000";
+    		str=tmidi.ersx[y];
+    		if (tmidi.gfs==0) str="---";
+    		b.fillText(str,pleft+55,50+y*hrow)
+    		str=tmidi.erdx[y];
+    		if (tmidi.gfd==0) str="---";
+    		b.fillText(str,pright+55,50+y*hrow)
+   		}
+   		    fillTexte = function(l,n,m,y){
+    		b.fillText(l,plefttext,50+y*hrow)
+    		str=n
+    		if (n==0) str="---"
+    		b.fillText(str,pleft,50+y*hrow)
+    		str=m
+    		if (m==0) str="---"
+    		b.fillText(str,pright,50+y*hrow)
+    		b.fillStyle="#FF0000";
+    		str=tmidi.ersx[y];
+    		if (tmidi.gfs==0) str="---";
+    		b.fillText(str,pleft+55,50+y*hrow)
+    		str=tmidi.erdx[y];
+    		if (tmidi.gfd==0) str="---";
+    		b.fillText(str,pright+55,50+y*hrow)
+   		}
+
+
+
+    	//b.fillStyle="#A0522D";
+    	//b.fillStyle="#FF0000";
+   		
+    	b.font="16px Verdana";
+    	//b.fillRect(280,0,27,260)
+    	b.fillStyle="#FFFFFF";
+		b.fillRect(0,30,w,2);
 		b.fillRect(220,0,2,260);
-		b.fillRect(310,0,2,260);
-		b.fillText("LEFT",240,30);
-		b.fillText("RIGHT",325,30);
-		b.fillText("Wrong notes",18,80);
+		b.fillRect(280,0,2,260);
+		b.fillRect(307,0,2,260);
+		b.fillRect(365,0,2,260);
+		b.fillText("LEFT",230,20);
+		b.fillText("RIGHT",312,20);
+		//b.fillText("PAIR",350,20);
+		//b.fillText("Wrong notes",10,50);
 		//b.fillText(tmidi.numerrnotes+ " ("+tmidi.errnotes+ "%)",230,80);
 		//b.fillText(tmidi.numerrnoted+ " ("+tmidi.errnoted+ "%)",320,80);
-		b.fillText(tmidi.numerrnotes,230,80);
-		b.fillText(tmidi.numerrnoted,320,80);
-		b.fillText("Note start error",18,105);
-		b.fillText(tmidi.erras+ " %",230,105);
-		b.fillText(tmidi.errad+ " %",320,105);
-		b.fillText("Note stop error",18,130);
-		b.fillText(tmidi.errds+ " %",230,130);
-		b.fillText(tmidi.errdd+ " %",320,130);
-		b.fillText("note duration error",18,155);
-		b.fillText(tmidi.errdurs+ " %",230,155);
-		b.fillText(tmidi.errdurd+ " %",320,155);
-		b.fillText("pressure stability",18,180);
-		b.fillText(tmidi.errps+ " %",230,180); 
-		b.fillText(tmidi.errpd+ " %",320,180);
+		fillTexte("Wrong notes",tmidi.numerrnotes,tmidi.numerrnoted,0);
+		//b.fillText(tmidi.numerrnoted,285,50);
+		//b.fillText(tmidi.numerrnotep,345,50);
+		b.fillStyle="#FFFFFF";
+		fillTextd("Note start error",tmidi.erras,tmidi.errad,1);
+		//fillTextc(tmidi.erras,225,70);
+		//fillTextc(tmidi.errad,285,70);
+		//fillTextc(tmidi.errap,345,70);
+		b.fillStyle="#FF8C00";
+		fillTextd("Note start regularity",tmidi.erregas,tmidi.erregad,2);
+		//fillTextc(tmidi.erregas,225,90);
+		//fillTextc(tmidi.erregad,285,90);
+		// fillTextc(tmidi.erregap,345,90);  non hanno molto senso
+		b.fillStyle="#FFFFFF";
+		fillTextd("Note stop error",tmidi.errds,tmidi.errdd,3);
+		//fillTextc(tmidi.errds,225,110);
+		//fillTextc(tmidi.errdd,285,110);
+		//fillTextc(tmidi.errdp,345,110);
+		b.fillStyle="#FF8C00";
+		fillTextd("Note stop regularity",tmidi.erregds,tmidi.erregdd,4);
+		//fillTextc(tmidi.erregds,225,130);
+		//fillTextc(tmidi.erregdd,285,130);
+		//fillTextc(tmidi.erregdp,345,130);
+		b.fillStyle="#FFFFFF";
+		fillTextd("note duration error",tmidi.errdurs,tmidi.errdurd,5);
+		//fillTextc(tmidi.errdurs,225,150);
+		//fillTextc(tmidi.errdurd,285,150);
+		//fillTextc(tmidi.errdurp,345,150);
+		b.fillStyle="#FF8C00";
+		fillTextd("note duration regularity",tmidi.erregdurs,tmidi.erregdurd,6);
+		//fillTextc(tmidi.erregdurs,225,170);
+		//fillTextc(tmidi.erregdurd,285,170);
+		//fillTextc(tmidi.erregdurp,345,170);
+		b.fillStyle="#FFFFFF";
+		fillTextd("pressure regularity",tmidi.erregps,tmidi.erregpd,7);
+		//fillTextc(tmidi.erregps,225,190); 
+		//fillTextc(tmidi.erregpd,285,190);
+		//fillTextc(tmidi.erregpp,345,190);
+		b.fillStyle="#FFFFFF";
 		b.fillRect(0,200,w,2);
-		b.font="24px Verdana";
-		b.fillText("overall score",18,235);
-		b.fillText(tmidi.gfs+ " %",240,235);
-		b.fillText(tmidi.gfd+ " %",320,235);
+		b.font="20px Verdana";
+		fillTextc("overall score",tmidi.gfs,tmidi.gfd,235);
+		//fillTextc(tmidi.gfp,345,235);    //provvisorio
+		b.fillStyle="#FFFFFF";
 		b.fillRect(0,260,w,1);
 				
 
@@ -1063,21 +1131,8 @@ var tmidi = {
     	tmidi.barradestra=[];
     	tmidi.colorenotadestra=[];
     	tmidi.colorenotasinistra=[];
+    	tmidi.azzeraerrori();
 
-    	tmidi.numerrnoted=0;
-    	tmidi.errnoted=0;
-    	tmidi.errad=0;
-    	tmidi.errdd=0;
-    	tmidi.errpd=0;
-    	tmidi.errdurd=0;
-    	tmidi.gfd=0;
-    	tmidi.numerrnotes=0;
-    	tmidi.errnotes=0;
-    	tmidi.erras=0;
-    	tmidi.errds=0;
-    	tmidi.errps=0;
-    	tmidi.errdurs=0
-    	tmidi.gfs=0;
 
     	
     	tmidi.bpm=80;
@@ -1108,55 +1163,251 @@ var tmidi = {
 
     },
 
+    azzeraerrori: function(){
+
+
+			tmidi.numerrnoted=0;
+			tmidi.errnoted=0;
+			tmidi.errad=0;
+			tmidi.errdd=0;
+			tmidi.erregad=0;
+			tmidi.erregdd=0;
+
+			tmidi.erregpd=0;
+			tmidi.errdurd=0;
+			tmidi.erregdurd=0;
+			tmidi.gfd=0;
+			
+			tmidi.numerrnotes=0;
+			tmidi.errnotes=0;
+			tmidi.erras=0;
+			tmidi.errds=0;
+			tmidi.erregas=0;
+			tmidi.erregds=0;
+
+			tmidi.erregps=0;
+			tmidi.errdurs=0
+			tmidi.erregdurs=0
+			tmidi.gfs=0;
+
+			tmidi.numerrnotep=0;
+			tmidi.errnotep=0;
+			tmidi.errap=0;
+			tmidi.errdp=0;
+			tmidi.erregap=0;
+			tmidi.erregdp=0;
+
+			tmidi.erregpp=0;
+			tmidi.errdurp=0
+			tmidi.erregdurp=0
+			tmidi.gfp=0;
+
+
+			tmidi.erdx=[0,0,0,0,0,0,0,0,0]
+			tmidi.ersx=[0,0,0,0,0,0,0,0,0]
+			//tmidi.oldtotale=0;
+			
+
+ },
+
     aggiornaerrori: function(){
 
-    	var lung,b,sdeltastart,sdeltastop,notebuone,sdeltadur;
+    	var lungt,lungd,lunghs,bd,bs,sdeltastartd,sdeltastarts,sdeltastopd,sdeltastops,notebuoned,notebuones,sdeltadurd,sdeltadurs;
+    	var smediastartd,smediastopd,smediadurd,smediapressd,smediastarts,smediastops,smediadurs,smediapresss;
+		var notebuoned=0;notebuones=0;notebuonep=0;
+   	
+    	bd=tmidi.barradestra;bs=tmidi.barrasinistra;
+    	lungd=bd.length;lungs=bs.length;
+		lungt=lungd; if (lungs<lungt) lungt=lungs;  //lungt è il minore dei due indici
 
-    	//destra
     	
-    	b=tmidi.barradestra;
-    	lung=b.length;
-    	if (lung<4) return ;
     	
-    	tmidi.numerrnoted=0;sdeltastart=0;sdeltastop=0;sdeltadur=0;
-    	for (var i=0;i<lung;i++) {
-			if (b[i].e) tmidi.numerrnoted++;
+    	tmidi.numerrnoted=0;sdeltastartd=0;sdeltastopd=0;sdeltadurd=0;smediastartd=0;smediastopd=0;smediadurd=0;smediapressd=0;
+    	tmidi.numerrnotes=0;sdeltastarts=0;sdeltastops=0;sdeltadurs=0;smediastarts=0;smediastops=0;smediadurs=0;smediapresss=0;
+    	tmidi.numerrnotep=0;sdeltastartp=0;sdeltastopp=0;sdeltadurp=0;smediastartp=0;smediastopp=0;smediadurp=0;smediapressp=0;
+   		
+   		if (lungt<4) return ;
+ 
+    	
+    	for (var i=0;i<lungt;i++) {
+			if (bd[i].e) tmidi.numerrnoted++;
 			else{
-				sdeltastart+=Math.abs(tmidi.deltastartd[i]);
-				sdeltastop+=Math.abs(tmidi.deltastopd[i]);
-				sdeltadur+=Math.abs(tmidi.deltastartd[i]-tmidi.deltastopd[i]);
+				sdeltastartd+=Math.abs(tmidi.deltastartd[i]);			//mano destra
+				sdeltastopd+=Math.abs(tmidi.deltastopd[i]);
+				sdeltadurd+=Math.abs(tmidi.deltastartd[i]-tmidi.deltastopd[i]);
+				smediastartd+=tmidi.deltastartd[i];
+				smediastopd+=tmidi.deltastopd[i];
+				smediadurd+=(tmidi.deltastartd[i]-tmidi.deltastopd[i]);
+				smediapressd+=tmidi.veld[i];
+			}
+			if (bs[i].e) tmidi.numerrnotes++;
+			else{
+				sdeltastarts+=Math.abs(tmidi.deltastarts[i]);        //mano sinistra
+				sdeltastops+=Math.abs(tmidi.deltastops[i]);
+				sdeltadurs+=Math.abs(tmidi.deltastarts[i]-tmidi.deltastops[i]);
+				smediastarts+=tmidi.deltastarts[i];
+				smediastops+=tmidi.deltastops[i];
+				smediadurs+=(tmidi.deltastarts[i]-tmidi.deltastops[i]);
+				smediapresss+=tmidi.vels[i];
+			}
+			if ((bd[i].e)&&(bs[i].e)) tmidi.numerrnotep++;   //errori contemporanei
+			if (!(bd[i].e)&&!(bs[i].e)){					  //buoni contemporanei
+				notebuonep++;
+				sdeltastartp+=Math.abs(tmidi.deltastartd[i]-tmidi.deltastarts[i]);
+				sdeltastopp+=Math.abs(tmidi.deltastopd[i]-tmidi.deltastops[i]);
+				sdeltadurp+=Math.abs(Math.abs(tmidi.deltastartd[i]-tmidi.deltastopd[i])-Math.abs(tmidi.deltastarts[i]-tmidi.deltastops[i]));
+				smediastartp+=(tmidi.deltastartd[i]-tmidi.deltastarts[i]);;
+				smediastopp+=(tmidi.deltastopd[i]-tmidi.deltastops[i]);
+				smediadurp+=Math.abs(tmidi.deltastartd[i]-tmidi.deltastopd[i])-Math.abs(tmidi.deltastarts[i]-tmidi.deltastops[i]);
+				smediapressp+=(tmidi.veld[i]-tmidi.vels[i]);
 			}
     	}
-		tmidi.errnoted=Math.floor(tmidi.numerrnoted/lung*100);
-		nutebuone=lung-tmidi.numerrnoted;
-		tmidi.errad=Math.floor(sdeltastart/tmidi.intervallo/lung*100);
-		tmidi.errdd=Math.floor(sdeltastop/tmidi.intervallo/lung*100);
-		tmidi.errdurd=Math.floor(sdeltadur/tmidi.intervallo/lung*100);
-		tmidi.gfd=Math.floor(Math.max(100-Math.pow(tmidi.errnoted,1.6)-tmidi.errad/4-tmidi.errdd/4,0))
+
+		tmidi.errnoted=Math.floor(tmidi.numerrnoted/lungt*100); //note errate in percentuale sulle eseguite
+		tmidi.errnotes=Math.floor(tmidi.numerrnotes/lungt*100);
+		tmidi.errnotep=Math.floor(tmidi.numerrnotep/lungt*100);
 		
-    	//sinistra
-    	
-    	b=tmidi.barrasinistra;
-    	lung=b.length;
-    	tmidi.numerrnotes=0;sdeltastart=0;sdeltastop=0;sdeltadur=0;
-    	for (var i=0;i<lung;i++) {
-			if (b[i].e) tmidi.numerrnotes++;
-			else{
-				sdeltastart+=Math.abs(tmidi.deltastarts[i]);
-				sdeltastop+=Math.abs(tmidi.deltastops[i]);
-				sdeltadur+=Math.abs(tmidi.deltastarts[i]-tmidi.deltastops[i]);
+		notebuoned=lungd-tmidi.numerrnoted;
+		notebuones=lungs-tmidi.numerrnotes;
+		//notebuonep calcolato nel loop
+
+		if (notebuoned>0) {
+			tmidi.errad=Math.floor(sdeltastartd/tmidi.intervallo/notebuoned*100);
+			tmidi.errdd=Math.floor(sdeltastopd/tmidi.intervallo/notebuoned*100);
+			tmidi.errdurd=Math.floor(sdeltadurd/tmidi.intervallo/notebuoned*100);
+			smediastartd/=notebuoned;    //calcola i valori medi
+			smediastopd/=notebuoned;
+			smediadurd/=notebuoned;
+			smediapressd/=notebuoned;
+
+		}
+		if (notebuones>0) {
+			tmidi.erras=Math.floor(sdeltastarts/tmidi.intervallo/notebuones*100);
+			tmidi.errds=Math.floor(sdeltastops/tmidi.intervallo/notebuones*100);
+			tmidi.errdurs=Math.floor(sdeltadurs/tmidi.intervallo/notebuones*100);
+			smediastarts/=notebuones;    //calcola i valori medi
+			smediastops/=notebuones;
+			smediadurs/=notebuones;
+			smediapresss/=notebuones;
+
+
+		}
+		if (notebuonep>0) {
+			tmidi.errap=Math.floor(sdeltastartp/tmidi.intervallo/notebuonep*100);
+			tmidi.errdp=Math.floor(sdeltastopp/tmidi.intervallo/notebuonep*100);
+			tmidi.errdurp=Math.floor(sdeltadurp/tmidi.intervallo/notebuonep*100);
+			smediastartp/=notebuonep;    //calcola i valori medi
+			smediastopp/=notebuonep;
+			smediadurp/=notebuonep;
+			smediapressp/=notebuonep;
+
+		}
+
+
+		//avendo calcolato le sommatorie ora calcola gli scostamenti (scarto quadratico medio)
+
+		tmidi.erregad=0,tmidi.erregdd=0;tmidi.erregdurd=0;tmidi.erregpd=0;
+		tmidi.erregas=0,tmidi.erregds=0;tmidi.erregdurs=0;tmidi.erregps=0;
+		tmidi.erregap=0,tmidi.erregdp=0;tmidi.erregdurp=0;tmidi.erregpp=0;
+
+    	for (var i=0;i<lungt;i++) {
+			if (!bd[i].e){
+				tmidi.erregad+=Math.pow((tmidi.deltastartd[i]-smediastartd),2);			//sommatoria dei quadrati
+				tmidi.erregdd+=Math.pow((tmidi.deltastopd[i]-smediastopd),2);
+				tmidi.erregdurd+=Math.pow(((tmidi.deltastartd[i]-tmidi.deltastopd[i])-smediadurd),2);
+				tmidi.erregpd+=Math.pow((tmidi.veld[i]-smediapressd),2);
 			}
-
+			if (!bs[i].e) {
+				tmidi.erregas+=Math.pow((tmidi.deltastarts[i]-smediastarts),2);			//sommatoria dei quadrati
+				tmidi.erregds+=Math.pow((tmidi.deltastops[i]-smediastops),2);
+				tmidi.erregdurs+=Math.pow(((tmidi.deltastarts[i]-tmidi.deltastops[i])-smediadurs),2);
+				tmidi.erregps+=Math.pow((tmidi.vels[i]-smediapresss),2);
+			}
+			if (!(bd[i].e)&&!(bs[i].e)){					  //buoni contemporanei
+				tmidi.erregap+=Math.pow(((tmidi.deltastartd[i]-tmidi.deltastarts[i])-smediastartp),2);			//sommatoria dei quadrati
+				tmidi.erregdp+=Math.pow(((tmidi.deltastopd[i]-tmidi.deltastops[i])-smediastopd),2);
+				tmidi.erregdurp+=Math.pow(((Math.abs(tmidi.deltastartd[i]-tmidi.deltastopd[i])-Math.abs(tmidi.deltastarts[i]-tmidi.deltastops[i]))-smediadurd),2);
+				tmidi.erregpp+=Math.pow(((tmidi.veld[i]-tmidi.vels[i])-smediapressd),2);
+			}
     	}
-		tmidi.errnotes=Math.floor(tmidi.numerrnotes/lung*100)
-		nutebuone=lung-tmidi.numerrnotes;
-		tmidi.erras=Math.floor(sdeltastart/tmidi.intervallo/lung*100);
-		tmidi.errds=Math.floor(sdeltastop/tmidi.intervallo/lung*100);
-		tmidi.errdurs=Math.floor(sdeltadur/tmidi.intervallo/lung*100);
-		tmidi.gfs=Math.floor(Math.max(100-Math.pow(tmidi.errnotes,1.6)-tmidi.erras/4-tmidi.errds/4,0))
 
+		if (notebuoned>0) {
+			tmidi.erregad= 100-Math.floor(Math.sqrt(tmidi.erregad/notebuoned)/tmidi.intervallo*100);				//RMS
+			tmidi.erregdd=100-Math.floor(Math.sqrt(tmidi.erregdd/notebuoned)/tmidi.intervallo*100);
+			tmidi.erregdurd=100-Math.floor(Math.sqrt(tmidi.erregdurd/notebuoned)/tmidi.intervallo*100);
+			tmidi.erregpd=100-Math.floor(Math.sqrt(tmidi.erregpd/notebuoned));
+			if (tmidi.erregad<0) tmidi.erregad=0;
+			if (tmidi.erregdd<0) tmidi.erregdd=0;
+			if (tmidi.erregdurd<0) tmidi.erregdurd=0;
+			if (tmidi.erregpd<0) tmidi.erregpd=0;
+
+		}
+		if (notebuones>0) {
+			tmidi.erregas=100-Math.floor(Math.sqrt(tmidi.erregas/notebuones)/tmidi.intervallo*100);
+			tmidi.erregds=100-Math.floor(Math.sqrt(tmidi.erregds/notebuones)/tmidi.intervallo*100);
+			tmidi.erregdurs=100-Math.floor(Math.sqrt(tmidi.erregdurs/notebuones)/tmidi.intervallo*100);
+			tmidi.erregps=100-Math.floor(Math.sqrt(tmidi.erregps/notebuones));
+			if (tmidi.erregas<0) tmidi.erregas=0;
+			if (tmidi.erregds<0) tmidi.erregds=0;
+			if (tmidi.erregdurs<0) tmidi.erregdurs=0;
+			if (tmidi.erregps<0) tmidi.erregps=0;
+		}
+		if (notebuonep>0) {
+			tmidi.erregap=100-Math.floor(Math.sqrt(tmidi.erregap/notebuonep)/tmidi.intervallo*100);
+			tmidi.erregdp=100-Math.floor(Math.sqrt(tmidi.erregdp/notebuonep)/tmidi.intervallo*100);
+			tmidi.erregdurp=100-Math.floor(Math.sqrt(tmidi.erregdurp/notebuonep)/tmidi.intervallo*100);
+			tmidi.erregpp=100-Math.floor(Math.sqrt(tmidi.erregpp/notebuonep));
+			if (tmidi.erregap<0) tmidi.erregap=0;
+			if (tmidi.erregdp<0) tmidi.erregdp=0;
+			if (tmidi.erregdurp<0) tmidi.erregdurp=0;
+			if (tmidi.erregpp<0) tmidi.erregpp=0;
+
+		}
+
+
+
+		/*tmidi.gfd=Math.floor(Math.max(100-Math.pow(tmidi.errnoted,1.6)-tmidi.errad/4-tmidi.errdd/4,0));
+		tmidi.gfs=Math.floor(Math.max(100-Math.pow(tmidi.errnotes,1.6)-tmidi.erras/4-tmidi.errds/4,0))*/
+		//tmidi.gfp=Math.floor(Math.max(100-Math.pow(tmidi.errnotep,1.6)-tmidi.errap/4-tmidi.errdp/4,0)) 
+		//tmidi.erregpp=Math.floor(Math.max(100-Math.pow(tmidi.errnoted,1.6)-tmidi.errad/4-tmidi.errdd/4,0));  //per confronto col vecchio gfd
+
+		tmidi.erdx[0]=4*tmidi.numerrnoted;
+		tmidi.erdx[1]=Math.floor(tmidi.errad/10);
+		tmidi.erdx[2]=Math.floor(Math.pow((100-tmidi.erregad),2)/100);
+		tmidi.erdx[3]=Math.floor(tmidi.errdd/15);
+		tmidi.erdx[4]=Math.floor(Math.pow((100-tmidi.erregdd),2)/100);
+		tmidi.erdx[5]=Math.floor((tmidi.errdurd)/10);
+		tmidi.erdx[6]=Math.floor(Math.pow((100-tmidi.erregdurd),2)/100);
+		tmidi.erdx[7]=Math.floor((100-tmidi.erregpd)/10);
+
+
+		tmidi.ersx[0]=4*tmidi.numerrnotes;
+		tmidi.ersx[1]=Math.floor(tmidi.erras/10);
+		tmidi.ersx[2]=Math.floor(Math.pow((100-tmidi.erregas),2)/100);
+		tmidi.ersx[3]=Math.floor(tmidi.errds/15);
+		tmidi.ersx[4]=Math.floor(Math.pow((100-tmidi.erregds),2)/100);
+		tmidi.ersx[5]=Math.floor((tmidi.errdurs)/10);
+		tmidi.ersx[6]=Math.floor(Math.pow((100-tmidi.erregdurs),2)/100);
+		tmidi.ersx[7]=Math.floor((100-tmidi.erregps)/10);
+
+		tmidi.gfd=100;
+		tmidi.gfs=100;
+		for (var i=0;i<8;i++){
+			tmidi.gfd-=tmidi.erdx[i];
+			tmidi.gfs-=tmidi.ersx[i]
+		}
+
+		tmidi.erdx[8]=100-tmidi.gfd;
+		tmidi.ersx[8]=100-tmidi.gfs;
+
+		tmidi.gfd=Math.max(Math.floor(tmidi.gfd),0);
+		tmidi.gfs=Math.max(Math.floor(tmidi.gfs),0);
 
 		
+	
+
+
+
 		tmidi.initgraficodati(ctxdati,canvasdati.width,canvasdati.height);
 		var newtotale=Math.floor((tmidi.gfd+tmidi.gfs)/2);
 		if (newtotale!=tmidi.oldtotale){
@@ -1166,21 +1417,6 @@ var tmidi = {
 		
     },
 
-     azzeraerrori: function(){
-    	tmidi.numerrnoted=0;
-    	tmidi.errnoted=0;
-    	tmidi.errad=0;
-    	tmidi.errdd=0;
-    	tmidi.errpd=0;
-    	tmidi.gfd=0;
-    	tmidi.numerrnotes=0;
-    	tmidi.errnotes=0;
-    	tmidi.erras=0;
-    	tmidi.errds=0;
-    	tmidi.errps=0;
-    	tmidi.gfs=0;
-    	tmidi.oldtotale=0;
-    },
 
 
 	aggiustatempi: function(){
@@ -1253,21 +1489,7 @@ var tmidi = {
     		tmidi.barrasinistra=[];  //{"s":start,"w":width,"c":color,"e":error}
     		tmidi.barradestra=[];
 
-			tmidi.numerrnoted=0;
-			tmidi.errnoted=0;
-			tmidi.errad=0;
-			tmidi.errdd=0;
-			tmidi.errpd=0;
-			tmidi.errdurd=0;
-			tmidi.gfd=0;
-			tmidi.numerrnotes=0;
-			tmidi.errnotes=0;
-			tmidi.erras=0;
-			tmidi.errds=0;
-			tmidi.errps=0;
-			tmidi.errdurs=0
-			tmidi.gfs=0;
-
+			tmidi.azzeraerrori();
 			tmidi.resetgrafici();
 			//tmidi.initgraficosp(ctxsp,canvassp.width,canvassp.height);
 		}
