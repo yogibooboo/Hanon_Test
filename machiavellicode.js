@@ -26,13 +26,13 @@ Array.prototype.togli =function(elemento){
 
 var adjustscreen=function(){
 	zm=1,wh=$(window).height(),ww=$(window).width();
-	//if ((wh>=750)&&(ww>=1024)) zm=Math.min(wh/750,ww/1024)
-	//else{
-		if (wh<750) zm=wh/750;
-		if (ww<1024) zm=Math.min(zm,ww/1024);
-	//} 
- 	$("body").css({transform:"scale("+zm+")"});
- 	
+	if (wh<750) zm=wh/750;
+	if (ww<1600) zm=Math.min(zm,ww/1600)
+	//$('body').css('zoom',zm+'%'); /* Webkit browsers */
+  	//$('body').css('zoom',zm); /* Other non-webkit browsers */
+  	//$('body').css('-moz-transform',"scale("+zm+", "+zm+")"); /* Moz-browsers */
+  	$("body").css({transform:"scale("+zm+")"});
+	//$("body").css({transform:"translate("+($("body").offset().left)+"px,"+($("body").offset().top)+"px)"});
 };
 adjustscreen();
 
@@ -78,6 +78,7 @@ var ding=document.getElementById("ding");
 var thunder=document.getElementById("thunder");
 var applause=document.getElementById("applause");
 var distribuisci=document.getElementById("distribuisci");
+var tick=document.getElementById("tick");
 
 function Card(suit, rank,back,indice) {                                                                                                         
     this.init(suit, rank,back,indice);
@@ -95,6 +96,8 @@ Card.prototype = {
         this.selected=false;
         this.ntris=0;
         this.tipotris=0;  // Può essere TRIS=1,SCALA=2;
+        this.rowtris=0;   //riga sulla quale è visualizzato il tris
+        this.split=false;   //tris spezzato
         this.tipojolly="J";    //diventa il seme richiesto quando viene messo in un tris
         this.numerojolly=0;		//diventa il numero richiesto quando viene messo in un tris
         this.intris=0;			//fa parte di quanti tris dell'avversario?
@@ -199,7 +202,8 @@ var scala = {
 			valore=(parseInt(stp));
 			if ((valore>0)&&(valore<4)) this.numeroavversari=valore;
 		}
-
+		this.fautosort=true;
+       	$("#autosort").css({"border-color":"yellow"});
 
 		this.fscalauptouch=false;
 		this.fmodale=false;
@@ -218,18 +222,17 @@ var scala = {
 			primonumero:0,				//primo numero scala o numero del tris
     	};
 		this.f40avversario=[false,false,false];		//l'avversario' ha già ottenuto 40
-		this.f40giocatore=false;		//il giocatore ha già ottenuto 40
-		this.fscartipesca=false;		//pescato dagli scarti
+		this.fscartigiocatore=false;		//il giocatore ha già scartato qualcosa
+		//this.fscartipesca=false;		//pescato dagli scarti
 		this.modale=false;
 
-		this.altezzacampo=600/(2+this.numeroavversari*2);
+		//this.altezzacampo=600/(2+this.numeroavversari*2);
+		this.altezzacampo=120;
 
-		for (var i=1;i<=this.numeroavversari;i++){
-			this.creacampo("avversario"+i,2*i-2,true);
-			this.creacampo("trisavversario"+i,2*i-1);
+		/*for (var i=0;i<this.numeroavversari;i++){
+			this.crealabcampo("avversario"+String.fromCharCode(97+i));
 		}
-		this.creacampo("trisgiocatore",2*this.numeroavversari);
-		this.creacampo("giocatore",2*this.numeroavversari+1,true);
+		this.crealabcampo("giocatore");*/
     	
     	//opzioni
 		this.offsetxx=$("#campogioco").offset().left;
@@ -324,32 +327,14 @@ var scala = {
 
     },
 
-    creacampo:function (nome,posizione,parnomecampo) {
+    crealabcampo:function (nome,posizione,parnomecampo) {
 
-/*
-		var nomecampo="";
-		if (parnomecampo) nomecampo=nome;
-		$("#campogioco").append('<div id="'+
-		nome+'" class="campo" style="top:'+
-		(100+this.altezzacampo*(posizione))+'px; left: 12px; width:854px;height:'+
-		this.altezzacampo+'px;">'+
-		'<div id="punti'+
-		nome+'" style="top: 2px; left: 725px;" class="contatore">  <img src="images/scala40/vassoiod.png" height="50" width="130">'+
-		'<div id="digit3" class="digit" style="top: 2px; left: 5px;" background-position: -0px;"  > </div>'+
-		'<div id="digit2" class="digit" style="top: 2px; left: 45px; background-position: -0px;"  > </div>'+
-		'<div id="digit1" class="digit" style="top: 2px; left: 85px; background-position: -0px;"  > </div> </div></div>'
-		); 
-*/
-		$("#campogioco").append('<div id="'+
-		nome+'" class="campo" style="top:'+
-		(100+this.altezzacampo*(posizione))+'px; left: 12px; width:854px;height:'+
-		this.altezzacampo+'px;">' );
 
-		this.creacontatore ("punti"+nome,100,40,nome,754,2);  //130 50
 
-		if (parnomecampo) $("#campogioco").append('<div id="et'+nome+'" class="etichetta" style="top:'+
-		(60+this.altezzacampo*(posizione+0.5))+'px; left: 350px; height:50px;">&nbsp'+
+		$("#campogioco #"+nome).append('<div id="et'+nome+'" class="etichetta" style="position:absolute; top: -10px; left: 400px;"> &nbsp'+
 		nome+'</div>')
+
+		
 
     },
 
@@ -358,34 +343,35 @@ var scala = {
         
         this.stock=[];
 
-        var offy=25,moffx=25,moffy=22;
-        if (this.numeroavversari>1) offy=4;
-        if (this.numeroavversari>2) {moffx=35,moffy=35};
+        var offy=5,moffx=25,moffy=22;
+        //if (this.numeroavversari>1) offy=4;
+        //if (this.numeroavversari>2) {moffx=35,moffy=35};
         
         this.mazzo={carte:[], top:parseInt($("#mazzo").css("top")), 
-                    left:parseInt($("#mazzo").css("left")),offsetx:moffx,offsety:moffy,deltax:0.1,deltay:0.1,xtris:0};
+                    left:parseInt($("#mazzo").css("left")),offsetx:moffx,offsety:moffy,deltax:0.1,deltay:0.1,xtris:0,rotated:0};
         this.scarti={carte:[], top:parseInt($("#scarti").css("top")), 
-                    left:parseInt($("#scarti").css("left")),offsetx:moffx,offsety:moffy,deltax:0.1,deltay:0.1,xtris:0};
+                    left:parseInt($("#scarti").css("left")),offsetx:moffx,offsety:moffy,deltax:0.1,deltay:0.1,xtris:0,rotated:0};
         this.giocatore={carte:[], top:parseInt($("#giocatore").css("top")), 
-                    left:parseInt($("#giocatore").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80};
-        this.trisgiocatore={carte:[], top:parseInt($("#trisgiocatore").css("top")), 
-                    left:parseInt($("#trisgiocatore").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80};
-        this.avversario1={carte:[], top:parseInt($("#avversario1").css("top")), 
-                    left:parseInt($("#avversario1").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:0};
-        this.trisavversario1={carte:[], top:parseInt($("#trisavversario1").css("top")), 
-                    left:parseInt($("#trisavversario1").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80};
-        this.avversario2={carte:[], top:parseInt($("#avversario2").css("top")), 
-                    left:parseInt($("#avversario2").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:0};
-        this.trisavversario2={carte:[], top:parseInt($("#trisavversario2").css("top")), 
-                    left:parseInt($("#trisavversario2").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80};
-        this.avversario3={carte:[], top:parseInt($("#avversario3").css("top")), 
-                    left:parseInt($("#avversario3").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:0};
-        this.trisavversario3={carte:[], top:parseInt($("#trisavversario3").css("top")), 
-                    left:parseInt($("#trisavversario3").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80};
+                    left:parseInt($("#giocatore").css("left")),offsetx:5,offsety:offy,deltax:20,deltay:0,xtris:80,rotated:0};
+        this.avversarioa={carte:[], top:0, 
+                    left:170,offsetx:offy,offsety:0,deltax:0,deltay:20,xtris:80,rotated:90};
+        this.avversariob={carte:[], top:0, 
+                    left:270,offsetx:5,offsety:offy,deltax:20,deltay:0,xtris:0,rotated:0};
+        this.avversarioc={carte:[], top:700, 
+                    left:1330,offsetx:20,offsety:-25,deltax:0,deltay:-20,xtris:80,rotated:270};
 
+        this.etichette=["a","b","c"];
+        this.avversario1=this.avversarioa;this.avversario2=this.avversariob;this.avversario3=this.avversarioc;
+        if (this.numeroavversari==2) {this.avversario1=this.avversarioa;this.avversario2=this.avversarioc;this.etichette=["a","c","b"];};
+        if (this.numeroavversari==1) {this.avversario1=this.avversariob;this.etichette=["b","a","c"];}
         this.campiavversario=[this.avversario1,this.avversario2,this.avversario3];
-        this.campitrisavversario=[this.trisavversario1,this.trisavversario2,this.trisavversario3];
-       
+        //this.campitrisavversario=[this.trisavversario1,this.trisavversario2,this.trisavversario3];
+        for (var i=0;i<this.numeroavversari;i++){
+        	$("#etavversario"+scala.etichette[i]).text("avversario"+(i+1))
+        }
+       	while (i<3){
+       		$("#etavversario"+scala.etichette[i]).text("");i++;
+       	}
         var indice=0;
         for (var retro = 0; retro < 2; retro++) {     //il retro può essere ROSSO (0) o BLU (1)
             for (var i = 1; i <= 13; i++) {
@@ -394,18 +380,33 @@ var scala = {
                 this.stock[indice]=(new Card(FIORI, i,retro,indice++));
                 this.stock[indice]=(new Card(PICCHE, i,retro,indice++));
             }
-            this.stock[indice]=(new Card(JOLLY, 50,retro,indice++));   //Jolly rosso
-            this.stock[indice]=(new Card(JOLLY, 51,retro,indice++));    //jolly nero
+            //this.stock[indice]=(new Card(JOLLY, 50,retro,indice++));   //Jolly rosso
+            //this.stock[indice]=(new Card(JOLLY, 51,retro,indice++));    //jolly nero
         }
-        for (i=0;i<108;i++){
+        for (i=0;i<104;i++){
         	this.mazzo.carte[i]=this.stock[i];
         }
+		this.numerocampitris=5;
+		this.campitris=[];
+		
+		/*this.trisgiocatore={carte:[], top:parseInt($("#trisgiocatore").css("top")), 
+           left:parseInt($("#trisgiocatore").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80,rotated:0};
+        this.trisavversario1={carte:[], top:parseInt($("#trisavversario1").css("top")), 
+            	left:parseInt($("#trisavversario1").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80,rotated:0};
+        this.trisavversario2={carte:[], top:parseInt($("#trisavversario2").css("top")),left:parseInt($("#trisavversario2").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80,rotated:0};
+        this.trisavversario3={carte:[], top:parseInt($("#trisavversario3").css("top")), 
+                left:parseInt($("#trisavversario3").css("left")),offsetx:25,offsety:offy,deltax:20,deltay:0,xtris:80,rotated:0};  */
 
+
+
+        
+        this.campotris={carte:[], top:parseInt($("#campotris").css("top")), 
+            	left:parseInt($("#campotris").css("left")),offsetx:5,offsety:offy,deltax:20,deltay:0,xtris:80,rotated:0};
         
     },
     
     shuffle: function () {
-        var i = 108;
+        var i = 104;
         while (--i) {
             var j = Math.floor(Math.random() * (i + 1));
             var tempi = this.mazzo.carte[i];
@@ -416,7 +417,7 @@ var scala = {
     },
     
     createDeckElements: function () {
-        for (var i = 0; i < 108; i++) {
+        for (var i = 0; i < 104; i++) {
             var card = this.mazzo.carte[i];
             card.left=this.mazzo.left+this.mazzo.offsetx+Math.floor(i*this.mazzo.deltax);
             card.top=this.mazzo.top+this.mazzo.offsety+Math.floor(i*this.mazzo.deltay);
@@ -433,11 +434,11 @@ var scala = {
 	    givecards:function(){
 
 
-        this.muovicarta(this.mazzo,this.scarti,"faceUp");
+        //this.muovicarta(this.mazzo,this.scarti,"faceUp");
         this.render();
 
 		distribuisci.play();
-        for (var i=0;i<13;i++){
+        for (var i=0;i<10;i++){
 			window.setTimeout(function(){
 				scala.muovicarta(scala.mazzo,scala.giocatore,"faceUp");
 				scala.rendicontenitore(scala.giocatore,180);
@@ -603,6 +604,15 @@ var scala = {
             return  scala.scoperte();
         });
 
+        $("#autosort").bind("click", function(ev) {
+            return  scala.autosort();
+        });
+
+        $("#sort").bind("click", function(ev) {
+            return  scala.sort();
+        });
+
+
         $("#totalelimite").bind("click", function(ev) {
             return  scala.totalelim();
         });
@@ -654,14 +664,14 @@ var scala = {
     	stato.avversario1=[]; copia (scala.avversario1.carte,stato.avversario1);
     	stato.avversario2=[]; copia (scala.avversario2.carte,stato.avversario2);
     	stato.avversario3=[]; copia (scala.avversario3.carte,stato.avversario3);
-    	stato.trisgiocatore=[]; copia (scala.trisgiocatore.carte,stato.trisgiocatore);
-    	stato.trisavversario1=[]; copia (scala.trisavversario1.carte,stato.trisavversario1);
-    	stato.trisavversario2=[]; copia (scala.trisavversario2.carte,stato.trisavversario2);
-    	stato.trisavversario3=[]; copia (scala.trisavversario3.carte,stato.trisavversario3);
+    	stato.campotris=[]; copia (scala.campotris.carte,stato.campotris);
+    	//stato.trisavversario1=[]; copia (scala.trisavversario1.carte,stato.trisavversario1);
+    	//stato.trisavversario2=[]; copia (scala.trisavversario2.carte,stato.trisavversario2);
+    	//stato.trisavversario3=[]; copia (scala.trisavversario3.carte,stato.trisavversario3);
     	stato.mazzo=[]; copia (scala.mazzo.carte,stato.mazzo);
     	stato.scarti=[]; copia (scala.scarti.carte,stato.scarti);
 	  	stato.pescato=scala.pescato;
-	  	stato.f40giocatore=scala.f40giocatore;
+	  	stato.fscartigiocatore=scala.fscartigiocatore;
 	  	stato.f40avversario=[]; copia (scala.f40avversario,stato.f40avversario);
     	this.statostack.push(stato);
     	$("#pulsante2").css({"border-color":"yellow"});
@@ -686,16 +696,16 @@ var scala = {
     	copia(scala.avversario1.carte,stato.avversario1);
     	copia(scala.avversario2.carte,stato.avversario2);
     	copia(scala.avversario3.carte,stato.avversario3);
-    	copia(scala.trisgiocatore.carte,stato.trisgiocatore);
-    	copia(scala.trisavversario1.carte,stato.trisavversario1);
-    	copia(scala.trisavversario2.carte,stato.trisavversario2);
-    	copia(scala.trisavversario3.carte,stato.trisavversario3);
+    	copia(scala.campotris.carte,stato.campotris);
+    	//copia(scala.trisavversario1.carte,stato.trisavversario1);
+    	//copia(scala.trisavversario2.carte,stato.trisavversario2);
+    	//copia(scala.trisavversario3.carte,stato.trisavversario3);
     	copia(scala.mazzo.carte,stato.mazzo);
     	copia(scala.scarti.carte,stato.scarti);
     	scala.carteselezionate.splice(0,scala.carteselezionate.length);
     	scala.pescato=stato.pescato;
 	  	copia(scala.f40avversario,stato.f40avversario);
-	  	scala.f40giocatore=stato.f40giocatore;
+	  	scala.fscartigiocatore=stato.fscartigiocatore;
 
     	$(".card").removeClass("cardselected");
 
@@ -716,7 +726,7 @@ var scala = {
         
         this.cartadown=divCard;
 
-        for (var i=0;i<scala.jollymodificabili.length;i++){
+        /*for (var i=0;i<scala.jollymodificabili.length;i++){     //ùùù i jolly non ci sono piu
         	var carta=scala.jollymodificabili[i];
         	if (divCard.card.id==carta.id) {
         		var ntris=carta.ntris;
@@ -739,38 +749,36 @@ var scala = {
         		this.render();
         		return;
         	}
-        }
+        }*/
 
-        if (!this.pointerinelement(ev,"#giocatore")) return;
+        if (!this.pointerinelement(ev,"#giocatore")){
+
+        	if (!divCard.card.split) return;
+        } 
         
         this.scaladown=true;
         this.scalamove=false;
-        this.scaladownx=(ev.pageX-scala.offsetxx)/zm;
-        this.scaladowny=(ev.pageY-scala.offsetyy)/zm;
+        this.scaladownx=ev.pageX/zm;
+        this.scaladowny=ev.pageY/zm;
         
         return;
     },
     
     scalamousemove:function(ev){
         
-        var deltax=(ev.pageX-scala.offsetxx)/zm-this.scaladownx;
-        var deltay=(ev.pageY-scala.offsetyy)/zm-this.scaladowny;
+        var deltax=ev.pageX/zm-this.scaladownx;
+        var deltay=ev.pageY/zm-this.scaladowny;
         if (!this.scalamove) { if((Math.abs(deltax)<5)&& (Math.abs(deltay)<5)) return;}
 
         var divCard=this.cartadown;
         $(divCard).css({"z-index":1000});
         $(this.cartadown).css({"top":this.cartadown.card.top+deltay,"left":this.cartadown.card.left+deltax})
         this.scalamove=true;
-        if ((this.pointerinelement(ev,"#trisgiocatore"))&&(this.pescato)&&(this.trisgiocatore.carte.length>0)) {
-        	this.tgon();
-        	this.cercamatch(this.trisgiocatore,NOESEGUI);
-        }
-        else this.tgoff();
 
-        for (var j=0;j<scala.numeroavversari;j++) {
-			if ((this.pointerinelement(ev,("#trisavversario"+(j+1))))&&(this.pescato)&&(this.campitrisavversario[j].carte.length>0)) {
+        for (var j=0;j<scala.numerocampitris;j++) {
+			if ((this.pointerinelement(ev,("#campotris"+(j))))&&(!this.pescato)) {
 				 this.taon(j);
-				 this.cercamatch(this.campitrisavversario[j],NOESEGUI);
+				 this.cercamatch(j,NOESEGUI);
 			}
 			else this.taoff(j);
         }
@@ -786,8 +794,8 @@ var scala = {
         if (!scala.scaladown){
             if  (this.pointerinelement(ev,"#mazzo")&&(!this.pescato)) return this.cartapesca();
             if  (this.pointerinelement(ev,"#giocatore")&&(!this.pescato)) return this.cartapesca();
-            if  (this.pointerinelement(ev,"#scarti")) return this.scartipesca();
-            if  (this.pointerinelement(ev,"#trisgiocatore")&&(this.pescato)) return this.scartatrisgiocatore();
+            //if  (this.pointerinelement(ev,"#scarti")) return this.scartipesca();
+            if  (this.pointerinelement(ev,"#campotris")&&(!this.pescato)) return this.scartatrisgiocatore();
             return;
         }
         this.scaladown=false;
@@ -796,7 +804,7 @@ var scala = {
         var carta=divCard.card;
         
         
-        if ((!scala.scalamove)&&(this.pescato)) {this.selezionacartagiocatore(divCard); return;}
+        if ((!scala.scalamove)&&(!this.pescato)) {this.selezionacartagiocatore(divCard); return;}
         
         
         
@@ -818,28 +826,18 @@ var scala = {
             }
         }
         else {
-            if (this.pointerinelement(ev,"#scarti")&&(this.pescato)) return this.scarta(carta);
-           	if ((this.pointerinelement(ev,"#trisgiocatore"))
-           	&&(this.pescato)
-           	&&(this.trisgiocatore.carte.length>0)
-           	&&(this.giocatore.carte.length!=1)) {
-        		this.tgon();
-        		this.cercamatch(this.trisgiocatore,ESEGUI);
-			}
-			else this.tgoff();
 			
-			for (j=0;j<scala.numeroavversari;j++){
+			$(".card").removeClass("cardselected");
 
-				if ((this.pointerinelement(ev,("#trisavversario"+(j+1))))
-				&&(this.pescato)
-				&&(this.campitrisavversario[j].carte.length>0)
-				&&(this.giocatore.carte.length!=1)
-				&&(this.calcolapuntitris(this.trisgiocatore.carte)>39)) {
+			for (var j=0;j<scala.numerocampitris;j++){
+
+				if ((this.pointerinelement(ev,("#campotris"+(j))))
+				&&(!this.pescato))
+				{
 					this.taon(j);
-					this.cercamatch(this.campitrisavversario[j],ESEGUI);
+					this.cercamatch(j,ESEGUI);
 				}
 				this.taoff(j);
-				$(".card").removeClass("cardselected");
 			}
 		}
 
@@ -849,11 +847,22 @@ var scala = {
     },
     
     
-	cercamatch:function(cont,esegui)  {                 //cont è il contenitore in cui cercare
+	cercamatch:function(subcont,esegui)  {                 //subcont è il sottocontenitore (riga) in cui cercare
 		var SINISTRA=true;
 		var DESTRA = false;
-		var ncarte=cont.carte.length;
-		for (var i=0;i<ncarte;i++) $(cont.carte[i].gui).removeClass("cardselected");
+		var cont=scala.campotris;
+		if (cont.carte.length==0) return
+		var indexrow=0;                       //prima carta sulla riga selezionata
+		var ncarte=0;
+		for (var i=0;i<cont.carte.length;i++){  //localizza il gruppo di carte nel subcontenitore
+			if (cont.carte[i].rowtris==subcont){
+				if (ncarte==0) indexrow=i;     //inizio riga
+				ncarte++
+			}
+		}
+		if (ncarte==0) return;
+		//for (var i=0;i<ncarte;i++) $(cont.carte[i].gui).removeClass("cardselected");
+		$(".card").removeClass("cardselected");
 		var cartaleft=parseInt($(this.cartadown).css("left"));				//la carta che sto spostando
 
 		//lavoro con il bordo sinistro della carta.
@@ -864,11 +873,11 @@ var scala = {
 
 		
 		
-		for (var i=0;i<ncarte;i++) {
+		for (var i=indexrow;i<indexrow+ncarte;i++) {
 			if(cont.carte[i].left>cartaleft) break;
 		} //trova prima carta successiva
-		if (i==0) return this.checkcarta(cont,0,SINISTRA,esegui);				//era prima della prima
-		if (i==ncarte) return this.checkcarta(cont,ncarte-1,DESTRA,esegui);    //era oltre l'ultima
+		if (i==indexrow) return this.checkcarta(cont,i,SINISTRA,esegui);				//era prima della prima
+		if (i==indexrow+ncarte) return this.checkcarta(cont,i-1,DESTRA,esegui);    //era oltre l'ultima
 		if ((cartaleft-cont.carte[i-1].left)>(2*cont.deltax)) return this.checkcarta(cont,i,SINISTRA,esegui);
 		else return this.checkcarta(cont,i-1,DESTRA,esegui);	
 		
@@ -893,7 +902,7 @@ var scala = {
 		}
 
 
-		if((cartasel.numero>49)&&(carta.numero<49)){      //sto cercando di rimpiazzare un jolly?
+		/* if((cartasel.numero>49)&&(carta.numero<49)){      //sto cercando di rimpiazzare un jolly?
 			var salvacarta=tris[indicetris];
 			if (tipotris==SCALA) {   //provo a rimpiazzare il jolly con la mia carta
 				tris[indicetris]=carta;
@@ -927,7 +936,7 @@ var scala = {
 				}
 			}
 
-		}   //non sto cercando di rimpiazzare un Jolly
+		} */   //non sto cercando di rimpiazzare un Jolly
 
 
 		if (left) {
@@ -980,48 +989,49 @@ var scala = {
 	aggiungitris: function(cont,indice,carta,cartasel,esegui){
 		$(cartasel.gui).addClass("cardselected");
 		if (esegui) {
+			if (carta.gruppo==scala.giocatore) scala.fscartigiocatore=true;
 			slitta.play();
 			this.pushstato();
-			this.rimuovicarta(carta);
-			carta.gruppo=cont;
+			var posizione=this.rimuovicarta(carta);
+			scala.vismoved(carta);
+			if ((carta.gruppo==scala.campotris)&&(posizione<indice)) indice--;  //se ho tolto una carta prima dell'indice'
 			carta.ntris=cartasel.ntris;
 			carta.tipotris=cartasel.tipotris;
-			if (carta.numero>49)  { //era un Jolly?
-				if(carta.tipotris==SCALA){
-					carta.tipojolly=scala.trisdata.semescala;
-					//cerca la prima carta del tris
-					for (var i=0;i<cont.carte.length;i++) {if (cont.carte[i].ntris==cartasel.ntris) break;}
-					carta.numerojolly=scala.trisdata.primonumero+indice-i;
-				}
-				else{
-					//toglie da semidausare quelli eventualmente già usati dai jolly preesistenti
-					for (var i=0;i<cont.carte.length;i++) {
-						if ((cont.carte[i].ntris==carta.ntris)&&(cont.carte[i].numero>49)) {
-							scala.trisdata.semidausare.togli(cont.carte[i].tipojolly);
-						}
-					}
-					carta.tipojolly=scala.trisdata.semidausare.pop();
-					carta.numerojolly=scala.trisdata.primonumero;
-					// scala.jollymodificabili.push(carta); non serve, se aggiungo a un tris sono già 4 carte
-				}
-			}
 			carta.faceUp=true;
 			cont.carte.splice(indice,0,carta);
+			carta.gruppo=cont;
+			this.verificanumerotris();  //elimina eventuali buchi nella numerazione dei tris
 			this.render();
 			$(cartasel.gui).removeClass("cardselected");
-
+			scala.checkvinto();
 		}
 	},
-
-
-
+	vismoved:function(carta){
+		gruppo=carta.gruppo
+		if (gruppo==scala.giocatore) {$(carta.gui).addClass("cardmoved"); return;}
+		if ((gruppo==scala.avversario1)||(gruppo==scala.avversario2)||(gruppo==scala.avversario3))  $(carta.gui).addClass("cardmovedavv");
+	},
+	//elimina eventuali buchi nella numerazione dei tris  (max 1)
+	verificanumerotris:function(){
+		var ntris=-1; 
+		cont=scala.campotris.carte;
+		for (var i=0;i<cont.length;i++){
+			if (cont[i].ntris!=ntris) ntris++;
+			if (cont[i].ntris!=ntris) {
+				for (;i<cont.length;i++){
+					cont[i].ntris--
+				}
+				return
+			}
+		}
+	},
 
 
 	rimuovicarta:function(carta){
 		var cont=carta.gruppo.carte;
 		var posizione=cont.indexOf(carta);
         cont.splice(posizione,1);
- 
+ 		return posizione;
 	},
 
 
@@ -1049,10 +1059,10 @@ var scala = {
 
     scarta: function(carta){
 
-		var annulla40=(function(){
+		/*var annulla40=(function(){
 			while (scala.trisgiocatore.carte.length>0)
 			{scala.undo()};
-			while ((scala.fscartipesca)&&(scala.pescato))
+			while ((scala.fscartipesca)&&(!scala.pescato))
 			{scala.undo()};
 			this.hidedialog();
 		})
@@ -1069,7 +1079,7 @@ var scala = {
 
     	
 		
-		if (punti>39) this.f40giocatore=true;
+		//if (punti>39) this.f40giocatore=true;
 		$(".card").removeClass("cardselected");
 		scarta.play();
 
@@ -1081,7 +1091,7 @@ var scala = {
 		this.carteselezionate=[];
 		this.pushstato();
 		this.muovicarta(carta,this.scarti,"faceUp");
-		this.pescato=false;
+		this.pescato=true;
 
 
 		if (this.giocatore.carte.length==0){
@@ -1106,7 +1116,7 @@ var scala = {
 		else {
 			window.setTimeout(function(){scala.mossaavversario(0)},1000);   
 		}
-		this.render();
+		this.render();*/
 
     },
    
@@ -1183,9 +1193,47 @@ var scala = {
 	},
 
     cartadestro: function(divCard,ev) {
-    	if  (this.pointerinelement(ev,"#giocatore")) {
-    		if (this.pescato) return this.scarta(divCard.card);
-    		//else return this.cartapesca();
+    	if  (divCard.card.gruppo==scala.campotris) {
+			var carta=divCard.card;
+			var cont=scala.campotris.carte;
+			var id=carta.id; 											//posizione=cont.indexOf(carta);
+    		//splitta il tris a cui appartiene la carta in due parti
+    		var iniziotris=0;ntris=carta.ntris;ltris=0;posizione=0;
+    		for (i=0;i<cont.length;i++){
+				if (cont[i].ntris==ntris){
+					if (ltris==0) iniziotris=i;
+					if (cont[i].id==id) posizione=i;
+					ltris++
+				}
+    		}
+
+    		log ("posizione: "+posizione+", iniziotris: "+iniziotris+" lunghezzatris: "+ ltris +" numerotris: "+ntris)
+
+    		//se è un tris di 4 carte con lo stesso numero estrae solo la carta selezionata
+
+    		if ((ltris==4)&&(carta.tipotris==TRIS)){
+    			cont.splice(posizione,1);
+    			cont.splice(iniziotris,0,carta);
+    			posizione=iniziotris+1;
+    		}
+    		
+    		else if (posizione==iniziotris) posizione++   //non c'è niente da splittare. allora parto dalla seconda
+    		
+    		/*if ((posizione-iniziotris)<3){	                   //le carte a sinistra non bastano per un tris
+    			for (i=iniziotris;i<posizione;i++){
+    				cont[i].split=true;
+    			}
+			}
+			if ((iniziotris+ltris-posizione)<3){				//le carte a destra non bastano per un tris
+    			for (i=posizione;i<iniziotris+ltris;i++){
+    				cont[i].split=true;
+    			}
+			} */
+			for (i=posizione;i<cont.length;i++){
+				cont[i].ntris++;
+			}
+			this.pushstato();
+			scala.render();
     	} 
     },
     
@@ -1204,7 +1252,9 @@ var scala = {
         }
         
         if (toggle=="toggle") carta.faceUp=!carta.faceUp;
-        if (toggle=="faceUp") carta.faceUp=true;
+        if (toggle=="faceUp") {
+        	carta.faceUp=true;
+        }
         if (toggle=="faceDown") carta.faceUp=false;
         this.showcard(carta);
         carta.gruppo=destinazione;
@@ -1215,24 +1265,38 @@ var scala = {
     },
 
 	scartatrisgiocatore:function(){
-			if (this.carteselezionate.length==this.giocatore.carte.length) scala.myalert("non è possibile rimanere senza carte");
-			else this.scartatris(this.carteselezionate);
+			//if (this.carteselezionate.length==this.giocatore.carte.length) scala.myalert("non è possibile rimanere senza carte");
+			//else {
+				this.scartatris(this.carteselezionate);
+				
+			//}
             this.carteselezionate=[];
             this.render();
+            scala.checkvinto();
 
             return;
 	},
 
     
+	checkvinto:function(){
+		if (scala.giocatore.carte.length!=0) return false;
+		if (!(scala.checksplit())){
+			window.setTimeout(function(){tada.play();scala.mydialog("haivinto",scala.nuovo)},1000)
+		}
+
+	},
+
+
       scartatris:function(tris){
         var ncarte=tris.length;
         if (ncarte<3) return;
+        if (tris[0].gruppo==scala.giocatore)scala.fscartigiocatore=true;
         var gruppo=tris[0].gruppo.carte;
-        if (gruppo==this.giocatore.carte) gruppotris=this.trisgiocatore;
-		if (gruppo==this.avversario1.carte) gruppotris=this.trisavversario1;
-		if (gruppo==this.avversario2.carte) gruppotris=this.trisavversario2;
-		if (gruppo==this.avversario3.carte) gruppotris=this.trisavversario3;
-
+        //if (gruppo==this.giocatore.carte) gruppotris=this.trisgiocatore;
+		//if (gruppo==this.avversario1.carte) gruppotris=this.trisavversario1;
+		//if (gruppo==this.avversario2.carte) gruppotris=this.trisavversario2;
+		//if (gruppo==this.avversario3.carte) gruppotris=this.trisavversario3;
+		var gruppotris=this.campotris;
         
         var ntris=0;
         if (gruppotris.carte.length!=0) ntris=gruppotris.carte[gruppotris.carte.length-1].ntris+1;
@@ -1244,7 +1308,7 @@ var scala = {
 			carta.ntris=ntris;
 			$(carta.gui).removeClass("cardselected");
 			carta.selected=false;
-			if (carta.seme=="J"){
+			/*if (carta.seme=="J"){
 				if (carta.tipotris==SCALA) {
 					carta.tipojolly=this.trisdata.semescala;
 					carta.numerojolly=this.trisdata.primonumero+i;
@@ -1255,10 +1319,14 @@ var scala = {
 					carta.tipojolly=(this.trisdata.semidausare).pop();
 					if (gruppotris==this.trisgiocatore) scala.jollymodificabili.push(carta);
 				}
-			}
+			}*/
+
+			scala.vismoved(carta);
+
 			this.muovicarta(carta,gruppotris,"faceUp");
 		}
 		scartatris.play();
+
         return;
     },
 
@@ -1270,23 +1338,23 @@ var scala = {
 
 		if (this.cartescoperte) this.displaypunti(this.calcolapunti(this.avversario1.carte),"avversario1");
 		else this.displaypunti(0,"puntiavversario1");
-		this.displaypunti(this.calcolapuntitris(this.trisavversario1.carte),"trisavversario1");
+		//this.displaypunti(this.calcolapuntitris(this.trisavversario1.carte),"trisavversario1");
 
 		if (this.numeroavversari>1){
 			if (this.cartescoperte) this.displaypunti(this.calcolapunti(this.avversario2.carte),"avversario2");
 			else this.displaypunti(0,"puntiavversario2");
-			this.displaypunti(this.calcolapuntitris(this.trisavversario2.carte),"trisavversario2");
+			//this.displaypunti(this.calcolapuntitris(this.trisavversario2.carte),"trisavversario2");
 		}
 
 		if (this.numeroavversari>2){
 			if (this.cartescoperte) this.displaypunti(this.calcolapunti(this.avversario3.carte),"avversario3");
 			else this.displaypunti(0,"puntiavversario3");
-			this.displaypunti(this.calcolapuntitris(this.trisavversario3.carte),"trisavversario3");
+			//this.displaypunti(this.calcolapuntitris(this.trisavversario3.carte),"trisavversario3");
 		}
 		
 
 		this.displaypunti(this.calcolapunti(this.giocatore.carte),"giocatore");
-		this.displaypunti(this.calcolapuntitris(this.trisgiocatore.carte),"trisgiocatore");
+		//this.displaypunti(this.calcolapuntitris(this.trisgiocatore.carte),"trisgiocatore");
 		this.displaypunti(this.totaleavversario1,"totaleavversario1");
 		if (this.numeroavversari>1) this.displaypunti(this.totaleavversario2,"totaleavversario2");
 		if (this.numeroavversari>2)this.displaypunti(this.totaleavversario3,"totaleavversario3");
@@ -1295,27 +1363,100 @@ var scala = {
 		this.displaypunti(this.totalepartite,"totalepartite");
 
     	
+        $(".card").removeClass("cardsplit");
+
+
         this.rendicontenitore(this.mazzo);
         this.rendicontenitore(this.scarti);
         this.rendicontenitore(this.giocatore);
-        this.rendicontenitore(this.trisgiocatore);
+        this.checksplit();
+        this.rendicontenitore(this.campotris);
 		
 		for (var j=0;j<this.numeroavversari;j++){
 			this.rendicontenitore(this.campiavversario[j]);
-			this.rendicontenitore(this.campitrisavversario[j]);
+			//this.rendicontenitore(this.campitrisavversario[j]);
 		}
 
-        if (this.pescato) $("#giocatore").css({"border-color":"yellow" });
+        if (!this.pescato) $("#giocatore").css({"border-color":"yellow" });
         else $("#giocatore").css({"border-color":"grey" });
 		if (this.turno==-1) $("#etgiocatore").css({"color":"yellow"});
 		else $("#etgiocatore").css({"color":"#888888"});
 		for (var j=0;j<this.numeroavversari;j++) {
-			if (j==this.turno) $("#etavversario"+(j+1)).css({"color":"yellow"});
-        	else $("#etavversario"+(j+1)).css({"color":"#888888"});
+			if (j==this.turno) $("#etavversario"+scala.etichette[j]).css({"color":"yellow"});
+        	else $("#etavversario"+scala.etichette[j]).css({"color":"#888888"});
 		}
+		if (scala.fscartigiocatore) $("#etgiocatore").css({"color":"red"});
+    },
+    
+
+    checksplit:function(){
+    	var cont=this.campotris.carte;
+    	var trovatosplit=false;
+    	if (cont.length==0) return;
+    	var ntris=0;cartetris=0;
+    	for (var i=0;i<cont.length;i++){
+    		cont[i].split=false;
+    		if (cont[i].ntris==ntris){
+    			cartetris++;
+    		}
+    		else {
+    			if (cartetris<3){
+    				for (var j=i-cartetris;j<i;j++) 
+    					cont[j].split=true;
+    					trovatosplit=true;
+    			}
+    			cartetris=1;
+    			ntris++;
+    		}
+    	}
+    	if (cartetris<3) {for (var j=i-cartetris;j<i;j++) 
+    		cont[j].split=true;}  //per l'ultimo tris'
+    	return trovatosplit;
     },
     
     rendicontenitore:function(cont,speed){
+    	var velocita=speed||400;
+        var newtop,newleft,carta;
+        var contatris=0;contarow=0;cartetris=0;offseti=0;offsettris=0;
+        for (var i=0;i<cont.carte.length;i++){
+            carta=cont.carte[i];
+            newleft=cont.left+cont.offsetx+Math.floor((i-offseti)*cont.deltax)+cont.xtris*(carta.ntris-offsettris);
+            if (carta.ntris!=contatris){  //è un nuovo tris, se non ci sta salto alla riga successiva
+            	contatris++;
+            	//conto di quante carte è formato il trisdata
+            	cartetris=0;
+            	for (var j=i;j<cont.carte.length;j++){
+            		if (cont.carte[j].ntris!=carta.ntris) break;
+            		cartetris++;
+            	}
+            	var limitex=1000;
+            	if (carta.rowtris==contarow) limitex=1290;  //favorisco il permanere di un tris sulla sua riga precedente
+            	if ((newleft+cont.deltax*cartetris)>limitex){  //se sborda salto alla riga successiva
+            		contarow++;
+            		offseti=i;
+            		offsettris=carta.ntris;
+            		newleft=cont.left+cont.offsetx+Math.floor((i-offseti)*cont.deltax)+cont.xtris*(carta.ntris-offsettris);
+
+            	}
+            	
+            }
+            newtop=cont.top+cont.offsety+Math.floor(i*cont.deltay)+contarow*110;
+
+            carta.top=newtop;
+            carta.left=newleft;
+            carta.zindex=i;
+            carta.rowtris=contarow;
+
+            if (carta.split) $(carta.gui).addClass("cardsplit");;
+            $(carta.gui).css({transform:("rotate("+cont.rotated+"deg)")})
+            $(carta.gui).animate({"top":newtop,"left":newleft,"z-index":i},velocita);
+			this.showcard(carta);        
+
+        }
+    },
+ 
+
+    /* rendicontenitore:function(cont,speed){
     	var velocita=speed||400;
         var newtop,newleft,carta;
         for (var i=0;i<cont.carte.length;i++){
@@ -1325,29 +1466,45 @@ var scala = {
             carta.top=newtop;
             carta.left=newleft;
             carta.zindex=i;
+            $(carta.gui).css({transform:("rotate("+cont.rotated+"deg)")})
             $(carta.gui).animate({"top":newtop,"left":newleft,"z-index":i},velocita);
 			this.showcard(carta);        
 
         }
-    },
-        
+    },    */   
   
     cartapesca:function(){
-
+		$(".card").removeClass("cardmoved");
+		$(".card").removeClass("cardmovedavv");
     	if (this.turno!=-1) return;
-    	this.fscartipesca=false;
-		pesca.play();
-        this.pushstato();
-        this.muovicarta(this.mazzo,this.giocatore,"faceUp");
+    	//this.fscartipesca=false;
+		this.pushstato();
+        if (!scala.fscartigiocatore) {
+        	this.muovicarta(this.mazzo,this.giocatore,"faceUp");
+        	$(this.giocatore.carte[this.giocatore.carte.length-1].gui).addClass("cardmoved");
+			pesca.play();
+        }
+ 		else tick.play();
+ 		
+		scala.fscartigiocatore=false;
+	   	for (i=0; i<this.carteselezionate.length;i++) {      //cancella selezioni
+			this.carteselezionate[i].selected=false;
+		}
+		$(".card").removeClass("cardselected");
+		
         this.pescato=true;
+        if (scala.fautosort) scala.ordinacarte(scala.giocatore);
         this.render();
+
+        window.setTimeout(function(){scala.mossaavversario(0)},1000);   
+
         return;
     },
     
     
-    scartipesca:function(){
+   /* scartipesca:function(){
     	if (this.turno!=-1) return;
-		if (this.pescato){   //se clicco sugli scarti avendo pescato e c'e' una carta selezionata la scarto
+		if (!this.pescato){   //se clicco sugli scarti avendo pescato e c'e' una carta selezionata la scarto
 			if (this.carteselezionate.length==1){
 				this.scarta(this.carteselezionate.pop());
 			}
@@ -1362,10 +1519,10 @@ var scala = {
 		dascarti.play();
         this.pushstato();
         this.muovicarta(this.scarti,this.giocatore,"faceUp");
-        this.pescato=true;
+        this.pescato=false;
         this.render();
         return;
-    },
+    },  */
     
     selezionacartagiocatore:function(divCard){
         
@@ -1411,12 +1568,22 @@ var scala = {
         return false;
     },
     
-    checktris:function(arraycards,nosort){  //nosort parametro opzionale
-        var ncarte=arraycards.length;
-        if (ncarte<3) return false;
-        if (ncarte>13) return false;
+    checktris:function (carte,nosort){  //nosort parametro opzionale  
+        var ncarte=carte.length; 
+        if (ncarte<3) {
+
+        	if (ncarte!=2) return false;
+			//verifica se è una coppia accettabile
+			if (carte[0].numero==carte[1].numero){
+				if (carte[0].seme==carte[1].seme) return false
+				this.trisdata.tipotris=TRIS;
+				return true;
+			}
+        	
+        }
+        if (ncarte>15) return false;
         
-        var carte=arraycards;
+        
 
   
 		if (typeof(nosort)=="undefined"){
@@ -1475,25 +1642,15 @@ var scala = {
 
         var trovatotris=true;       
         for (var i=1;i<ncarte;i++,primonumero++) {
-        	if (oltrekappa&&(primonumero==2)) {trovatotris = false; break} //il due oltre il kappa non si mette
+        	if (oltrekappa&&(primonumero==4)) {trovatotris = false; break} //il 4 oltre il kappa non si mette
             if (primonumero==14) {primonumero=1,oltrekappa=true};   //dopo il K viene l'asse
-            if (carte[i].numero>49) {
-                   	numerojolly++;
-                   	this.trisdata.jollycontenuti.push(carte[i]);
-            	continue;   //salta il Jolly
-            }
-            if (primonumero>49) {   //se il primo numero era jolly lo rimpiazza
-            	primonumero=carte[i].numero; primoseme=carte[i].seme;
-            	numerojolly++;
-              	this.trisdata.jollycontenuti.splice(0,0,carte[i]);
-            }   
             if (carte[i].numero!=primonumero) {trovatotris = false; break}
             if (carte[i].seme!=primoseme) {trovatotris = false; break}
             if (primonumero==13) {primonumero=0,oltrekappa=true};   //dopo il K viene l'asse
         }
          if (trovatotris) {
-         	if (primonumero<3) primonumero+=13;
-         	this.trisdata.primonumero=primonumero-i;
+         	//if (primonumero<3) primonumero+=13;
+         	this.trisdata.primonumero=carte[0].numero;
          	for (var j=0;j<ncarte;j++) {carte[j].tipotris=SCALA};  
          	this.trisdata.tipotris=SCALA;
          	this.trisdata.semescala=primoseme;      	
@@ -1505,6 +1662,7 @@ var scala = {
     },
         
     selezionacarta:function(divCard){
+    	$(divCard).removeClass("cardmoved");
         $(divCard).addClass("cardselected");
         this.carteselezionate.push(divCard.card);
         divCard.card.selected=true;
@@ -1521,7 +1679,7 @@ var scala = {
     showcard:function(carta){
         
         var backx,backy,stepx=-71,stepy=-96,bsx=1233,bsy=384;
-        if (this.numeroavversari>2) {stepx=-52,stepy=-70,bsx=903,bsy=280}
+        //if (this.numeroavversari>2) {stepx=-52,stepy=-70,bsx=903,bsy=280}
         if ((carta.faceUp==true)||(this.cartescoperte)){
             if (carta.numero<50){  //non jolly
                 backx=stepx*(carta.numero-1);
@@ -1554,25 +1712,25 @@ var scala = {
         maxx=minx+parseInt($(element).css("width"));
         miny=parseInt($(element).css("top"));
         maxy=miny+parseInt($(element).css("height"));
-        if(((ev.pageX-scala.offsetxx)/zm)<minx) return false;
-        if(((ev.pageX-scala.offsetxx)/zm)>maxx) return false;
-        if(((ev.pageY-scala.offsetyy)/zm<miny)) return false;
-        if(((ev.pageY-scala.offsetyy)/zm>maxy)) return false;
+        if((ev.pageX/zm)<minx) return false;
+        if((ev.pageX/zm)>maxx) return false;
+        if((ev.pageY/zm<miny)) return false;
+        if((ev.pageY/zm>maxy)) return false;
         return true;
     },
   
-    tgon:function(ev){
+    /*tgon:function(ev){
         $("#trisgiocatore").css({"border-color": "yellow"});        
     },
     tgoff:function(ev){
         $("#trisgiocatore").css({"border-color": "gray"});        
-    },
+    },*/
     
 	taon:function(avv){
-		$("#trisavversario"+(avv+1)).css({"border-color": "yellow"});        
+		$("#campotris"+(avv)).css({"border-color": "yellow"});        
     },
     taoff:function(avv){
-        $("#trisavversario"+(avv+1)).css({"border-color": "gray"});        
+        $("#campotris"+(avv)).css({"border-color": "gray"});        
     },
 
 
@@ -1798,8 +1956,8 @@ var scala = {
 
 
 	multiundo:function(){
-		if (this.pescato) this.undo();
-		else while(!this.pescato) {	this.undo();}
+		if (!this.pescato) this.undo();
+		while(this.pescato) {	this.undo();}
     },
 
 
@@ -1814,17 +1972,22 @@ var scala = {
 
 
 	 mossaavversario:function(avv){
-	 scala.turno=avv; 
-       if (this.campiavversario[avv].carte.length==0) return;
-       this.apesca(avv);
+	 scala.turno=avv;
+	 	var numcarte= this.campiavversario[avv].carte.length
+       if (numcarte==0) return;
        this.alavora(avv);
+       if (numcarte==this.campiavversario[avv].carte.length) {   //pesca solo se non ha posizionato carte
+       		this.apesca(avv);
+       }
+	   else window.setTimeout(function(){tick.play()},500);
        window.setTimeout(function(){
        		
-       		if ((scala.ascarta(avv))&&(avv<(scala.numeroavversari-1))) 
+       		//if ((scala.ascarta(avv))&&(avv<(scala.numeroavversari-1)))
+       		if (avv<(scala.numeroavversari-1))  
        		window.setTimeout(function(){
-       			scala.mossaavversario(avv+1);},1000);
+       			scala.mossaavversario(avv+1);},500);
        		else window.setTimeout(function(){
-       			scala.turno=-1;scala.render()},500);
+       			scala.turno=-1;scala.render();scala.pushstato();scala.pescato=false;scala.fscartigiocatore=false;scala.carteselezionate=[];},500);
        	
        },1000);
    }, 
@@ -1878,6 +2041,7 @@ calcolapuntitris: function(gruppo){
 
 
 	displaypunti: function(punti,display) {
+		/*
 		var centinaia,decine,unita,altezza;
 		if (punti>999) punti=999;
 		centinaia=Math.floor(punti/100); punti-=(centinaia*100);
@@ -1908,6 +2072,8 @@ calcolapuntitris: function(gruppo){
 				$("#"+display+" #digit1").css({"background-position":("0px "+ now + "px" )});
 			}
 		});
+
+		*/
 	},
 
 	calcolacarteattaccabili:function(avv){
@@ -1925,7 +2091,7 @@ calcolapuntitris: function(gruppo){
 				return true;
 			});
 			conten=contx.carte;
-			if (carta.numero>49) return true; //non esamina il jolly e non lo fa esaminare al buffer successivo (ret true)
+			//if (carta.numero>49) return true; //non esamina il jolly e non lo fa esaminare al buffer successivo (ret true)
 			var ncarte=conten.length;
 			var tris=[];
 			if (ncarte==0) return false;
@@ -1949,7 +2115,10 @@ calcolapuntitris: function(gruppo){
 					if (scala.trisdata.semescala!=carta.seme) continue;
 					if (scala.trisdata.primonumero==carta.numero+1) return salvacarta(ultimacartatris+1-tris.length);
 					var prossimacarta =scala.trisdata.primonumero+tris.length;
-					if (prossimacarta==14) prossimacarta=1;
+					if (prossimacarta>=14) {
+						prossimacarta-=13;
+						if (carta.numero>3) continue;   //dopo il K non posso mettere oltre il 3
+					}
 					if (prossimacarta==carta.numero) return salvacarta(ultimacartatris+1);
 				}
 			}
@@ -1969,11 +2138,11 @@ calcolapuntitris: function(gruppo){
 		for (var i=0;i<cont.length;i++){
 			//se è uguale alla carta precedente la skippa
 			if ((i>0)&&(cont[i].shortName==cont[i-1].shortName)) continue;
-			if (!checkattaccabili(this.trisgiocatore,cont[i])) {
-				for (var j=0;j<scala.numeroavversari;j++) {
+			checkattaccabili(this.campotris,cont[i]);
+			/*	for (var j=0;j<scala.numerocampitris;j++) {
 					if (checkattaccabili(this.campitrisavversario[j],cont[i])) break;
-				}
-			}
+				}  */
+			
 
 			
 		}
@@ -2032,11 +2201,10 @@ calcolapuntitris: function(gruppo){
 		for (var i=0;i<cont.length;i++){
 			//se è uguale alla carta precedente la skippa
 			if ((i>0)&&(cont[i].shortName==cont[i-1].shortName)) continue;
-			if (!checkattaccabili(this.trisgiocatore,cont[i])) {
-				for (var j=0;j<scala.numeroavversari;j++) {
+			checkattaccabili(this.campotris,cont[i]);
+				/*for (var j=0;j<scala.numeroavversari;j++) {
 					if (checkattaccabili(this.campitrisavversario[j],cont[i])) break;
-				}
-			}
+				}*/
 
 			
 		}
@@ -2050,7 +2218,7 @@ calcolapuntitris: function(gruppo){
 	cercajollyrecuperabili:function(cont){
 		this.jollyincampo=[];
 		this.jollyrecuperabili=[];
-		var cercajolly=function(conten){
+		/*var cercajolly=function(conten){
 			if (conten.length==0) return;
 			for (var i=0;i<conten.length;i++){
 				if (conten[i].numero>49) scala.jollyincampo.push(conten[i]);
@@ -2081,8 +2249,8 @@ calcolapuntitris: function(gruppo){
 				}	
 			}
 			
-		}
-		return this.jollyrecuperabili.length;
+		}*/
+		return 0;
 	},
 
 	cercacoppie:function(avv){
@@ -2261,10 +2429,9 @@ calcolapuntitris: function(gruppo){
 	jollydausare:0,
 
     apesca:function(avv){
-    	this.pushstato();
    		this.jollydausare=0;
 
-        if ((this.campiavversario[avv].carte.length>=3)) {
+        /*if ((this.campiavversario[avv].carte.length>=3)) {
         	var scarto=this.scarti.carte[this.scarti.carte.length-1];
         	
         	this.ordinacarte(this.campiavversario[avv]);
@@ -2306,7 +2473,7 @@ calcolapuntitris: function(gruppo){
         			return;  
 
 				}
-        	}
+        	
 
 			if ((!this.f40avversario[avv])&&(this.fscartiprima40)){ //non abbiamo ancora aperto ma c'è l'opzione dipescare dagli scarti senza apertura
 				//la pesca dagli scarti formerebbe un tris, ma abbiamo i 40 punti?
@@ -2329,7 +2496,7 @@ calcolapuntitris: function(gruppo){
 				}
 			}
 
-		} 
+		} }*/
 
 
    		pesca.play();
@@ -2348,7 +2515,8 @@ calcolapuntitris: function(gruppo){
 	   		this.cercacoppie(avv);
 			this.ottimizzacoppie();
 
-	   		if (!this.f40avversario[avv]) this.verifica40(avv);
+	   		//if (!this.f40avversario[avv]) this.verifica40(avv);
+	   		this.f40avversario[avv]=true;
 			while ((this.f40avversario[avv])&&(this.trispossibili.length>0)){
 					if (this.trispossibili[0].length==this.campiavversario[avv].carte.length) this.trispossibili[0].splice(0,1);
 					this.scartatris(this.trispossibili[0]);
@@ -2441,7 +2609,7 @@ calcolapuntitris: function(gruppo){
 			//oppure se ci sono 3 carte e un jolly attacca il jolly da qualche parte
 			this.ordinacarte(this.campiavversario[avv]);
 			var lung=this.campiavversario[avv].carte.length;
-			while ((lung<5)&&(lung>1)&&(this.campiavversario[avv].carte[1].numero>49)||
+			/*while ((lung<5)&&(lung>1)&&(this.campiavversario[avv].carte[1].numero>49)||
 			(lung==3)&&(this.campiavversario[avv].carte[2].numero>49)){
 				if (!this.attaccajolly(this.trisgiocatore,this.campiavversario[avv].carte[lung-1])){
 					for (var j=0;j<scala.numeroavversari;j++) {
@@ -2462,7 +2630,7 @@ calcolapuntitris: function(gruppo){
 				var tris=[];
 				for (var i=2;i<5;i++) tris.push(this.campiavversario[avv].carte[i]);
 				this.scartatris(tris);
-			}
+			}*/
 
 			//se ci sono due carte uguali aggiunge alla seconda un quarto dei punti della prima
 			var carta; 
@@ -2580,7 +2748,7 @@ calcolapuntitris: function(gruppo){
      
     ascarta:function(avv){
 
-   		scarta.play();
+   		//scarta.play();
    		var indiceminimo=this.campiavversario[avv].carte.length-1;minimo=1000;
    		//cerca la carta con il minimo punteggio
    		if (this.campiavversario[avv].carte.length<4) {  //se non posso piu fare tris annullo il punteggio coppia (e tris che sarà già nullo)
@@ -2615,7 +2783,7 @@ calcolapuntitris: function(gruppo){
 
 		}
    		    	
-		this.muovicarta(this.campiavversario[avv].carte[indiceminimo],this.scarti,"faceUp");
+		//this.muovicarta(this.campiavversario[avv].carte[indiceminimo],this.scarti,"faceUp");
 		var finito=false;   
         if (this.campiavversario[avv].carte.length==0){
         	finito=true;
@@ -2684,8 +2852,25 @@ calcolapuntitris: function(gruppo){
     }, 
 
 
-    
- 
+     autosort:function(){
+       if (this.fautosort) {
+			this.fautosort=false;
+			$("#autosort").css({"border-color":"#888888"});
+       } 
+       else{
+       		this.fautosort=true;
+       		$("#autosort").css({"border-color":"yellow"});
+       		scala.sort();
+
+       }
+       
+    }, 
+    sort:function(){
+       scala.ordinacarte(scala.giocatore); 
+       scala.render();
+       ordina.play();
+    	
+ 	},
 
 }  //scala
 

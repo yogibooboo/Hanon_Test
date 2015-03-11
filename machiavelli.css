@@ -14,23 +14,64 @@ body{
 	width:auto;
 	height:700px;
 	background-color:green;
-	margin:0;
 	-ms-transform-origin: left top;
 	-moz-transform-origin: left top;
 	-webkit-transform-origin: left top;
-
+	margin:0;
+	
+	
+	
 
 }
 
-#campogioco{
-	position:relative;
+#sfondo{
+	position:absolute;
 	top:0px;
-	left:auto;
-	width:1024px;
-	height:750px;
+	left:0px;
+	width:1600px;
+	height:770px;
 	background-image:url(images/scala40/tappetoverde.png);
+	//display:none;
+
+}
+#campogioco{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:1600px;
+	height:770px;
+	//background-image:url(images/scala40/tappetoverde.png);
 	margin:0px  auto 0px;
 
+}
+
+#campotris{
+	position:absolute;
+	background-image:url(images/scala40/tappetoverdescuro.png);
+
+}
+
+#accessorisinistra{
+	position:absolute;
+	top:0px;
+	left:0px;
+	width:154px;
+	height:764px;
+	margin:0px  auto 0px;
+	color:#fff;
+	
+}
+
+#accessoridestra{
+	position:absolute;
+	top:0px;
+	left:1440px;
+	width:154px;
+	height:764px;
+	margin:0px  auto 0px;
+	color:#fff;
+
+	
 }
 
 
@@ -54,9 +95,23 @@ h1,h2,h3,h4,h5,h6{
 
 	border-style:solid;
 	border-color:#888888;
-	border-width:3px 6px;
+	border-width:3px ;
 	color:#888888;
 	position:absolute;
+}
+
+
+.campo2{
+	margin-top:auto;
+	margin-bottom:auto;
+	text-align:center;	
+	font-size:50px;
+	border-style:solid;
+	border-color:#888888;
+	border-width:3px ;
+	color:#888888;
+	position:absolute;
+
 }
 
 
@@ -77,25 +132,13 @@ h1,h2,h3,h4,h5,h6{
 	border-radius:9px;
 	text-align:center;
 	position:absolute;
-	top:415px;
-	left:890px;
-	width:120px;
-	height:130px;
+	top:330px;
+	left:1450px;
+	width:130px;
+	height:150px;
 	background-image:url(images/scala40/tappetoverdescuretto.png);
 }
 
-#scarti{
-	font-size:15px;
-	color:#cccccc;
-	border-radius:9px;
-	text-align:center;
-	position:absolute;
-	top:565px;
-	left:890px;
-	width:120px;
-	height:130px;
-	background-image:url(images/scala40/tappetoverdescuretto.png);
-}
 
 .card{
 	border-radius:9px;
@@ -107,6 +150,7 @@ h1,h2,h3,h4,h5,h6{
 	background-image:url(images/scala40/conjollyplus.png);
 	position:absolute;
 	cursor:pointer;
+	
 }
 
 .cardselected{
@@ -115,6 +159,24 @@ h1,h2,h3,h4,h5,h6{
 	
 }
 
+.cardsplit{
+	border-style:dashed;
+	border-color:#0ff;
+	border-width:3px;
+	background-color:blue;
+	
+	
+}
+
+.cardmoved{
+	background-image:url(images/scala40/conjollyselblu.png);	
+	
+}
+
+.cardmovedavv{
+	background-image:url(images/scala40/conjollyselgreen.png);	
+	
+}
 
 
 .pulsante{
@@ -321,8 +383,8 @@ h1,h2,h3,h4,h5,h6{
 	
 	position:absolute;
 	cursor:pointer;
-	top:100px;
-	left:880px;
+	top:10px;
+	left:10px;
 
 	width:130px;
 	height:300px;
@@ -338,7 +400,7 @@ h1,h2,h3,h4,h5,h6{
 	top:0px;
 	left:auto;
 	width:1024px;
-	height:750px; 
+	height:770px; 
 	background-image:url(images/scala40/nero.png); 
 	z-index:30000;
 	margin:0px  auto 0px;
@@ -356,7 +418,7 @@ h1,h2,h3,h4,h5,h6{
 	position:absolute;
 	width:500px;
 	height:280px;
-	left:250px;
+	left:500px;
 	top:200px;
 	background-size: 500px 280px;
 	display:none;

@@ -6,7 +6,7 @@ function log(msg) {
 log.enabled = true;
 
 
-
+$("#campografico").hide();
 
   // recupera l'elemento canvas
 
@@ -41,11 +41,26 @@ $('#esamina').click(function () {
 	tmidi.esamina();
 });
 
+$('#grafico').click(function () {
+	$("#campografico").show();
+	$('#grafico').hide();
+	tmidi.grafico();
+});
+
+
 $('#esaminao').click(function () {
 	$("#campoesamina").hide();
 	tmidi.fesamina=false;
+	tmidi.fegrafico=false;
 });
 
+$('#egraficoo').click(function () {
+	$("#campografico").hide();
+	$('#grafico').show();
+
+	tmidi.fesamina=false;
+	tmidi.fegrafico=false;
+});
 
 $('#noteoff').click(function () {
 	tmidi.noteonoff();
@@ -60,9 +75,23 @@ $('#campoesamina').mousemove(function (ev) {
 });  
 
 
+$('#campografico').mouseup(function (ev) {
+	tmidi.esaminaup(ev);
+});
+
+$('#campografico').mousedown(function (ev) {
+	tmidi.esaminadown(ev);
+});
+
+$('#campografico').mousemove(function (ev) {
+	tmidi.esaminamove(ev);
+});  
+
+
 $('#campoesamina').mouseup(function (ev) {
 	tmidi.esaminaup(ev);
 });
+
 
 $('#canvasmetronomo').mousedown(function (ev) {
 	tmidi.metronomodown(ev);
@@ -186,9 +215,10 @@ function midiProc(t,a,b,c){
 	//il buffer in esecuzione è puntato da tmidi.cbuffer
 
  	if (tmidi.fsuona&&!tmidi.fintro) {  	//stiamo suonando ed è finita l'introduzione
-
+		var bnote=tmidi.notesuonate
 		if (a==0x90){ //inizio nota
 			var pospresunta=Math.round((tempo-tmidi.inizioinput)/tmidi.intervallo);
+			bnote.push({"tstart":(tempo-tmidi.inizioinput),"nota":b,"vel":c,"tstop":0})
 
 			gestnote=(function(sin,des,prima) {
 				var ritardo=tempo-tmidi.inizioinput-tmidi.intervallo*pospresunta;
@@ -236,6 +266,14 @@ function midiProc(t,a,b,c){
 		var colore;
 
 		if (a==0x80){ //fine nota
+
+			for (var i=0;i<bnote.length;i++){
+				var bn=bnote[i];
+				if ((bn.tstop==0)&&(bn.nota==b)) {
+					bn.tstop=tempo-tmidi.inizioinput;
+				}
+			}
+
 
 			var pos,vel,dx,trovato=false;
 			for (var i=0;i<tmidi.notain.length;i++){
@@ -360,6 +398,8 @@ function midiProc(t,a,b,c){
   canvasoptions = document.getElementById("canvasoptions");
   ctxop = canvasoptions.getContext('2d');
   
+  canvasgrafico = document.getElementById("egrafico");
+  ctxgr = canvasgrafico.getContext('2d');
 
 
 
@@ -737,6 +777,198 @@ var tmidi = {
 
 	},
   
+
+	initgraficoscroll:function(b,w,h){
+		b.clearRect(0, 0, w,h);
+		var tempo=performance.now()-tmidi.latenza;
+		var ntasti=35,ltasti=20;
+
+
+		//var offtempo=0;   //tempo corrispondente al bordo superiore della tastiera
+		var lnota=50;  //lunghezza in pixel di una nota  (1/16 bpm)
+		var buf=tmidi.BufferNote;   //contiene le note della mano destra del brano  (n. tasto biancocon 0 a partire da do sotto due ottave)
+		var cbuf=tmidi.cbuffer; //contiene le note midi della mano destra (36 è il do sotto due ottave)
+		//ci sono 500 pixel sopra e 700 pixel sotto la keyboard, pertanto sono visualizzabili i sedicesimi da +500/lnota a -700/lnota
+		//rispetto al puntatore attuale dato da asse=(performance.now()-tmidi.latenza-tmidi.inizioinput)/tmidi.sedicesimo
+		
+		var asse=0;      //diventerà relativo a performance.now(), espresso in numero di sedicesimi
+		var bufn=tmidi.notesuonate;
+
+		asse=-tmidi.eoffset/16
+
+
+		b.fillStyle="#FFFFFF";
+		b.fillRect(700-80,0,80,ntasti*ltasti);  //rettangolo bianco tastiera
+
+
+		//per visualizzare le note suonate il tempo iniziale visualizzabile corrisponde a asse*tmidi.sedicesimo-500/lnota*tmidi.sedicesimo
+		//e il tempo finalee visualizzabile corrisponde a asse*tmidi.sedicesimo+700/lnota*tmidi.sedicesimo
+		
+		var nota;
+		var iniziale=asse*tmidi.sedicesimo-700/lnota*tmidi.sedicesimo;
+		var finale=asse*tmidi.sedicesimo+500/lnota*tmidi.sedicesimo;
+		var bn,inizio,fine;
+		for (var i=0;i<bufn.length;i++){
+			bn=bufn[i];inizio=iniziale;fine=asse*tmidi.sedicesimo;
+			if (bn.tstart>finale) continue;
+			if (bn.tstart>iniziale) inizio=bn.tstart;
+			if (bn.tstop!=0) {
+				if (bn.tstop<iniziale) continue;
+				if (bn.tstop<finale) fine=bn.tstop;
+				else fine=finale;
+			}
+			nota=tmidi.convertinote(bn.nota)+4;
+			b.fillStyle="#0000FF";
+			b.fillRect((inizio-iniziale)/tmidi.sedicesimo*lnota,(nota+0.25)*ltasti,(fine-inizio)/tmidi.sedicesimo*lnota,ltasti/2);
+
+		}
+
+
+		b.strokeStyle="#888888";
+
+
+		
+ 		for (var i=Math.floor(Math.max(asse-700/lnota,0));i<Math.min(Math.ceil(asse+500/lnota),buf.length);i++){
+			nota=buf[i]+4;
+			if (i==Math.floor(asse)){
+				b.fillStyle="#AAAAFF";
+				b.fillRect(700-80,nota*ltasti,80,ltasti); //tasto azzurro
+				b.fillStyle="#AAFFAA";
+				b.fillRect(700-80,(nota-7)*ltasti,80,ltasti); //tasto verde
+			}
+			//b.fillStyle="#0000FF";
+			//b.fillRect(nota*ltasti,300-(i-tempo+1)*lnota,ltasti/2,lnota);
+			//b.fillStyle="#00FF00";
+			//b.fillRect((nota-7)*ltasti,300-(i-tempo+1)*lnota,ltasti/2,lnota);
+			b.strokeRect(700+(i-asse)*lnota,(nota+0.25)*ltasti,lnota,ltasti/2);
+			b.strokeRect(700+(i-asse)*lnota,(nota-6.75)*ltasti,lnota,ltasti/2);
+
+		}
+
+
+		
+		b.strokeStyle="#000000";
+		b.fillStyle="#000000";
+
+		for (var i=0;i<ntasti;i++){
+			b.strokeRect(700-80,i*ltasti,80,ltasti)
+			if ((i%7!=3)&&(i%7!=6)){
+				b.fillRect(700-50,ltasti*(i+0.75),50,ltasti/2);
+			}
+		}
+
+				b.fillStyle="#D2691E";
+
+		for (var i=0;i<ntasti;i++){
+			if ((i%7==3)||(i%7==6)){
+				b.fillRect(0,ltasti*(i+1),1200,1)
+			}
+		}
+
+	
+
+	},
+
+
+
+/*	initgraficoscroll:function(b,w,h){
+		b.clearRect(0, 0, w,h);
+		var tempo=performance.now()-tmidi.latenza;
+		var ntasti=35,ltasti=30;
+
+
+		//var offtempo=0;   //tempo corrispondente al bordo superiore della tastiera
+		var lnota=50;  //lunghezza in pixel di una nota  (1/16 bpm)
+		var buf=tmidi.BufferNote;   //contiene le note della mano destra del brano  (n. tasto biancocon 0 a partire da do sotto due ottave)
+		var cbuf=tmidi.cbuffer; //contiene le note midi della mano destra (36 è il do sotto due ottave)
+		//ci sono 300 pixel sopra e 350 pixel sotto la keyboard, pertanto sono visualizzabili i sedicesimi da +300/lnota a -350/lnota
+		//rispetto al puntatore attuale dato da asse=(performance.now()-tmidi.latenza-tmidi.inizioinput)/tmidi.sedicesimo
+		
+		var asse=0;      //diventerà relativo a performance.now(), espresso in numero di sedicesimi
+		var bufn=tmidi.notesuonate;
+
+		asse=-tmidi.eoffset/16
+		if ((tmidi.fsuona)&&(!tmidi.fintro)){
+			//asse=(tempo-tmidi.inizioinput)/tmidi.sedicesimo;
+			asse=-tmidi.eoffset/16;
+		}
+
+
+		b.fillStyle="#FFFFFF";
+		b.fillRect(0,300,ntasti*ltasti,80);  //rettangolo bianco tastiera
+
+
+		//per visualizzare le note suonate il tempo iniziale visualizzabile corrisponde a asse*tmidi.sedicesimo-350/lnota*tmidi.sedicesimo
+		//e il tempo finalee visualizzabile corrisponde a asse*tmidi.sedicesimo+300/lnota*tmidi.sedicesimo
+		
+		var nota;
+		var iniziale=asse*tmidi.sedicesimo-350/lnota*tmidi.sedicesimo;
+		var finale=asse*tmidi.sedicesimo+300/lnota*tmidi.sedicesimo;
+		var bn,inizio,fine;
+		for (var i=0;i<bufn.length;i++){
+			bn=bufn[i];inizio=iniziale;fine=asse*tmidi.sedicesimo;
+			if (bn.tstart>finale) continue;
+			if (bn.tstart>iniziale) inizio=bn.tstart;
+			if (bn.tstop!=0) {
+				if (bn.tstop<iniziale) continue;
+				if (bn.tstop<finale) fine=bn.tstop;
+				else fine=finale;
+			}
+			nota=tmidi.convertinote(bn.nota)+4;
+			b.fillStyle="#0000FF";
+			b.fillRect(nota*ltasti,(finale-fine)/tmidi.sedicesimo*lnota,ltasti/2,(fine-inizio)/tmidi.sedicesimo*lnota);
+
+		}
+
+
+		b.strokeStyle="#888888";
+
+
+		
+ 		for (var i=Math.floor(Math.max(asse-350/lnota,0));i<Math.min(Math.ceil(asse+300/lnota),buf.length);i++){
+			nota=buf[i]+4;
+			if (i==Math.floor(asse)){
+				b.fillStyle="#AAAAFF";
+				b.fillRect(nota*ltasti,300,ltasti,80);
+				b.fillStyle="#AAFFAA";
+				b.fillRect((nota-7)*ltasti,300,ltasti,80);
+			}
+			//b.fillStyle="#0000FF";
+			//b.fillRect(nota*ltasti,300-(i-tempo+1)*lnota,ltasti/2,lnota);
+			//b.fillStyle="#00FF00";
+			//b.fillRect((nota-7)*ltasti,300-(i-tempo+1)*lnota,ltasti/2,lnota);
+			b.strokeRect(nota*ltasti,300-(i-asse+1)*lnota,ltasti/2,lnota);
+			b.strokeRect((nota-7)*ltasti,300-(i-asse+1)*lnota,ltasti/2,lnota);
+
+		}
+
+
+		
+		b.strokeStyle="#000000";
+		b.fillStyle="#000000";
+
+		for (var i=0;i<ntasti;i++){
+			b.strokeRect(i*ltasti,300,ltasti,80)
+			if ((i%7!=3)&&(i%7!=6)){
+				b.fillRect(ltasti*(i+0.75),300,ltasti/2,50);
+			}
+		}
+
+				b.fillStyle="#D2691E";
+
+		for (var i=0;i<ntasti;i++){
+			if ((i%7==3)||(i%7==6)){
+				b.fillRect(ltasti*(i+1),0,1,650)
+			}
+		}
+
+	
+
+	},  */
+
+
+
+
     initgraficosp:function(b,w,h){
 
     	var esamina=(b==ectxsp);
@@ -948,7 +1180,13 @@ var tmidi = {
     	
 		if (tmidi.fesamina){
 			if (tmidi.fsuona) tmidi.eoffset=-(performance.now()-tmidi.inizio)/tmidi.intervallo*16+tmidi.Bintro.length*64;
-			tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+
+			if (tmidi.fegrafico){
+				tmidi.initgraficoscroll(ctxgr,canvasgrafico.width,canvasgrafico.height);
+			}
+			else {
+				tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+			}
 		}
 		else {
 			if ((tmidi.fsuona)&&!(tmidi.fintro)) tmidi.initgraficosp(ctxsp,canvassp.width,canvassp.height);
@@ -971,6 +1209,15 @@ var tmidi = {
     	Jazz.MidiOut(a,b,c);	
 
     },
+
+
+
+	grafico:function(){
+		tmidi.fesamina=true;
+		tmidi.fegrafico=true;
+	},
+
+
 
 	fedown:false,
 	femove:false,
@@ -1028,7 +1275,13 @@ var tmidi = {
 		}
 		if (tmidi.femove){
 			tmidi.eoffset=tmidi.estartoffset+tmidi.edeltax;
-		tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+			if (tmidi.fegrafico){
+				tmidi.initgraficoscroll(ctxgr,canvasgrafico.width,canvasgrafico.height);
+			}
+			else {
+				tmidi.initgraficosp(ectxsp,ecanvassp.width,ecanvassp.height);
+			}
+		
 
 		}
 	},
@@ -1132,6 +1385,10 @@ var tmidi = {
     	tmidi.colorenotadestra=[];
     	tmidi.colorenotasinistra=[];
     	tmidi.azzeraerrori();
+    	tmidi.notesuonate=[];
+
+    	tmidi.fesamina=false;
+    	tmidi.fegrafico=false;
 
 
     	
@@ -1530,15 +1787,17 @@ var tmidi = {
 	initbuffernote: function(){
 		tmidi.BufferNote=[];
     	for (var i=0;i<tmidi.cbuffer.length;i++) {
-
-			var nota=tmidi.cbuffer[i]-36;
-			var ottava=Math.floor(nota/12);
-			nota-=ottava*12;
-			if (nota>4) nota++;
-			tmidi.BufferNote[i]=nota/2+ottava*7;   //note con 0 a partire da do sotto due ottave
+			tmidi.BufferNote[i]=tmidi.convertinote(tmidi.cbuffer[i]);   //note con 0 a partire da do sotto due ottave
 		}
     },
-	
+	convertinote: function(nota){    //converte nota da numerazione midi a numerazione tasti bianchi con 0 a partire da do sotto due ottave
+		nota-=36;
+		var ottava=Math.floor(nota/12);
+		nota-=ottava*12;
+		if (nota>4) nota++;
+		return nota/2+ottava*7;   //note con 0 a partire da do sotto due ottave
+
+	},
 
 
     noteonoff: function(){
@@ -1570,6 +1829,7 @@ var tmidi = {
     	tmidi.initnotecolori();
     	tmidi.azzeraerrori();
     	tmidi.resetgrafici();
+    	tmidi.notesuonate=[];
 		
 
   
