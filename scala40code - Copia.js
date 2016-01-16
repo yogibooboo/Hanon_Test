@@ -8,12 +8,6 @@ log.enabled = true;
 //log(location.href);
 log(location.search);
 
-function suona(suono){
-	if ((scala.turno!=-1)&&(scala.dopo)){
-		scala.salvasuono=suono;
-	}
-	else suono.play();
-}
 
 
 Array.prototype.togli =function(elemento){
@@ -141,18 +135,15 @@ var scala = {
 
     inizializzazioni: function(){
 
-		scala.dopo=true;
-		scala.immediato=false;
-		scala.avvsalvalog=0;
-		scala.salvasuono=0;
+		
 
-		this.totalelimite=150;
+		this.totalelimite=100;
 		this.totalepartite=0;
 		this.totaleavversario1=0;
 		this.totaleavversario2=0;
 		this.totaleavversario3=0;
 		this.totalegiocatore=0;
-		this.numeroavversari=3;
+		this.numeroavversari=1;
 
 
 		//this.start();
@@ -442,18 +433,18 @@ var scala = {
 	    givecards:function(){
 
 
-        this.muovicarta(this.mazzo,this.scarti,"faceUp","nopush");
+        this.muovicarta(this.mazzo,this.scarti,"faceUp");
         this.render();
 
 		distribuisci.play();
         for (var i=0;i<13;i++){
 			window.setTimeout(function(){
-				scala.muovicarta(scala.mazzo,scala.giocatore,"faceUp","nopush");
+				scala.muovicarta(scala.mazzo,scala.giocatore,"faceUp");
 				scala.rendicontenitore(scala.giocatore,180);
 			},i*400);
 			window.setTimeout(function(){
 				for (var j=0;j<scala.numeroavversari;j++){
-					scala.muovicarta(scala.mazzo,scala.campiavversario[j],"faceDown","nopush");
+					scala.muovicarta(scala.mazzo,scala.campiavversario[j],"faceDown");
 					scala.rendicontenitore(scala.campiavversario[j],180);
 				}
 			},i*400+200);
@@ -558,7 +549,7 @@ var scala = {
        $(".card").bind("mousedown", function(ev) {
            
             
-            if ((ev.button==0)&& (!scala.fmodale)&&(scala.astato!="playrender")) return  scala.scalamousedown(this,ev);
+            if ((ev.button==0)&& (!scala.fmodale)) return  scala.scalamousedown(this,ev);
         });  
 
 
@@ -642,8 +633,7 @@ var scala = {
         return
     },
     
-    pushstato:function(comm){
-    	var commento=comm||"nc"
+    pushstato:function(){
     	var stato ={};
     	stato.stock=[];
     	var copiastock = (function (da,a){
@@ -660,8 +650,6 @@ var scala = {
     		}
     	};
     
-    	stato.commento=commento;
-    	stato.salvasuono=scala.salvasuono;
     	stato.giocatore=[]; copia (scala.giocatore.carte,stato.giocatore);
     	stato.avversario1=[]; copia (scala.avversario1.carte,stato.avversario1);
     	stato.avversario2=[]; copia (scala.avversario2.carte,stato.avversario2);
@@ -680,20 +668,12 @@ var scala = {
     	$("#pulsante2").text("UNDO (" + this.statostack.length+")");
     },
 
-    popstato:function(numerostato,lasciacopia){
-
-    	var miostato=numerostato||-1;
-
+    popstato:function(lasciacopia){
     	var miacopia=lasciacopia||false;
     	if (this.statostack.length==0) return;
 
     	if (miacopia) var stato =this.statostack[this.statostack.length-1];
-    	else {
-    		if (miostato!=-1) var stato =this.statostack[numerostato];
-    		else var stato =this.statostack.pop();
-
-    	}
-
+    	else var stato =this.statostack.pop();
 
 
    		var copia = function (a,da){
@@ -716,8 +696,6 @@ var scala = {
     	scala.pescato=stato.pescato;
 	  	copia(scala.f40avversario,stato.f40avversario);
 	  	scala.f40giocatore=stato.f40giocatore;
-	  	scala.commento=stato.commento;
-	  	scala.salvasuono=stato.salvasuono;
 
     	$(".card").removeClass("cardselected");
 
@@ -991,10 +969,8 @@ var scala = {
 			contenitore2.carte[posizione2]=carta;
 			cartasel.tipojolly="J";
 			this.render();
-			suona(perjolly);
-			scala.pushstato("scambiajolly")
 			$(cartasel.gui).removeClass("cardselected");
-			
+			perjolly.play();
 		}
 	},
 
@@ -1004,6 +980,8 @@ var scala = {
 	aggiungitris: function(cont,indice,carta,cartasel,esegui){
 		$(cartasel.gui).addClass("cardselected");
 		if (esegui) {
+			slitta.play();
+			this.pushstato();
 			this.rimuovicarta(carta);
 			carta.gruppo=cont;
 			carta.ntris=cartasel.ntris;
@@ -1013,7 +991,6 @@ var scala = {
 					carta.tipojolly=scala.trisdata.semescala;
 					//cerca la prima carta del tris
 					for (var i=0;i<cont.carte.length;i++) {if (cont.carte[i].ntris==cartasel.ntris) break;}
-					//if (indice==i) i--  // 24/08/15 se inserisce nella prima posiione
 					carta.numerojolly=scala.trisdata.primonumero+indice-i;
 				}
 				else{
@@ -1030,9 +1007,6 @@ var scala = {
 			}
 			carta.faceUp=true;
 			cont.carte.splice(indice,0,carta);
-			suona(slitta);
-			this.pushstato("aggiungitris "+carta.shortName);
-
 			this.render();
 			$(cartasel.gui).removeClass("cardselected");
 
@@ -1079,7 +1053,6 @@ var scala = {
 			while (scala.trisgiocatore.carte.length>0)
 			{scala.undo()};
 			while ((scala.fscartipesca)&&(scala.pescato))
-			//while ((scala.fscartipesca))
 			{scala.undo()};
 			this.hidedialog();
 		})
@@ -1106,10 +1079,9 @@ var scala = {
 			$(this.carteselezionate[i].gui).removeClass("cardselected");
 		}
 		this.carteselezionate=[];
-		//this.pushstato("scarta");
+		this.pushstato();
+		this.muovicarta(carta,this.scarti,"faceUp");
 		this.pescato=false;
-
-		this.muovicarta(carta,this.scarti,"faceUp","scarta");
 
 
 		if (this.giocatore.carte.length==0){
@@ -1221,9 +1193,8 @@ var scala = {
     //oppure una card che varrà rimossa dal gruppo
     //fa il push in destinazione
     
-    muovicarta:function(sorgente,destinazione,toggle,messaggio){
+    muovicarta:function(sorgente,destinazione,toggle){
         var carta;
-        var mesg=""||messaggio
         
         if (typeof (sorgente.carte) !="undefined") {carta=sorgente.carte.pop()}
         else {
@@ -1235,10 +1206,9 @@ var scala = {
         if (toggle=="toggle") carta.faceUp=!carta.faceUp;
         if (toggle=="faceUp") carta.faceUp=true;
         if (toggle=="faceDown") carta.faceUp=false;
-        //this.showcard(carta);
+        this.showcard(carta);
         carta.gruppo=destinazione;
         destinazione.carte.push(carta);
-        if (messaggio!="nopush") scala.pushstato("muovicarta "+carta.shortName+" "+messaggio);  //se scartatris già fatto
         // this.render();                 //*****************attivare par dare le carte una alla volta
         return carta;
 
@@ -1267,7 +1237,7 @@ var scala = {
         var ntris=0;
         if (gruppotris.carte.length!=0) ntris=gruppotris.carte[gruppotris.carte.length-1].ntris+1;
 
-        //this.pushstato();
+        this.pushstato();
 		this.checktris(tris,SORTED);
 		for(var i=0;i<ncarte;i++){
 			var carta=tris[i];
@@ -1286,13 +1256,9 @@ var scala = {
 					if (gruppotris==this.trisgiocatore) scala.jollymodificabili.push(carta);
 				}
 			}
-
-			this.muovicarta(carta,gruppotris,"faceUp","nopush");
+			this.muovicarta(carta,gruppotris,"faceUp");
 		}
-		suona(scartatris);
-		this.pushstato("scartatris");
-
-		//scartatris.play();
+		scartatris.play();
         return;
     },
 
@@ -1301,8 +1267,6 @@ var scala = {
 
     
     render:function(){
-
-    	if ((scala.dopo)&&((scala.turno!=-1)&&scala.astato=="nextavv")) return;
 
 		if (this.cartescoperte) this.displaypunti(this.calcolapunti(this.avversario1.carte),"avversario1");
 		else this.displaypunti(0,"puntiavversario1");
@@ -1361,12 +1325,7 @@ var scala = {
             carta.top=newtop;
             carta.left=newleft;
             carta.zindex=i;
-            if (scala.immediato) {
-				$(carta.gui).css({"top":newtop,"left":newleft,"z-index":i},velocita);
-            }
-            else {
-             	$(carta.gui).animate({"top":newtop,"left":newleft,"z-index":i},velocita);
-            }
+            $(carta.gui).animate({"top":newtop,"left":newleft,"z-index":i},velocita);
 			this.showcard(carta);        
 
         }
@@ -1377,12 +1336,10 @@ var scala = {
 
     	if (this.turno!=-1) return;
     	this.fscartipesca=false;
-		
-        if (scala.statostack.length==0) this.pushstato("iniziale");
+		pesca.play();
+        this.pushstato();
+        this.muovicarta(this.mazzo,this.giocatore,"faceUp");
         this.pescato=true;
-        this.muovicarta(this.mazzo,this.giocatore,"faceUp","cartapesca");
-        pesca.play();
-        
         this.render();
         return;
     },
@@ -1390,7 +1347,6 @@ var scala = {
     
     scartipesca:function(){
     	if (this.turno!=-1) return;
-    	if (scala.statostack.length==0) this.pushstato("iniziale");
 		if (this.pescato){   //se clicco sugli scarti avendo pescato e c'e' una carta selezionata la scarto
 			if (this.carteselezionate.length==1){
 				this.scarta(this.carteselezionate.pop());
@@ -1402,14 +1358,11 @@ var scala = {
     	if (!this.f40giocatore) {
     		if (!this.fscartiprima40) {scala.myalert("gioco non ancora aperto");return}
      	}
-    	this.fscartipesca=true;
-    	this.pescato=true;
-    	dascarti.play(); 
-        this.muovicarta(this.scarti,this.giocatore,"faceUp","scartipesca");
-
-        //this.pushstato("scartipesca");
-
-
+    	this.fscartipesca=true; 
+		dascarti.play();
+        this.pushstato();
+        this.muovicarta(this.scarti,this.giocatore,"faceUp");
+        this.pescato=true;
         this.render();
         return;
     },
@@ -1704,7 +1657,7 @@ var scala = {
 					temporaneo2.push(mtest[i]);
 				}
 				else {  //non carta conseguente
-					if ((numscala2==13)&&(contscala2>=2)&&(assi[seme2].length>1)){temporaneo2.push(assi[seme2][1]); contscala2++}
+					if ((numscala2==13)&&(contscala2>=2)&&(assi[seme2].length>1)){temporaneo2.push(assi[seme1][1]); contscala2++}
 					if (contscala2>=3) this.trispossibili.push(temporaneo2);
 					temporaneo2=[]; contscala2=1;
 					seme2=mtest[i].seme;
@@ -1720,7 +1673,7 @@ var scala = {
 						contscala1++
 		}
 		if (contscala1>=3) this.trispossibili.push(temporaneo1);
-		if ((numscala2==13)&&(contscala2>=2)&&(assi[seme2].length>1)){temporaneo2.push(assi[seme2][1]); contscala2++}
+		if ((numscala1==13)&&(contscala2>=2)&&(assi[seme2].length>1)){temporaneo2.push(assi[seme1][1]); contscala2++}
 		if (contscala2>=3) this.trispossibili.push(temporaneo2);
 
 		//segnala che la carta è in un tris e le somma PUNTITRIS punti
@@ -1845,19 +1798,8 @@ var scala = {
 
 
 	multiundo:function(){
-		if (this.pescato) {this.popstato();this.popstato(-1,true)}
-		else { 
-			while((!this.pescato)&&(scala.statostack.length>0)) {
-				this.popstato();
-			}
-		}
-		if (scala.astato=="playrender")
-		{
-			scala.astato="abortito";
-			scala.turno=-1;
-		}
-		scala.jollymodificabili=[];
-		this.render();
+		if (this.pescato) this.undo();
+		else while(!this.pescato) {	this.undo();}
     },
 
 
@@ -1869,120 +1811,22 @@ var scala = {
     },
     
    
-    mossaavversario:function(){
-    	scala.astato=0;
-   		return scala.alavorastato();
-    },
 
 
-	 /* mossaavversario:function(avv){
+	 mossaavversario:function(avv){
 	 scala.turno=avv; 
        if (this.campiavversario[avv].carte.length==0) return;
        this.apesca(avv);
        this.alavora(avv);
-       this.ascarta(avv);
-       scala.astato=0;
-       return scala.alavorastato(avv);  
-	 },*/
-
-	 alavorastato:function(){
-		scala.ritardo=1000;
-		var avv=scala.turno;
-  
-		switch (scala.astato){
-
-			case 0://solo alla prima entrata del primo avversario;
-			scala.turno=0; //primo avversario;
-			avv=0;
-			scala.astato="nextavv";
-
-			case "nextavv":  //rientro per un nuovo avversario
-				
-				scala.avvsalvalog=scala.statostack.length;
-				if (scala.campiavversario[avv].carte.length==0) {scala.astato="fineturno";break;}   //DA VEDERE
-				scala.apesca(avv);
-				scala.alavora(avv);
-				scala.ascarta(avv);
-				//scala.pushstato("dopo ascarta");
-				if (scala.dopo) {
-					scala.ritardo=10;
-					scala.astato="playrender"
-					break;
-				}
-				scala.astato="fineturno";
-				break;
-
-
-			case "playrender": //visualizza le mosse una per una da stack
-				if (scala.avvsalvalog<scala.statostack.length){
-					scala.popstato(scala.avvsalvalog);
-					scala.avvsalvalog++;
-					if (scala.salvasuono!=0) scala.salvasuono.play();
-					scala.render();
-					
-					scala.salvasuono=0;
-					scala.ritardo=1000;
-					break;
-				}
-				else {
-					scala.astato="fineturno";
-				}
-
-			
-			case "fineturno":
-
-	   			var finito=false;   
-        		if (scala.campiavversario[avv].carte.length==0){		
-        			finito=true;
-        			scala.cartescoperte=true;
-
-        			var salvapunti=scala.totalegiocatore;
-        	
-       				var vintotorneo=scala.calcolatotali();
-       				scala.render(); 
-			
-					if ((scala.totalegiocatore>=scala.totalelimite)&&(salvapunti<scala.totalelimite)){
-						thunder.play();
-						scala.mydialog("haipersotorneo",function(){scala.azzeratotale();scala.nuovo()},scala.nuovo);
-						return;  //esce definitivamente
-					} 
-					else {
-					 	if (vintotorneo) {
-							applause.play();
-							scala.mydialog("haivintotorneo",function(){scala.azzeratotale();scala.nuovo()},scala.nuovo);
-							return;  //esce definitivamente
-					 	}
-				 		else {
-							haiperso.play();
-							scala.mydialog("haiperso",scala.nuovo)};
-							return;  //esce definitivamente - da vedere
-				 		}
- 				
-       			}
-            
-       			
-       			if ((!finito)&&(avv<(scala.numeroavversari-1))){
-       				scala.astato="nextavv"; 
-       				scala.turno++;
-       				scala.ritardo=10;
-       				break;
-       			}
-       			else {
-       				scala.turno=-1;
-       				scala.render();
-					return;
-       			}
-
-			case "abortito":
-       				scala.turno=-1;
-					return;
-				
-
-		}// switch
-
-		window.setTimeout(scala.alavorastato,scala.ritardo)	
-		return;
-
+       window.setTimeout(function(){
+       		
+       		if ((scala.ascarta(avv))&&(avv<(scala.numeroavversari-1))) 
+       		window.setTimeout(function(){
+       			scala.mossaavversario(avv+1);},1000);
+       		else window.setTimeout(function(){
+       			scala.turno=-1;scala.render()},500);
+       	
+       },1000);
    }, 
 
 
@@ -2311,7 +2155,7 @@ calcolapuntitris: function(gruppo){
 						else {
 							var puntitris =cont[i].numero*3+3;
 							if (cont[i].numero==9) puntitris=29;
-							if (cont[i].numero>=10) puntitris=30;
+							if (cont[i].numero>10) puntitris=30;
 							if ((differenza==1)&&(cont[i].numero==1)){
 								salvacoppia(i,j,SCALA,PUNTIMEZZACOPPIA,puntitris,2);
 							}
@@ -2417,7 +2261,7 @@ calcolapuntitris: function(gruppo){
 	jollydausare:0,
 
     apesca:function(avv){
-    	//this.pushstato("apesca");
+    	this.pushstato();
    		this.jollydausare=0;
 
         if ((this.campiavversario[avv].carte.length>=3)) {
@@ -2456,8 +2300,8 @@ calcolapuntitris: function(gruppo){
 
         	if (trovato){
 				if (this.f40avversario[avv]){
-        			suona(dascarti);  //brutta duplicazione   
-        			this.muovicarta(this.scarti,this.campiavversario[avv],"faceDown","apesca");
+   		   			dascarti.play();  //brutta duplicazione
+        			this.muovicarta(this.scarti,this.campiavversario[avv],"faceDown");   
         			this.render(); 
         			return;  
 
@@ -2466,11 +2310,7 @@ calcolapuntitris: function(gruppo){
 
 			if ((!this.f40avversario[avv])&&(this.fscartiprima40)){ //non abbiamo ancora aperto ma c'è l'opzione dipescare dagli scarti senza apertura
 				//la pesca dagli scarti formerebbe un tris, ma abbiamo i 40 punti?
-				
-				var salvalog=scala.statostack.length;
-				suona(dascarti); 
-
-				this.muovicarta(this.scarti,this.campiavversario[avv],"faceDown","apescanascosta");   //prova di nascosto
+				this.muovicarta(this.scarti,this.campiavversario[avv],"faceDown");   //prova di nascosto
 				this.cancellapuntietris(avv);
 
 
@@ -2480,21 +2320,20 @@ calcolapuntitris: function(gruppo){
 				this.ottimizzacoppie();
 
 				if (this.verifica40(avv)) {
+					dascarti.play(); 
 					this.render(); 
 					return;
 				}
 				else {
-					while (scala.statostack.length>salvalog) scala.popstato(); 
-					this.popstato(-1,true); //ripesca dallo stack lasciando lo dtack inalterato
+					this.popstato(true); //ripesca dallo stack lasciando lo dtack inalterato
 				}
 			}
 
 		} 
 
 
-        suona(pesca); 
-   		
-        this.muovicarta(this.mazzo,this.campiavversario[avv],"faceDown","apesca");  
+   		pesca.play();
+        this.muovicarta(this.mazzo,this.campiavversario[avv],"faceDown");   
         this.render();
      }, 
 
@@ -2584,22 +2423,14 @@ calcolapuntitris: function(gruppo){
 		&&(this.campiavversario[avv].carte[lung-1].numero>49)&&(this.campiavversario[avv].carte[1].numero<49)){    
 			temp=this.carteattaccabili.pop();
 			temp.carta.faceUp=true;
-			// 24/08/15 correzione per mettere prima il jolly- tolto  this.aggiungitris(temp.cont,temp.indice,temp.carta,temp.cartatris,ESEGUI);
+			this.aggiungitris(temp.cont,temp.indice,temp.carta,temp.cartatris,ESEGUI);
 			//ora mette il jolly
-			scala.trisdata.semescala=temp.carta.seme;  //serve a aggiungitris per dare il seme al jolly
+			scala.trisdata.semescala=temp.cartatris.seme;  //serve a aggiungitris per dare il seme al jolly
 			scala.trisdata.primonumero=temp.primonumero;
- 			if (!temp.messeprima) {
- 				
- 				// 24/08/15   this.aggiungitris(temp.cont,temp.indice,this.campiavversario[avv].carte[lung-2],temp.cartatris,ESEGUI);
- 				this.aggiungitris(temp.cont,temp.indice,this.campiavversario[avv].carte[lung-1],temp.cartatris,ESEGUI);
- 				this.aggiungitris(temp.cont,temp.indice+1,temp.carta,temp.cartatris,ESEGUI); // aggiunto  24/08/15
- 			}
+ 			if (!temp.messeprima) this.aggiungitris(temp.cont,temp.indice,this.campiavversario[avv].carte[lung-2],temp.cartatris,ESEGUI);
 			else {
-				// 24/08/15 scala.trisdata.primonumero-=2; 
-				scala.trisdata.primonumero-=1; 
-				// 24/08/15 this.aggiungitris(temp.cont,temp.indice+1,this.campiavversario[avv].carte[lung-2],temp.cartatris,ESEGUI);
-				this.aggiungitris(temp.cont,temp.indice,this.campiavversario[avv].carte[lung-1],temp.cartatris,ESEGUI);
-				this.aggiungitris(temp.cont,temp.indice,temp.carta,temp.cartatris,ESEGUI); // aggiunto 24/08/15
+				scala.trisdata.primonumero-=2;
+				this.aggiungitris(temp.cont,temp.indice+1,this.campiavversario[avv].carte[lung-2],temp.cartatris,ESEGUI);
 			}
 			//this.attaccabiliconjolly(avv); non dovrebbe servire
 			lung=this.campiavversario[avv].carte.length;
@@ -2734,7 +2565,6 @@ calcolapuntitris: function(gruppo){
 				else { //era una scala, se non comincia con uno lo metto all'inizio
 					
 					if ((scala.trisdata.primonumero!=1)&&(tris.length<14)) {
-						scala.trisdata.primonumero-=1  //24/08/2015
 						this.aggiungitris(contx,ultimacartatris-tris.length+1,carta,contx.carte[ultimacartatris-tris.length+1],ESEGUI);
 						return true;
 					}
@@ -2750,7 +2580,7 @@ calcolapuntitris: function(gruppo){
      
     ascarta:function(avv){
 
-   		
+   		scarta.play();
    		var indiceminimo=this.campiavversario[avv].carte.length-1;minimo=1000;
    		//cerca la carta con il minimo punteggio
    		if (this.campiavversario[avv].carte.length<4) {  //se non posso piu fare tris annullo il punteggio coppia (e tris che sarà già nullo)
@@ -2784,12 +2614,8 @@ calcolapuntitris: function(gruppo){
 			}
 
 		}
-   		suona(scarta);    	
-		this.muovicarta(this.campiavversario[avv].carte[indiceminimo],this.scarti,"faceUp","ascarta");
-		
-		
-		//spostato in mossaavversario
-		/*
+   		    	
+		this.muovicarta(this.campiavversario[avv].carte[indiceminimo],this.scarti,"faceUp");
 		var finito=false;   
         if (this.campiavversario[avv].carte.length==0){
         	finito=true;
@@ -2815,7 +2641,6 @@ calcolapuntitris: function(gruppo){
             
        this.render(); 
 	   return !finito;
-	   */ 
     }, 
 
 	

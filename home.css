@@ -3,11 +3,11 @@
 		border-style:solid;
 	border-color:#FFFFFF;
 	border-width:6px;
-	top:180px;
+	top:170px;
 	left:100px;
-	width:150px;
-	height:100px;
-	background-size: 150px 100px;
+	width:140px;
+	height:90px;
+	background-size: 140px 90px;
 	background-image:url(images/home/scala40.jpg);
 	//background-color:green; */
 	
@@ -23,16 +23,16 @@
 }
 
 #underconstruction{
-	position:absolute;
+	position:auto;
 		border-style:solid;
 	border-color:#FFFFFF;
 	border-width:6px;
 
 	top:00px;
-	left:100px;
+	left:0px;
 	width:1024px;
-	height:768px;
-	background-size: 1024px 768px;
+	height:750px;
+	background-size: 1024px 750px;
 	background-image:url(images/home/underconstruction.jpg);
 	//background-color:green; */
 	
@@ -61,13 +61,37 @@
 		border-style:solid;
 	border-color:#FFFFFF;
 	border-width:6px;
-	top:570px;
+	top:610px;
 	left:100px;
-	width:150px;
-	height:100px;
-	background-size: 150px 100px;
+	width:140px;
+	height:90px;
+	background-size: 140px 90px;
 	background-image:url(images/home/yogi.png);
 	//background-color:green; */
+	
+}
+#icomachia{
+	position:absolute;
+		border-style:solid;
+	border-color:#FFFFFF;
+	border-width:6px;
+	top:280px;
+	left:100px;
+	width:140px;
+	height:90px;
+	background-size: 140px 90px;
+	background-image:url(images/home/machiavelli.jpg);
+	//background-color:green; */
+	
+}
+
+#icomachia img{
+	position:absolute;
+	top:25px;
+	left:200px;
+	width:350px;
+	height:60px;
+	//background-color:green; 
 	
 }
 
@@ -87,11 +111,11 @@
 	border-color:#FFFFFF;
 	border-width:6px;
 
-	top:440px;
+	top:500px;
 	left:100px;
-	width:150px;
-	height:100px;
-	background-size: 150px 100px;
+	width:140px;
+	height:90px;
+	background-size: 140px 90px;
 	background-image:url(images/home/hanon.jpg);
 	//background-color:green;
 	
@@ -113,11 +137,11 @@
 	border-color:#FFFFFF;
 	border-width:6px;
 
-	top:310px;
+	top:390px;
 	left:100px;
-	width:150px;
-	height:100px;
-	background-size: 150px 100px;
+	width:140px;
+	height:90px;
+	background-size: 140px 90px;
 	background-image:url(images/home/icometronomo.jpg);
 	//background-color:green;
 	
@@ -155,7 +179,7 @@
 	
 	
 }
-
+/*
 body{
 	-webkit-touch-callout:none;
 	-webkit-user-select:none;
@@ -175,7 +199,30 @@ body{
 	margin:0;
 
 }
+*/
+body{
+	-webkit-touch-callout:none;
+	-webkit-user-select:none;
+	-khtml-user-select:none;
+	-moz-user-select:none;
+	-ms-user-select:none;
+	user-select:none;
 
+	font-size:.75em;
+	font-family:'Open Sans',"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#fff;
+	width:auto;
+	height:700px;
+	background-color:green;
+	-ms-transform-origin: left top;
+	-moz-transform-origin: left top;
+	-webkit-transform-origin: left top;
+	margin:0;
+	background-image:url(images/home/castagne.jpg);
+	
+	
+
+}
 #campogioco{
 	position:relative;
 	top:0px;

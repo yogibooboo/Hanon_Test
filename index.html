@@ -25,6 +25,7 @@
 	
 		
 		<a href="scala40.html"><div id="icoscala" ><img src="images/home/scala40.png"></div></a>
+		<a href="machiavelli.html"><div id="icomachia" ><img src="images/home/machiavelli.png"></div></a>
 		<a href="metronome.html"><div id="icometro"><img src="images/home/metronome.png"></div></a>
 		<a href="hanon.html"><div id="icohanon"><img src="images/home/hanontest.png"></div></a>
 		<a href="aboutme.html"><div id="aboutme"><img src="images/home/aboutme.png"></div></a>
@@ -40,5 +41,24 @@
 
 	
 </body>
+<script src="jquery-2.1.1.js"></script>
+<script>
+	var adjustscreen=function(){
+	zm=1,wh=$(window).height(),ww=$(window).width();
+	if (wh<750) zm=wh/750;
+	if (ww<1600) zm=Math.min(zm,ww/1024)
+	//$('body').css('zoom',zm+'%'); /* Webkit browsers */
+  	//$('body').css('zoom',zm); /* Other non-webkit browsers */
+  	//$('body').css('-moz-transform',"scale("+zm+", "+zm+")"); /* Moz-browsers */
+  	$("body").css({transform:"scale("+zm+")"});
+	//$("body").css({transform:"translate("+($("body").offset().left)+"px,"+($("body").offset().top)+"px)"});
+};
+adjustscreen();
 
+$(window).resize(function () {
+	//scala.offsetxx=$("#campogioco").offset().left;
+	//scala.offsetyy=$("#campogioco").offset().top;
+	adjustscreen();
+});
+</script>
 </html>

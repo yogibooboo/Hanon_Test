@@ -9,7 +9,7 @@
 
     <link rel="stylesheet" href="machiavelli.css" />
     
-    <meta name="Description" content="Play free Machiavelli card game online. choose between one, two or three opponents"
+    <meta name="Description" content="Play free Machiavelli card game online no registration. Choose between one, two or three opponents. Gioca Machiavelli gratis online senza registrazione"
        
 </head>
 
@@ -32,10 +32,13 @@
 
 	   <div id="accessoridestra" class="campo">
 	   	   	<div id="totalizzatore"  class="totalizzatore">
-	   			<div id="azzeratotale" class="pulsanteazz" style="top: 260px; left: 12px; z-index:1000; ">AZZERA</div> 
+	   			<!--<div id="azzeratotale" class="pulsanteazz" style="top: 260px; left: 12px; z-index:1000; ">AZZERA</div>--> 
 	   		</div>  <!--totalizzatore-->
-			<div id="autosort" class="pulsante2" style="top: 660px; left: 10px; ">AUTO SORT</div> 
-			<div id="sort" class="pulsante2" style="top: 710px; left: 10px; z-index:1000">SORT</div>
+	   		<div id="passopasso" class="pulsante4" style="top: 510px; left: 10px; ">PASSOPASSO</div> 
+	   		<div id="group" class="pulsante2" style="top: 560px; left: 10px; ">GROUP</div> 
+			<div id="autosort" class="pulsante2" style="top: 610px; left: 10px; ">AUTO SORT</div> 
+			<div id="sort" class="pulsante2" style="top: 660px; left: 10px; z-index:1000">SORT</div>
+			<a href="scala40.html"><div class="pulsantescala40" style="top: 710px; left: 10px; "></div></a>
 
     
 	   </div>	<!--accessoridestra-->
@@ -51,14 +54,21 @@
 	   </div>
 	   <div id="campotris" style="top:110px; left: 270px; width:1054px;height:550px;"> 
 	   </div>   <!--campotris serve solo come sfondo e riferimento dimensionale-->
-	 	<div id="campotris0" class="campo2" style="top:110px; left: 270px; width:1054px;height:104px;"> campotris0 </div>
-		<div id="campotris1" class="campo2" style="top: 220px; left: 270px;  width:1054px;height:104px;"> campotris1 </div>
-		<div id="campotris2" class="campo2" style="top: 330px; left: 270px;  width:1054px;height:104px;"> campotris2 </div>
-		<div id="campotris3" class="campo2" style="top: 440px; left: 270px;  width:1054px;height:104px;"> campotris3</div>
-		<div id="campotris4" class="campo2" style="top: 550px; left: 270px;  width:1054px;height:104px;"> campotris4</div>
+	 	<div id="campotris0" class="campo2" style="top:110px; left: 270px; width:1054px;height:104px;"> </div>
+		<div id="campotris1" class="campo2" style="top: 220px; left: 270px;  width:1054px;height:104px;"> </div>
+		<div id="campotris2" class="campo2" style="top: 330px; left: 270px;  width:1054px;height:104px;">  </div>
+		<div id="campotris3" class="campo2" style="top: 440px; left: 270px;  width:1054px;height:104px;"> </div>
+		<div id="campotris4" class="campo2" style="top: 550px; left: 270px;  width:1054px;height:104px;"></div>
 
 	   <div id="giocatore" class="campo2" style="top: 660px; left: 270px;  width:1054px;height:104px;"> 
 			<div id="etgiocatore" class="etichetta" style="position: absolute; top: -10px; left: 700px;"> &nbsp;giocatore</div>
+			<div id="showstep">
+				<div id="etstep" style="position: absolute; top: 10px; left: 180px;"> &nbsp;etichetta</div>
+				<div id="etstep2" style="position: absolute; top: 70px; left: 180px;"> &nbsp;etichetta2</div>
+				<div id="indietro" class="pulsante2" style="top: 5px; left: 10px; ">INDIETRO</div> 
+				<div id="avanti" class="pulsante2" style="top: 55px; left: 10px; ">AVANTI</div> 
+			 </div>
+
 	   </div>
 	   <div id="avversarioa" class="campo2" style="top: 330px; left: -170px;  width:764px;height:104px;transform: rotate(90deg)">  
 	   			<div id="etavversarioa" class="etichetta" style="position: absolute;  top: -10px; left: 400px; "> &nbsp;avversarioa</div>
@@ -68,19 +78,23 @@
 		</div>
 	  
 	  <div id="formistruzioni" class="formistruzioni"> 
-		<h2>Istruzioni per giocare a scala 40 Luciano:</h2>
-Per pescare dal mazzo: cliccare nell’area “giocatore” oppure sul mazzo.<br><br>
-Per pescare dagli scarti cliccare su di essi.<br><br>
-Per scartare una carta cliccarla con il tasto destro, oppure trascinarla negli scarti,oppure selezionarla e cliccare sugli scarti.<br><br>
-Per riordinare le proprie carte, trascinare la carta che si intende spostare a destra della carta dopo cui si intende inserirla, oppure a sinistra della prima carta.<br><br>
+		<h2>Istruzioni per giocare a Machiavelli Luciano:</h2>
+I tris si formano come nella SCALA 40, ma nelle scale dopo il K si può arrivare fino a tre.<br><br>
 Per formare un tris cliccare sulle carte che lo compongono, che devono essere ordinate correttamente. Una volta selezionato, si può scartare il tris cliccando nell’area immediatamente superiore a quella del giocatore.<br><br>
-Per aggiungere una carta a un tris o per sostituire un Jolly trascinare la carta nella posizione dove si intende collocare.<br><br>
-Il tasto UNDO permette di annullare la mosse più recenti.<br><br>
-Il tasto SCOPERTE permette di giocare a carte scoperte.<br><br>
-il tasto AVVERSARI consente di scegliere il numeri di avversari e/o iniziare una nuova partita <br><br>
-Per modificare il limite di punti cliccargli sopra<br><br>
-Quando si deposita un tris con jolly, è possibile cambiarne il seme cliccandoci sopra<br><br>
-<button class= "bottone1" type="button" >OK</button>
+Per aggiungere una carta a un tris trascinare la carta nella posizione dove si intende collocare.<br><br>
+Cliccando con il tasto destro su una carta di un tris in campo il tris viene spezzato in quel punto 
+(la carta selezionata resterà nella parte destra del tris, a meno che non si tratti della prima carta o di una carta di un poker, nel qual caso verrà isolata).<br>
+Una volta spezzato il tris è possibile aggiungere carte oppure muovere le carte del tris spezzato.<br><br>
+Al termine delle operazioni il giocatore deve cliccare sulla parte libera del suo campo, oppure sul mazzo.
+Se durante il proprio turno il giocatore ha aggiunto almeno una carta ai tris il gioco passerà al primo avversario senza pescare, altrimenti verrà automaticamente pascata una carta.<br><br>
+Per riordinare le proprie carte, trascinare la carta che si intende spostare a destra della carta dopo cui si intende inserirla, oppure a sinistra della prima carta.<br><br>
+Il tasto UNDO permette di annullare la mosse più recenti.<br>
+Il tasto SCOPERTE permette di giocare a carte scoperte.<br>
+il tasto AVVERSARI consente di scegliere il numero di avversari e/o iniziare una nuova partita<br>
+il tasto GROUP raggruppa i tris che possono essere uniti <br>
+il tasto PASSOPASSO permette di vedere le mosse degli avversari una alla volta.<br>
+
+<button class= "bottone1" type="button1" style="left: 650px;" >OK</button>
 	  </div> 
 	   
 
@@ -91,7 +105,7 @@ Quando si deposita un tris con jolly, è possibile cambiarne il seme cliccandoci
 		<input type="radio" name="avversari" value="2" >2<br>
 		<input type="radio" name="avversari" value="3" >3<br>
 
-<button class= "bottone1" type="button" >OK</button>
+<button class= "bottone1" type="button"  style="left: 650px;" >OK</button>
 	  </div> 
 
 
@@ -105,7 +119,8 @@ Quando si deposita un tris con jolly, è possibile cambiarne il seme cliccandoci
 	   <div id="haiperso" class="form" style="background-image:url(images/scala40/haiperso.jpg)">  
 	  <!--<button id= "persoOK" type="button" style="left: 100px;" >OK</button>
 	  <button id= "persoNEW" type="button" style="left: 200px;" >NUOVA PARTITA</button>-->
-	  <button class= "bottone1" type="button" style="left: 200px;" >NUOVA PARTITA</button>
+	  <button class= "bottone1" type="button" style="left: 100px;" >NUOVA PARTITA</button>
+	  <button class= "bottone2" type="button" style="left: 300px;" >CONTINUA</button>
 	  </div> 
 
 
@@ -121,8 +136,8 @@ Quando si deposita un tris con jolly, è possibile cambiarne il seme cliccandoci
 
 
 
-	   <div id="oltre40" class="form" style="background-image:url(images/scala40/achtung.jpg)">  
-	  <button class= "bottone1" type="button" style="left: 100px;" >ANNULLA APERTURA</button>
+	   <div id="oltre40" class="form" style="background-image:url(images/machiavelli/scollegate.jpg)">  
+	  <button class= "bottone1" type="button" style="left: 100px;" >ANNULLA TAGLI</button>
 	  <button class= "bottone2" type="button" style="left: 300px;" >CONTINUA</button>
 	  </div> 
 	  <div id="allerta" class="form" style="background-image:url(images/scala40/allerta.jpg)">
@@ -148,11 +163,14 @@ Quando si deposita un tris con jolly, è possibile cambiarne il seme cliccandoci
 	 <audio id="ding" src="sounds/scala40/ding.mp3"></audio>
 	 <audio id="thunder" src="sounds/scala40/thunder.mp3"></audio>
 	 <audio id="applause" src="sounds/scala40/applause.mp3"></audio>
-	 <audio id="distribuisci" src="sounds/scala40/distribuisci.mp3"></audio>
+	 <audio id="distribuisci" src="sounds/scala40/distribuisci10.mp3"></audio>
 	 <audio id="tick" src="sounds/scala40/tick.mp3"></audio>
+	 <audio id="dindon" src="sounds/scala40/dindon.mp3"></audio>
+	 <audio id="split" src="sounds/scala40/split.mp3"></audio>
 
 	<script src="jquery-2.1.1.js"></script>
 	<script src="machiavellicode.js"></script>
+	<script src="machiavellic2.js"></script>
 
 
 	</div>	<!-- sfondo-->

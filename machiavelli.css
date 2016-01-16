@@ -73,9 +73,41 @@ body{
 
 	
 }
+#showstep {
+	
+	z-index:40000;
+	border-style:solid;
+	
+	border-radius:9px;
+	border-color:black;
+	border-width:5px ;
+	
+	color:#fff;
 
 
+	position:absolute;
+	width:550px;
+	height:105px;
+	left:500px;
+	top:-5px;
+	background-image:url(images/wood2.png);
+	display:none;
+}  
+#etstep {
+	text-align:left;
+	font-size:20px;
+	
 
+	width:400px;
+}
+
+#etstep2 {
+	text-align:left;
+	font-size:20px;
+	
+	color:orange;
+	width:400px;
+}
 img{
 	border-style:none
 }
@@ -168,13 +200,25 @@ h1,h2,h3,h4,h5,h6{
 	
 }
 
+
+.cardjoined{
+	//border-style:solid;
+	//border-color:#f00;
+	//border-width:3px;
+	//background-color:blue;
+	box-shadow: 0px 0px  10px 4px #ff8c00 inset;	
+	//box-shadow: 2px 2px  2px red;
+	
+	
+}
+
 .cardmoved{
 	background-image:url(images/scala40/conjollyselblu.png);	
 	
 }
 
 .cardmovedavv{
-	background-image:url(images/scala40/conjollyselgreen.png);	
+	background-image:url(images/scala40/conjollyselgreen.png);
 	
 }
 
@@ -210,6 +254,24 @@ h1,h2,h3,h4,h5,h6{
 	
 }
 
+.pulsante4{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:18px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888oo;
+	text-align:center;
+	border-radius:9px;
+	width:126px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/scala40/wbutton.png);
+	
+}
+
 .pulsanteback{
 	border-style:solid;
 	border-color:#888888;
@@ -227,6 +289,25 @@ h1,h2,h3,h4,h5,h6{
 	background-image:url(images/home/manentibutton.png);
 	
 }
+
+.pulsantescala40{
+	border-style:solid;
+	border-color:#888888;
+	padding:2px;
+	font-size:22px;
+	font-family:Slackey,"Lucida Grande","Lucida Sans Unicode",Tahoma,Geneva,Arial,Verdana,sans-serif;
+	color:#8888;
+	text-align:center;
+	border-radius:9px;
+	width:126px;
+	height:36px;
+	position:absolute;
+	cursor:pointer;
+	background-size: 130px 40px;
+	background-image:url(images/home/pulsantescala40.png);
+	
+}
+
 
 .pulsanteazz{
 	
@@ -390,7 +471,7 @@ h1,h2,h3,h4,h5,h6{
 	height:300px;
 
 	background-size: 130px 300px;
-	background-image:url(images/scala40/mtotalizzatore.png);  
+	background-image:url(images/scala40/totalizzatoretemp.png);  
 	
 }
 
@@ -432,17 +513,21 @@ h1,h2,h3,h4,h5,h6{
 	border-style:solid;
 	
 	border-radius:9px;
-	font-size:12px;
+	font-size:18px;
 
 	position:absolute;
-	width:700px;
-	left:150px;
-	top:50px;
+	width:1400px;
+	left:100px;
+	top:10px;
 	padding:25px;
 	background-size: 500px 280px;
 	background-color:green;
 	display:none;
 }  
+
+#formnuovo {
+	display:none;
+}
 
 #testoallerta {
 	
